@@ -2,3 +2,39 @@ npx create-react-app my-app
 cd my-app
 npm start
 export NODE_OPTIONS=--openssl-legacy-provider
+
+npm cache clean --force
+
+npm init -y
+npm install webpack webpack-cli --save-dev
+
+npx webpack-cli init
+npx webpack
+
+
+
+There might be a problem with the project dependency tree.
+It is likely not a bug in Create React App, but something you need to fix locally.
+
+The react-scripts package provided by Create React App requires a dependency:
+
+  "babel-loader": "8.1.0"
+
+Don't try to install it manually: your package manager does it automatically.
+However, a different version of babel-loader was detected higher up in the tree:
+
+  /opt/lampp/htdocs/salonapp/node_modules/babel-loader (version: 8.2.3) 
+
+Manually installing incompatible versions is known to cause hard-to-debug issues.
+
+If you would prefer to ignore this check, add SKIP_PREFLIGHT_CHECK=true to an .env file in your project.
+That will permanently disable this message but you might encounter other issues.
+
+To fix the dependency tree, try following the steps below in the exact order:
+
+ 1. Delete package-lock.json (not package.json!) and/or yarn.lock in your project folder.
+  2. Delete node_modules in your project folder.
+  3. Remove "babel-loader" from dependencies and/or devDependencies in the package.json file in your project folder.
+  4. Run npm install or yarn, depending on the package manager you use.
+
+https://stackoverflow.com/questions/44690308/whats-the-difference-between-prettier-eslint-eslint-plugin-prettier-and-eslint/44690309#44690309
