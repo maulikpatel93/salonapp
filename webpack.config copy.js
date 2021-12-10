@@ -1,6 +1,6 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
-// const path = require("path");
+const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
@@ -11,12 +11,18 @@ const isProduction = process.env.NODE_ENV == "development";
 const stylesHandler = MiniCssExtractPlugin.loader;
 
 const config = {
+  mode: isProduction ? "development" : "production",
   entry: "./src/index.js",
-  output: {
-    path: path.join(__dirname, 'node_modules'),
-    filename: 'bundle.js',
-    publicPath: '/'
+  resolve: {
+      extensions: ['.jsx', '.js'],
   },
+  output: {
+    path: __dirname,
+    publicPath: "/",
+    filename: "[name].bundle.js",
+    chunkFilename: "[name].chunk.js",
+  },
+
   devServer: {
     open: true,
     host: "localhost",
@@ -53,11 +59,6 @@ const config = {
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
-    resolve: {
-      modules: [
-        path.join(__dirname, 'node_modules'),
-      ],
-    },
   },
   plugins: [isProduction && new ReactRefreshWebpackPlugin()].filter(Boolean),
 };

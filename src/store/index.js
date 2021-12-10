@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
-import counterReducer from './slices/counterSlice';
-import { userSlice } from "./slices/userSlice";
+import authReducer from "./slices/auth";
+import messageReducer from "./slices/message";
 
 const reducer = combineReducers({
-  counter: counterReducer,
-  user: userSlice.reducer,
+  auth: authReducer,
+  message: messageReducer,
 });
 export const store = configureStore({
-  reducer
+  reducer,
+  devTools: true,
 });
