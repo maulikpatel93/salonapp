@@ -3,24 +3,23 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from '../layout/MainLayout';
 import Loadable from '../component/Loadable';
-import { Navigate } from 'react-router-dom';
+import AuthGuard from './../utils/route-guard/AuthGuard';
 
 // dashboard routing
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard/index')));
 
 const MainRoutes = {
     path: '/',
-    // element: isLoggedIn ? <MainLayout /> : <Navigate to="/login" />,
-    element: <MainLayout />,
+    element: (
+        <AuthGuard>
+            <MainLayout />
+        </AuthGuard>
+    ),
     children: [
-        {
-            path: '/',
-            element: <Dashboard />
-        },
         {
             path: '/dashboard',
             element: <Dashboard />
-        },
+        }
     ]
 };
 

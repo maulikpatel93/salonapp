@@ -4,18 +4,18 @@ import { lazy } from "react";
 import Loadable from "../component/Loadable";
 import MinimalLayout from "../layout/MinimalLayout";
 import { Navigate } from "react-router-dom";
+import GuestGuard from './../utils/route-guard/GuestGuard';
 // login option 3 routing
 const Login = Loadable(lazy(() => import("../pages/auth/Login")));
 
+const Dashboard = Loadable(lazy(() => import('../pages/dashboard/index')));
 // import { useSelector } from "react-redux";
 // const { isLoggedIn } = useSelector((state) => state.auth);
 
 const AuthenticationRoutes = {
   path: "/",
-  // element: !isLoggedIn ? <MinimalLayout /> : <Navigate to="/dashboard" />,
-  element: <MinimalLayout />,
+  element: <GuestGuard><MinimalLayout /></GuestGuard>,
   children: [
-    { path: "/", element: <Navigate to="/login" /> },
     { path: "/login", element: <Login /> },
   ],
 };

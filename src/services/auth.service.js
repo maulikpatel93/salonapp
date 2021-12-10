@@ -1,5 +1,7 @@
 import axios from "axios";
 import config from "../config";
+import { useNavigate } from "react-router-dom";
+
 const API_URL = config.API_URL;
 
 const register = (username, email, password) => {
@@ -11,6 +13,7 @@ const register = (username, email, password) => {
 };
 
 const login = (email, password, action) => {
+  // const scriptedRef = useScriptRef();
   return axios
     .post(API_URL + "login", {
       email,
@@ -27,6 +30,8 @@ const login = (email, password, action) => {
 
 const logout = () => {
   localStorage.removeItem("user");
+  const navigate = useNavigate();
+  navigate('/login');
 };
 
 const authService = {

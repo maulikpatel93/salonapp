@@ -29,7 +29,7 @@ const Dashboard = () => {
   }, [logOut]);
 
   return (
-    <>
+    <React.Fragment>
       <div className="container mx-auto">
         <p>
           <strong>Id:</strong> {currentUser.id}
@@ -41,7 +41,7 @@ const Dashboard = () => {
             LogOut
           </a>
       </div>
-    </>
+      </React.Fragment>
   );
 };
 

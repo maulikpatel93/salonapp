@@ -11,26 +11,27 @@ const isProduction = process.env.NODE_ENV == "development";
 const stylesHandler = MiniCssExtractPlugin.loader;
 
 const config = {
-  entry: "./src/index.js",
-  output: {
-    path: path.join(__dirname, 'node_modules'),
-    filename: 'bundle.js',
-    publicPath: '/'
-  },
+  // entry: "./src/index.js",
+  // output: {
+  //   path: path.join(__dirname, 'node_modules/dist'),
+  //   filename: "[name].bundle.js",
+  //   chunkFilename: "[name].chunk.js",
+  //   publicPath: '/'
+  // },
   devServer: {
     open: true,
     host: "localhost",
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "index.html",
-    }),
+  // plugins: [
+  //   new HtmlWebpackPlugin({
+  //     template: "index.html",
+  //   }),
 
-    new MiniCssExtractPlugin(),
+  //   new MiniCssExtractPlugin(),
 
-    // Add your plugins here
-    // Learn more about plugins from https://webpack.js.org/configuration/plugins/
-  ],
+  //   // Add your plugins here
+  //   // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+  // ],
   module: {
     rules: [
       {
@@ -53,11 +54,6 @@ const config = {
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
-    resolve: {
-      modules: [
-        path.join(__dirname, 'node_modules'),
-      ],
-    },
   },
   plugins: [isProduction && new ReactRefreshWebpackPlugin()].filter(Boolean),
 };

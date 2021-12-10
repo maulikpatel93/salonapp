@@ -7,11 +7,12 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./i18n";
 import toast, { Toaster } from "react-hot-toast";
+import config from './config';
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename={config.basename}>
         <App />
       </BrowserRouter>
     </Provider>
