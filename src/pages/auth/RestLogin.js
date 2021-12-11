@@ -48,8 +48,12 @@ const RestLogin = (props) => {
       dispatch(login({ email, password, remember_me }))
         .unwrap()
         .then(() => {
-          navigate("/dashboard");
-          window.location.reload();
+          // try {
+          //   navigate("/dashboard");
+          //   window.location.reload();
+          // } catch (error) {
+          //   console.log(error);
+          // }
         })
         .catch(() => {
           setLoading(false);
@@ -66,80 +70,34 @@ const RestLogin = (props) => {
   };
 
   return (
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleLogin}
-      >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          touched,
-          values,
-        }) => (
-          <Form>
-            <div className="d-flex flex-row align-items-center justify-content-center mb-5">
-              <h1 className="fw-normal mb-0 me-3">{t("sign_in")}</h1>
+    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleLogin}>
+      {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+        <Form>
+          <div className="d-flex flex-row align-items-center justify-content-center mb-5">
+            <h1 className="fw-normal mb-0 me-3">{t("sign_in")}</h1>
+          </div>
+          <FloatLabelInputField name="email" type="text" placeholder="" className={touched.email && errors.email ? "form-control is-invalid" : "form-control"} id="login-email" label={t("email")} />
+          <FloatLabelInputField name="password" type="password" placeholder="" className={touched.password && errors.password ? "form-control is-invalid" : "form-control"} id="login-password" autoComplete="off" label={t("password")} />
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="form-check mb-0">
+              <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
+              <label className="form-check-label" htmlFor="form2Example3">
+                {t("remember_me")}
+              </label>
             </div>
-            <FloatLabelInputField
-              name="email"
-              type="text"
-              placeholder=""
-              className={
-                touched.email && errors.email
-                  ? "form-control is-invalid"
-                  : "form-control"
-              }
-              id="login-email"
-              label={t("email")}
-            />
-            <FloatLabelInputField
-              name="password"
-              type="password"
-              placeholder=""
-              className={
-                touched.password && errors.password
-                  ? "form-control is-invalid"
-                  : "form-control"
-              }
-              id="login-password"
-              autoComplete="off"
-              label={t("password")}
-            />
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <div className="form-check mb-0">
-                <input
-                  className="form-check-input me-2"
-                  type="checkbox"
-                  value=""
-                  id="form2Example3"
-                />
-                <label className="form-check-label" htmlFor="form2Example3">
-                  {t("remember_me")}
-                </label>
-              </div>
-              <Link to="#!" className="text-body">
-                {t("forgot_password?")}
-              </Link>
-            </div>
-            <div className="text-center text-lg-start mt-4 pt-2">
-              <button
-                type="submit"
-                className="btn btn-primary btn-lg"
-                disabled={loading}
-              >
-                {loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-                )}
-                {t("login")}
-              </button>
-            </div>
-          </Form>
-        )}
-      </Formik>
+            <Link to="#!" className="text-body">
+              {t("forgot_password?")}
+            </Link>
+          </div>
+          <div className="text-center text-lg-start mt-4 pt-2">
+            <button type="submit" className="btn btn-primary btn-lg" disabled={loading}>
+              {loading && <span className="spinner-border spinner-border-sm"></span>}
+              {t("login")}
+            </button>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

@@ -1,13 +1,10 @@
-export default function authHeader() {
-  const user = JSON.parse(localStorage.getItem("user"));
 
-  if (user && user.token) {
-    // For Spring Boot back-end
-    // return { Authorization: "Bearer " + user.accessToken };
+import storage from "redux-persist/lib/storage";
 
-    // for Node.js Express back-end
-    return { "x-access-token": user.token };
-  } else {
-    return {};
+export default function authHeader(token) {
+  if (token) {
+    return { "Authorization": `Bearer ${token}` }
+  }else{
+    return {}
   }
 }

@@ -16,7 +16,7 @@ export default function ThemeRoutes() {
   return useRoutes([
     { path: "/", element: <Navigate to={config.defaultPath} /> },
     AuthenticationRoutes, 
-    // LoginRoutes,
+    LoginRoutes,
     MainRoutes
   ]);
 }

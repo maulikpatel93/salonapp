@@ -1,7 +1,11 @@
+import config from "../config";
+
 // ==============================|| LOADER ||============================== //
 const Loader = () => (
-    <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Loading...</span>
+    <div id="preloader">
+        <div id="status">
+            <img src={config.logopath} alt="" />
+        </div>
     </div>
 );
 

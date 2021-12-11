@@ -3,45 +3,50 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../store/slices/auth";
 import EventBus from "../../common/EventBus";
+import { Button } from "bootstrap";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user: currentUser } = useSelector((state) => state.auth);
-
+  const auth = useSelector((state) => state.auth);
+  const currentUser = auth.user;
   const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logout({ token: auth.token, auth_key: auth.user.auth_key }));
+  };
+  // const logOut = useCallback(() => {
+  //   dispatch(logout());
+  // }, [dispatch]);
 
-  const logOut = useCallback(() => {
-    dispatch(logout());
-  }, [dispatch]);
+  // if (!currentUser) {
+  //   return navigate("/login");
+  // }
 
-  if (!currentUser) {
-    return navigate("/login");
-  }
+  // useEffect(() => {
+  //   EventBus.on("logout", () => {
+  //     logOut();
+  //   });
 
-  useEffect(() => {
-    EventBus.on("logout", () => {
-      logOut();
-    });
-
-    return () => {
-      EventBus.remove("logout");
-    };
-  }, [logOut]);
+  //   return () => {
+  //     EventBus.remove("logout");
+  //   };
+  // }, [logOut]);
 
   return (
-    <React.Fragment>
-      <div className="container mx-auto">
-        <p>
-          <strong>Id:</strong> {currentUser.id}
-        </p>
-        <p>
-          <strong>Email:</strong> {currentUser.email}
-        </p>
-          <a href="/login" className="nav-link btn btn-primary" onClick={logOut}>
+    <>
+      <div className="page-content">
+        <div className="container mx-auto">
+          <p>
+            <strong>Id:</strong> {currentUser.id}
+          </p>
+          <p>
+            <strong>Email:</strong> {currentUser.email}
+          </p>
+          <button className="nav-link btn btn-primary" onClick={handleLogout}>
             LogOut
-          </a>
+          </button>
+        </div>
       </div>
-      </React.Fragment>
+    </>
   );
 };
 

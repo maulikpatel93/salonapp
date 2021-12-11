@@ -1,74 +1,81 @@
-import PropTypes from 'prop-types';
-
-// material-ui
-import { useTheme } from '@mui/material/styles';
-import { Avatar, Box, ButtonBase } from '@mui/material';
-
-// project imports
-import LogoSection from '../LogoSection';
-import SearchSection from './SearchSection';
-import ProfileSection from './ProfileSection';
-import NotificationSection from './NotificationSection';
-
-// assets
-import { IconMenu2 } from '@tabler/icons';
-
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
+import { Link } from "react-router-dom";
+import config from "../../../config";
+import ProfileSection from "./ProfileSection";
 
-const Header = ({ handleLeftDrawerToggle }) => {
-    const theme = useTheme();
-
-    return (
-        <>
-            {/* logo & toggler button */}
-            <Box
-                sx={{
-                    width: 228,
-                    display: 'flex',
-                    [theme.breakpoints.down('md')]: {
-                        width: 'auto'
-                    }
-                }}
-            >
-                <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
-                    <LogoSection />
-                </Box>
-                <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
-                    <Avatar
-                        variant="rounded"
-                        sx={{
-                            ...theme.typography.commonAvatar,
-                            ...theme.typography.mediumAvatar,
-                            transition: 'all .2s ease-in-out',
-                            background: theme.palette.secondary.light,
-                            color: theme.palette.secondary.dark,
-                            '&:hover': {
-                                background: theme.palette.secondary.dark,
-                                color: theme.palette.secondary.light
-                            }
-                        }}
-                        onClick={handleLeftDrawerToggle}
-                        color="inherit"
-                    >
-                        <IconMenu2 stroke={1.5} size="1.3rem" />
-                    </Avatar>
-                </ButtonBase>
-            </Box>
-
-            {/* header search */}
-            <SearchSection />
-            <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{ flexGrow: 1 }} />
-
-            {/* notification & profile */}
-            <NotificationSection />
+const Header = () => {
+  return (
+    <>
+      <header>
+        <div className="d-flex align-items-center justify-content-between">
+          <div className="left-col d-flex align-items-center">
+            <Link to="javascript:void(0)" className="mobile-menu-icon pe-2 d-lg-none">
+              <img src={config.imagepath + "favicon.png"} alt="" />
+            </Link>
+            <h2 className="page-title mb-0">Dashboard</h2>
+          </div>
+          <div className="rigt-col d-flex align-items-center">
+            <div className="search">
+              <Link to="javascript:void(0)" className="search-icon">
+                <img src={config.imagepath + "search.png"} alt="" />
+              </Link>
+              <div className="search-wrapper">
+                <form action="">
+                  <div className="input-group">
+                    <span className="input-group-text">
+                      <i className="far fa-search"></i>
+                    </span>
+                    <input type="text" className="search-input rounded-1 form-control" placeholder="Search Clients" />
+                    <Link to="javascript:void(0)" className="close">
+                      <i className="fal fa-times"></i>
+                    </Link>
+                  </div>
+                  <div className="search-result dropdown-box">
+                    <ul className="p-0 m-0 list-unstyled">
+                      <li>
+                        <Link to="#" className="d-flex">
+                          <div className="user-initial me-2">js</div>
+                          <div className="user-id">
+                            <span className="user-name">Jo Smith</span>
+                            <span className="user-id">jo.smith@gmail.com</span>
+                          </div>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="#" className="d-flex">
+                          <div className="user-initial me-2">js</div>
+                          <div className="user-id">
+                            <span className="user-name">Jo Smith</span>
+                            <span className="user-id">jo.smith@gmail.com</span>
+                          </div>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="#" className="d-flex">
+                          <div className="user-initial me-2">js</div>
+                          <div className="user-id">
+                            <span className="user-name">Jo Smith</span>
+                            <span className="user-id">jo.smith@gmail.com</span>
+                          </div>
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <Link to="" className="ms-lg-4 ms-2">
+              <img src={config.imagepath + "bell.png"} alt="" />
+            </Link>
+            <Link to="" className="ms-lg-4 ms-2">
+              <img src={config.imagepath + "setting-icon.png"} alt="" />
+            </Link>
             <ProfileSection />
-        </>
-    );
-};
-
-Header.propTypes = {
-    handleLeftDrawerToggle: PropTypes.func
+          </div>
+        </div>
+      </header>
+    </>
+  );
 };
 
 export default Header;

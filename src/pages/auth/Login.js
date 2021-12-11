@@ -8,34 +8,24 @@ import * as Yup from "yup";
 import config from "../../config";
 import Language from "../../component/Language";
 
-import { login } from "../../store/slices/auth";
-import { clearMessage } from "../../store/slices/message";
-
-//Formik
-import FloatLabelInputField from "../../component/form/FloatLabelInputField";
-import WithTranslateFormErrors from "../../component/form/use-translate-form-errors";
 import RestLogin from "./RestLogin";
 
 const Login = () => {
   return (
-      <React.Fragment>
-        <section className="vh-100">
-          <div className="container py-5 h-custom">
-            <div className="row d-flex justify-content-center align-items-center h-100">
-              <div className="col-md-9 col-lg-6 col-xl-5 text-center">
-                <img
-                  src={config.logopath}
-                  className="img-fluid"
-                  alt="Sample image"
-                />
-              </div>
-              <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <RestLogin />
-              </div>
+    <React.Fragment>
+      <section className="vh-100">
+        <div className="container py-5 h-custom">
+          <div className="row d-flex justify-content-center align-items-center h-100">
+            <div className="col-md-9 col-lg-6 col-xl-5 text-center">
+              <img src={config.logopath} className="img-fluid" alt="Sample image" />
+            </div>
+            <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+              <RestLogin />
             </div>
           </div>
-        </section>
-      </React.Fragment>
+        </div>
+      </section>
+    </React.Fragment>
   );
 };
 // const Login = (props) => {

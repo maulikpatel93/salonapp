@@ -1,13 +1,24 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
-import authReducer from "./slices/auth";
-import messageReducer from "./slices/message";
+import {
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER
+} from "redux-persist";
+import rootReducer from './reducer';
 
-const reducer = combineReducers({
-  auth: authReducer,
-  message: messageReducer,
-});
-export const store = configureStore({
-  reducer,
+const store = configureStore({
+  reducer:rootReducer,
   devTools: true,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+    }
+  }),
 });
+const persister = persistStore(store);
+
+export { store, persister };
