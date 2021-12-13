@@ -1,5 +1,5 @@
 import axios from "axios";
-import { store } from '../store';
+import { store } from "../store";
 import config from "../config";
 import authHeader from "./auth-header";
 
@@ -36,7 +36,7 @@ const logout = () => {
       API_URL + "afterlogin/logout",
       {
         action: "logout",
-        auth_key
+        auth_key,
       },
       { headers: authHeader() },
     )
@@ -50,9 +50,33 @@ const logout = () => {
   // navigate("/login");
 };
 
+const getUser = (authenticate) => {
+  const token = authenticate.token;
+  const auth_key = authenticate.auth_key;
+  return axios
+    .post(
+      API_URL + "afterlogin/user",
+      {
+        action: "user",
+        auth_key,
+      },
+      { headers: authHeader(token) },
+    )
+    .then((response) => {
+      if (response.status == 200) {
+        if (response.data.status == 200) {
+          return response.data.data;
+        } else {
+          return response.data.message;
+        }
+      }
+    });
+};
+
 const authService = {
   register,
   login,
   logout,
+  getUser,
 };
 export default authService;

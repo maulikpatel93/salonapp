@@ -18,7 +18,7 @@ export const register = createAsyncThunk("auth/register", async ({ username, ema
 export const login = createAsyncThunk("auth/login", async ({ email, password, remember_me }, thunkAPI) => {
   try {
     const resposedata = await AuthService.login(email, password, remember_me);
-    return { isLoggedIn: true, user: resposedata.data, token: resposedata.token };
+    return { isLoggedIn: true, user: await AuthService.getUser({ auth_key:resposedata.data.auth_key, token:resposedata.token}), token: resposedata.token };
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
     thunkAPI.dispatch(setMessage(message));
@@ -28,7 +28,6 @@ export const login = createAsyncThunk("auth/login", async ({ email, password, re
 
 export const logout = createAsyncThunk("auth/logout", async () => {
   try {
-    console.log("hello");
     const resposedata = await AuthService.logout();
   } catch (error) {
     console.log(error);

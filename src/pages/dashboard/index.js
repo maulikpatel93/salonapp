@@ -34,15 +34,7 @@ const Dashboard = () => {
     <>
       <div className="page-content">
         <div className="container mx-auto">
-          <p>
-            <strong>Id:</strong> {currentUser.id}
-          </p>
-          <p>
-            <strong>Email:</strong> {currentUser.email}
-          </p>
-          <button className="nav-link btn btn-primary" onClick={handleLogout}>
-            LogOut
-          </button>
+         
         </div>
       </div>
     </>

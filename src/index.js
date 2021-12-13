@@ -1,6 +1,9 @@
 
 
 import "./assets/scss/react-bootstrap.scss";
+import './assets/css/font-awsome.css';
+require('./assets/js/jquery.min.js');
+
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";

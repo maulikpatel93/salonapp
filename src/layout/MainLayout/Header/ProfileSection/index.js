@@ -20,10 +20,10 @@ const ProfileSection = () => {
           <img src={config.imagepath + "Avatar.png"} alt="" />
           <span className="user-status online"></span>
         </Link>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" >Dashboard</a>
-          <a class="dropdown-item" >Edit Profile</a>
-          <a class="dropdown-item cursor-pointer" onClick={handleLogout}>Log Out</a>
+        <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a className="dropdown-item" >{currentUser.first_name+' '+currentUser.last_name}</a>
+          <a className="dropdown-item" >{currentUser.email}</a>
+          <a className="dropdown-item cursor-pointer text-bold" onClick={handleLogout}><i className="fas fa-sign-out-alt me-2"></i>Log Out</a>
         </div>
       </div>
     </>

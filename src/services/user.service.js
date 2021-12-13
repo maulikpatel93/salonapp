@@ -1,30 +1,31 @@
 import axios from "axios";
+import { store } from "../store";
+import config from "../config";
 import authHeader from "./auth-header";
 
-import config from "../config";
 const API_URL = config.API_URL;
 
-const getPublicContent = () => {
-  return axios.get(API_URL + "all");
-};
-
-const getUserBoard = () => {
-  return axios.get(API_URL + "user", { headers: authHeader() });
-};
-
-const getModeratorBoard = () => {
-  return axios.get(API_URL + "mod", { headers: authHeader() });
-};
-
-const getAdminBoard = () => {
-  return axios.get(API_URL + "admin", { headers: authHeader() });
+const getUser = () => {
+  const auth = store.getState().auth;
+  const auth_key = auth.user.auth_key;
+  return axios
+    .post(
+      API_URL + "afterlogin/user",
+      {
+        action: "user",
+        auth_key,
+      },
+      { headers: authHeader() },
+    )
+    .then((response) => {
+      if (response.status == 200) {
+        return response.data;
+      }
+    });
 };
 
 const userService = {
-  getPublicContent,
-  getUserBoard,
-  getModeratorBoard,
-  getAdminBoard,
+  getUser,
 };
 
-export default userService
+export default userService;

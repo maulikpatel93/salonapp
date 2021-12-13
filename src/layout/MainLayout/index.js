@@ -3,7 +3,6 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { Helmet } from "react-helmet-async";
 // import config from "../../config";
-// import "../../assets/css/style.css";
 // ==============================|| MAIN LAYOUT ||============================== //
 const MainLayout = () => {
   return (
