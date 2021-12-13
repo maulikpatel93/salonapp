@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin');
+// const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin');
 
 const isProduction = process.env.NODE_ENV == "development";
 
@@ -14,12 +14,12 @@ const stylesHandler = MiniCssExtractPlugin.loader;
 
 const config = {
   entry: "./src/index.js",
-  output: {
-    // path: path.join(__dirname, 'public'),
-    filename: "[name].bundle.js",
-    chunkFilename: "[name].chunk.js",
-    publicPath: '/'
-  },
+  // output: {
+  //   // path: path.join(__dirname, 'public'),
+  //   filename: "[name].bundle.js",
+  //   chunkFilename: "[name].chunk.js",
+  //   publicPath: '/'
+  // },
   optimization: {
     runtimeChunk: 'single',
   },
@@ -28,10 +28,10 @@ const config = {
     host: "localhost",
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new RetryChunkLoadPlugin({
-      maxRetries: 3,
-    }),
+    // new webpack.HotModuleReplacementPlugin(),
+    // new RetryChunkLoadPlugin({
+    //   maxRetries: 3,
+    // }),
 
     new HtmlWebpackPlugin({
       template: "index.html",
@@ -66,7 +66,7 @@ const config = {
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
   },
-  resolve: { extensions: ["*", ".js", ".jsx"] },
+  // resolve: { extensions: ["*", ".js", ".jsx"] },
 };
 
 module.exports = () => {

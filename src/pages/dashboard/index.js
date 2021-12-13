@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../store/slices/auth";
 import EventBus from "../../common/EventBus";
-import { Button } from "bootstrap";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -21,15 +20,15 @@ const Dashboard = () => {
   //   return navigate("/login");
   // }
 
-  // useEffect(() => {
-  //   EventBus.on("logout", () => {
-  //     logOut();
-  //   });
+  useEffect(() => {
+    EventBus.on("handleLogout", () => {
+      handleLogout();
+    });
 
-  //   return () => {
-  //     EventBus.remove("logout");
-  //   };
-  // }, [logOut]);
+    return () => {
+      EventBus.remove("logout");
+    };
+  }, [handleLogout]);
 
   return (
     <>
