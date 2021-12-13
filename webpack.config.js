@@ -14,12 +14,12 @@ const stylesHandler = MiniCssExtractPlugin.loader;
 
 const config = {
   entry: "./src/index.js",
-  // output: {
-  //   // path: path.join(__dirname, 'public'),
-  //   filename: "[name].bundle.js",
-  //   chunkFilename: "[name].chunk.js",
-  //   publicPath: '/'
-  // },
+  output: {
+    // path: path.join(__dirname, 'public'),
+    filename: "[name].bundle.js",
+    chunkFilename: "[name].chunk.js",
+    publicPath: '/'
+  },
   optimization: {
     runtimeChunk: 'single',
   },
@@ -66,6 +66,7 @@ const config = {
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
   },
+  resolve: { modules: [path.resolve(__dirname, './src'), 'node_modules'] }
   // resolve: { extensions: ["*", ".js", ".jsx"] },
 };
 
