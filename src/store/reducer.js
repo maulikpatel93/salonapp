@@ -4,7 +4,7 @@ import storage from "redux-persist/lib/storage";
 
 import authReducer from "./slices/auth";
 import messageReducer from "./slices/message";
-
+import storageSession from 'redux-persist/lib/storage/session'
 //-----------------------|| COMBINE REDUCER ||-----------------------//
 
 const reducer = combineReducers({
@@ -13,6 +13,8 @@ const reducer = combineReducers({
       key: "auth",
       storage,
       keyPrefix: "salon-",
+      debug: false,
+      timeout: 20000
     },
     authReducer,
   ),

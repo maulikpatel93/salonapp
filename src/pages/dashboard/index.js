@@ -11,7 +11,7 @@ const Dashboard = () => {
   const currentUser = auth.user;
   const dispatch = useDispatch();
   const handleLogout = () => {
-    dispatch(logout({ token: auth.token, auth_key: auth.user.auth_key }));
+    dispatch(logout());
   };
   // const logOut = useCallback(() => {
   //   dispatch(logout());

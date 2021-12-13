@@ -1,8 +1,6 @@
-import React from "react";
 import axios from "axios";
+import { store } from '../store';
 import config from "../config";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import authHeader from "./auth-header";
 
 const API_URL = config.API_URL;
@@ -30,7 +28,9 @@ const login = (email, password, remember_me) => {
     });
 };
 
-const logout = (token, auth_key) => {
+const logout = () => {
+  const auth = store.getState().auth;
+  const auth_key = auth.user.auth_key;
   return axios
     .post(
       API_URL + "afterlogin/logout",
@@ -38,7 +38,7 @@ const logout = (token, auth_key) => {
         action: "logout",
         auth_key
       },
-      { headers: authHeader(token) },
+      { headers: authHeader() },
     )
     .then((response) => {
       if (response.status == 200) {
