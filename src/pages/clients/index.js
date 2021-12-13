@@ -1,9 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+
 import config from "../../config";
 import ClientForm from "./Form";
+import { openClientForm } from "../../store/slices/client";
 
 const Clients = () => {
+  const dispatch = useDispatch();
+  const handleOpenClientForm = () => {
+      dispatch(openClientForm());
+  };
   return (
     <>
       <div className="page-content bg-pink service">
@@ -81,7 +88,7 @@ const Clients = () => {
                 </a>
               </li>
             </ul>
-            <a id="addclient-drawer-link" className="add-new-btn btn me-1 px-lg-4  cursor-pointer">
+            <a id="addclient-drawer-link" className="add-new-btn btn me-1 px-lg-4  cursor-pointer" onClick={handleOpenClientForm}>
               New Client
             </a>
             <div className="dropdown d-inline-block setting-dropdown">
