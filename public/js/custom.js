@@ -4,7 +4,7 @@ $(window).on('load', function() { // makes sure the whole site is loaded
     $('#status').fadeOut(); // will first fade out the loading animation 
     $('#preloader').delay(200).slideUp('slow'); // will fade out the white DIV that covers the website. 
     $('body').delay(350).addClass('active-body');
-})
+});
 $( document ).ready(function($) {
     // tooltip js
     if($('[data-bs-toggle="tooltip"]').length){

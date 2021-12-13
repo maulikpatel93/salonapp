@@ -2,7 +2,7 @@
 
 import "./assets/scss/react-bootstrap.scss";
 import './assets/css/font-awsome.css';
-require('./assets/js/jquery.min.js');
+import $ from 'jquery';
 
 import React from "react";
 import ReactDOM from "react-dom";
