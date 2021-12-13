@@ -9,26 +9,6 @@ const Dashboard = () => {
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
   const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-  // const logOut = useCallback(() => {
-  //   dispatch(logout());
-  // }, [dispatch]);
-
-  // if (!currentUser) {
-  //   return navigate("/login");
-  // }
-
-  useEffect(() => {
-    EventBus.on("handleLogout", () => {
-      handleLogout();
-    });
-
-    return () => {
-      EventBus.remove("logout");
-    };
-  }, [handleLogout]);
 
   return (
     <>
