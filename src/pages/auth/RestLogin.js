@@ -4,17 +4,13 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useTranslation } from "react-i18next";
 
-// third party
+// validation Formik
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
-
-// project imports
-import useScriptRef from "../../hooks/useScriptRef";
-
-//Formik
+import yupconfig from "../../yupconfig";
 import FloatLabelInputField from "../../component/form/FloatLabelInputField";
-// import WithTranslateFormErrors from "../../component/form/use-translate-form-errors";
 
+import useScriptRef from "../../hooks/useScriptRef";
 //============================|| API JWT - LOGIN ||============================//
 import { login } from "../../store/slices/auth";
 import { clearMessage } from "../../store/slices/message";
@@ -40,32 +36,16 @@ const RestLogin = (props) => {
     password: Yup.string().min(6).max(16).label("Password").required(),
     remember_me: Yup.bool(),
   });
+  yupconfig();
 
   const handleLogin = (formValue) => {
     const { email, password, remember_me } = formValue;
     setLoading(true);
     try {
-      dispatch(login({ email, password, remember_me }))
-        .unwrap()
-        .then(() => {
-          // try {
-          //   navigate("/dashboard");
-          //   window.location.reload();
-          // } catch (error) {
-          //   console.log(error);
-          // }
-        })
-        .catch(() => {
-          setLoading(false);
-        });
+      dispatch(login({ email, password, remember_me }));
     } catch (err) {
       console.error(err);
       setLoading(false);
-      // if (scriptedRef.current) {
-      //   setStatus({ success: false });
-      //   setErrors({ submit: err.message });
-      //   setSubmitting(false);
-      // }
     }
   };
 

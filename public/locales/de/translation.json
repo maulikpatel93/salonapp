@@ -1,7 +1,7 @@
 {
     "English": "English",
     "German": "German",
-    "sign_in": "Sign In",
+    "sign_in": "Sign In 1",
     "email": "Email",
     "password": "Password",
     "remember_me": "Remember me",
@@ -9,7 +9,7 @@
     "login": "Login",
     "mixed": {
         "default": "${path} is invalid",
-        "required": "${path} is a required field",
+        "required": "${path} is a required field 1",
         "oneOf": "${path} must be one of the following values: ${values}",
         "notOneOf": "${path} must not be one of the following values: ${values}",
         "defined": "${path} must be defined",

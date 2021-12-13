@@ -23,6 +23,11 @@ const Login = () => {
               <RestLogin />
             </div>
           </div>
+          <div className="row d-flex justify-content-center align-items-center">
+            <div className="col-md-12 text-center">
+              <Language />
+            </div>
+          </div>
         </div>
       </section>
     </React.Fragment>

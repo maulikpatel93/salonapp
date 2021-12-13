@@ -28,7 +28,7 @@ export const login = createAsyncThunk("auth/login", async ({ email, password, re
 
 export const logout = createAsyncThunk("auth/logout", async () => {
   try {
-    console.log('hello');
+    console.log("hello");
     const resposedata = await AuthService.logout();
   } catch (error) {
     console.log(error);
@@ -38,9 +38,6 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   }
 });
 
-// const initialState = user
-//   ? { isLoggedIn: true, user }
-//   : { isLoggedIn: false, user: null };
 const initialState = {
   token: "",
   isLoggedIn: false,

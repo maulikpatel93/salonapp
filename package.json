@@ -16,6 +16,7 @@
         "history": "^5.1.0",
         "i18next": "^21.6.0",
         "i18next-browser-languagedetector": "^6.1.2",
+        "i18next-xhr-backend": "^3.2.2",
         "jquery": "^3.6.0",
         "lodash": "^4.17.21",
         "postinstall": "^0.7.4",
