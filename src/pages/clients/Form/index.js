@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useTranslation } from "react-i18next";
-
 // validation Formik
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
@@ -12,12 +10,17 @@ import yupconfig from "../../../yupconfig";
 import FloatLabelInputField from "../../../component/form/FloatLabelInputField";
 
 import { clearMessage } from "../../../store/slices/message";
+import { closeclientform } from "../../../store/slices/clientSlice";
 
 const ClientForm = (props) => {
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const rightDrawerOpened = useSelector((state) => state.client.opened);
+  
+  const handleCloseClientForm = () => {
+      dispatch(closeclientform());
+  }
 
   useEffect(() => {
     dispatch(clearMessage());
@@ -36,7 +39,7 @@ const ClientForm = (props) => {
   });
   yupconfig();
 
-  const handleLogin = (formValue) => {
+  const handleClientSubmit = (formValue) => {
     const { email, password, remember_me } = formValue;
     setLoading(true);
     try {
@@ -48,14 +51,14 @@ const ClientForm = (props) => {
   };
 
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleLogin}>
+    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleClientSubmit}>
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
         <Form>
-          <div className="drawer client-drawer" id="addclient-drawer">
+          <div className={ "drawer client-drawer "+rightDrawerOpened } id="addclient-drawer">
             <div className="drawer-wrp position-relative include-footer">
               <div className="drawer-header">
                 <h2 className="mb-4 pe-md-5 pe-3">New Client</h2>
-                <a className="close-drawer cursor-pointer">
+                <a className="close-drawer cursor-pointer" onClick={ handleCloseClientForm }>
                   <img src={config.imagepath + "close-icon.svg"} alt="" />
                 </a>
               </div>

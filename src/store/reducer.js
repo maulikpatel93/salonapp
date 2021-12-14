@@ -4,7 +4,7 @@ import storage from "redux-persist/lib/storage";
 
 import authReducer from "./slices/auth";
 import messageReducer from "./slices/message";
-import storageSession from 'redux-persist/lib/storage/session'
+import clientReducer from "../store/slices/clientSlice";
 //-----------------------|| COMBINE REDUCER ||-----------------------//
 
 const reducer = combineReducers({
@@ -19,6 +19,7 @@ const reducer = combineReducers({
     authReducer,
   ),
   message: messageReducer,
+  client: clientReducer,
 });
 
 export default reducer;

@@ -4,13 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import config from "../../config";
 import ClientForm from "./Form";
-import { openClientForm } from "../../store/slices/client";
+import { openclientform } from "../../store/slices/clientSlice";
 
 const Clients = () => {
   const dispatch = useDispatch();
   const handleOpenClientForm = () => {
-      dispatch(openClientForm());
-  };
+      dispatch(openclientform());
+  }
   return (
     <>
       <div className="page-content bg-pink service">
