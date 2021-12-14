@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import yupconfig from "../../yupconfig";
-import FloatLabelInputField from "../../component/form/FloatLabelInputField";
+import { FloatLabelInputField } from "../../component/form/Field";
 
 import useScriptRef from "../../hooks/useScriptRef";
 //============================|| API JWT - LOGIN ||============================//
@@ -56,8 +56,8 @@ const RestLogin = (props) => {
           <div className="d-flex flex-row align-items-center justify-content-center mb-5">
             <h1 className="fw-normal mb-0 me-3">{t("sign_in")}</h1>
           </div>
-          <FloatLabelInputField name="email" type="text" placeholder="" className={touched.email && errors.email ? "form-control is-invalid" : "form-control"} id="login-email" label={t("email")} />
-          <FloatLabelInputField name="password" type="password" placeholder="" className={touched.password && errors.password ? "form-control is-invalid" : "form-control"} id="login-password" autoComplete="off" label={t("password")} />
+          <FloatLabelInputField name="email" type="text" placeholder="" label={t("email")} controlId="login-email" />
+          <FloatLabelInputField name="password" type="password" placeholder="" autoComplete="off" label={t("password")} controlId="login-password" />
           <div className="d-flex justify-content-between align-items-center mb-3">
             <div className="form-check mb-0">
               <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3" />

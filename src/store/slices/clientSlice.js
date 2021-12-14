@@ -1,8 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import clientApiController from "../../services/client.service";
 
 const initialState = {
   opened: '',
-}
+};
+
+export const clientCreate = createAsyncThunk("client/create", async () => {
+  try {
+    const resposedata = await clientApiController.create();
+  } catch (error) {
+    console.log(error);
+    const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    thunkAPI.dispatch(setMessage(message));
+    return thunkAPI.rejectWithValue();
+  }
+});
 
 export const clientSlice = createSlice({
   name: 'client',

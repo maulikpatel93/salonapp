@@ -7,43 +7,65 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import config from "../../../config";
 import yupconfig from "../../../yupconfig";
-import FloatLabelInputField from "../../../component/form/FloatLabelInputField";
+import { InputField, SelectField } from "../../../component/form/Field";
 
 import { clearMessage } from "../../../store/slices/message";
-import { closeclientform } from "../../../store/slices/clientSlice";
+import { closeclientform, clientCreate } from "../../../store/slices/clientSlice";
 
 const ClientForm = (props) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
   const rightDrawerOpened = useSelector((state) => state.client.opened);
-  
   const handleCloseClientForm = () => {
       dispatch(closeclientform());
   }
-
   useEffect(() => {
     dispatch(clearMessage());
   }, [dispatch]);
 
   const initialValues = {
+    first_name: "",
+    last_name: "",
+    profile_photo: "",
     email: "",
-    password: "",
-    remember_me: "",
+    phone_number: "",
+    date_of_birth: "",
+    gender: "",
+    address: "",
+    street: "",
+    suburb: "",
+    state: "",
+    postcode: "",
+    description: "",
+    send_sms_notification: "",
+    send_email_notification: "",
+    recieve_marketing_email: "",
   };
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().label("Email").email().required(),
-    password: Yup.string().min(6).max(16).label("Password").required(),
-    remember_me: Yup.bool(),
+    first_name: Yup.string().max(50).label(t("first_name")).email().required(),
+    last_name: Yup.string().max(50).label(t("last_name")).required(),
+    profile_photo: Yup.string().label(t("profile_photo")).required(),
+    email: Yup.string().max(100).label(t("email")).required(),
+    phone_number: Yup.string().matches(config.phone_number_pattern, t(config.phone_number_334_error)).label(t("phone_number")).required(),
+    date_of_birth: Yup.string().label(t("date_of_birth")).required(),
+    gender: Yup.string().label(t("gender")).required(),
+    address: Yup.string().label(t("address")).required(),
+    street: Yup.string().label(t("street")).required(),
+    suburb: Yup.string().label(t("suburb")).required(),
+    state: Yup.string().label(t("state")).required(),
+    postcode: Yup.string().label(t("postcode")).required(),
+    description: Yup.string().label(t("description")).required(),
+    send_sms_notification: Yup.string().label(t("send_sms_notification")),
+    send_email_notification: Yup.string().label(t("send_email_notification")),
+    recieve_marketing_email: Yup.string().label(t("send_sms_notification")),
   });
   yupconfig();
 
   const handleClientSubmit = (formValue) => {
-    const { email, password, remember_me } = formValue;
     setLoading(true);
     try {
-      dispatch(login({ email, password, remember_me }));
+      dispatch(clientCreate());
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -67,28 +89,28 @@ const ClientForm = (props) => {
                   <div className="col-md-7">
                     <div className="row gx-2">
                       <div className="col-sm-6 mb-3">
-                        <label htmlFor="">First Name</label>
-                        <input type="text" className="form-control" />
+                        <label htmlFor="">{t('first_name')}</label>
+                        <InputField type="text" name="first_name" value={values.first_name} />
                       </div>
                       <div className="col-sm-6 mb-3">
-                        <label htmlFor="">Last Name</label>
-                        <input type="text" className="form-control" />
-                      </div>
-                    </div>
-                    <div className="row gx-2">
-                      <div className="col-sm-6 mb-3">
-                        <label htmlFor="">Mobile</label>
-                        <input type="text" className="form-control" />
-                      </div>
-                      <div className="col-sm-6 mb-3">
-                        <label htmlFor="">Email Address</label>
-                        <input type="text" className="form-control" />
+                        <label htmlFor="">{t('last_name')}</label>
+                        <InputField type="text" name="last_name" value={values.last_name}/>
                       </div>
                     </div>
                     <div className="row gx-2">
                       <div className="col-sm-6 mb-3">
-                        <label htmlFor="">Date of Birth</label>
-                        <input type="text" className="form-control" />
+                        <label htmlFor="">{t('phone_number')}</label>
+                        <InputField type="text" name="phone_number" value={values.phone_number} mask="999-999-9999"/>
+                      </div>
+                      <div className="col-sm-6 mb-3">
+                        <label htmlFor="">{t('email')}</label>
+                        <InputField type="text" name="email" value={values.email}/>
+                      </div>
+                    </div>
+                    <div className="row gx-2">
+                      <div className="col-sm-6 mb-3">
+                        <label htmlFor="">{t('date_of_birth')}</label>
+                        <InputField type="text" className="form-control" name="date_of_birth" value={values.date_of_birth}/>
                       </div>
                       <div className="col-sm-6 mb-3">
                         <label htmlFor="">Gender</label>

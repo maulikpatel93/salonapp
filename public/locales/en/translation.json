@@ -49,5 +49,20 @@
             "max": "${path} field must have less than or equal to ${max} items",
             "length": "${path} must have ${length} items"
         }
-    }
+    },
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "profile_photo": "Upload Profile Photo",
+    "phone_number": "Mobile Number",
+    "date_of_birth": "Date Of Birth",
+    "gender": "Gender",
+    "address": "Address",
+    "suburb": "Suburb",
+    "state": "State",
+    "postcode": "Postcode",
+    "description": "Description",
+    "send_sms_notification": "Send sms notification",
+    "send_email_notification": "Send email notification",
+    "recieve_marketing_email": "Recieve marketing email",
+    "phone_number_334_error": "${path} must match the following: 999-999-9999"
 }

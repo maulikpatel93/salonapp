@@ -5,7 +5,8 @@ const config = {
   imagepath: '/images/',
   defaultPath: '/dashboard',
   API_URL: 'http://127.0.0.1:8000/api/v1/',
-  borderRadius: 12
+  phone_number_pattern: /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/,
+  phone_number_334_error: 'phone_number_334_error'
 };
 
 export default config;
