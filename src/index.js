@@ -1,7 +1,6 @@
-
-
-import "./assets/scss/react-bootstrap.scss";
 import './assets/css/font-awsome.css';
+import "./assets/scss/react-bootstrap.scss";
+import "./assets/scss/custom.scss";
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 import $ from 'jquery';

@@ -64,5 +64,6 @@
     "send_sms_notification": "Send sms notification",
     "send_email_notification": "Send email notification",
     "recieve_marketing_email": "Recieve marketing email",
-    "phone_number_334_error": "${path} must match the following: 999-999-9999"
+    "phone_number_334_error": "${path} must match the following: 999-999-9999",
+    "--select--": "--Select--"
 }

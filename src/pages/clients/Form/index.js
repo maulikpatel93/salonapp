@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import config from "../../../config";
 import yupconfig from "../../../yupconfig";
-import { InputField, SelectField } from "../../../component/form/Field";
+import { InputField, SelectField, ReactSelectField } from "../../../component/form/Field";
 
 import { clearMessage } from "../../../store/slices/message";
 import { closeclientform, clientCreate } from "../../../store/slices/clientSlice";
@@ -17,8 +17,8 @@ const ClientForm = (props) => {
   const { t } = useTranslation();
   const rightDrawerOpened = useSelector((state) => state.client.opened);
   const handleCloseClientForm = () => {
-      dispatch(closeclientform());
-  }
+    dispatch(closeclientform());
+  };
   useEffect(() => {
     dispatch(clearMessage());
   }, [dispatch]);
@@ -30,7 +30,7 @@ const ClientForm = (props) => {
     email: "",
     phone_number: "",
     date_of_birth: "",
-    gender: "",
+    gender: null,
     address: "",
     street: "",
     suburb: "",
@@ -49,7 +49,13 @@ const ClientForm = (props) => {
     email: Yup.string().max(100).label(t("email")).required(),
     phone_number: Yup.string().matches(config.phone_number_pattern, t(config.phone_number_334_error)).label(t("phone_number")).required(),
     date_of_birth: Yup.string().label(t("date_of_birth")).required(),
-    gender: Yup.string().label(t("gender")).required(),
+    gender: Yup.object()
+      .shape({
+        value: Yup.string(),
+        label: Yup.string(),
+      })
+      .required()
+      .nullable(),
     address: Yup.string().label(t("address")).required(),
     street: Yup.string().label(t("street")).required(),
     suburb: Yup.string().label(t("suburb")).required(),
@@ -72,15 +78,21 @@ const ClientForm = (props) => {
     }
   };
 
+  const genderOptions = [
+    { value: "chocolate", label: "Chocolate" },
+    { value: "strawberry", label: "Strawberry" },
+    { value: "vanilla", label: "Vanilla" },
+  ];
+
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleClientSubmit}>
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
         <Form>
-          <div className={ "drawer client-drawer "+rightDrawerOpened } id="addclient-drawer">
+          <div className={"drawer client-drawer " + rightDrawerOpened} id="addclient-drawer">
             <div className="drawer-wrp position-relative include-footer">
               <div className="drawer-header">
                 <h2 className="mb-4 pe-md-5 pe-3">New Client</h2>
-                <a className="close-drawer cursor-pointer" onClick={ handleCloseClientForm }>
+                <a className="close-drawer cursor-pointer" onClick={handleCloseClientForm}>
                   <img src={config.imagepath + "close-icon.svg"} alt="" />
                 </a>
               </div>
@@ -89,32 +101,26 @@ const ClientForm = (props) => {
                   <div className="col-md-7">
                     <div className="row gx-2">
                       <div className="col-sm-6 mb-3">
-                        <label htmlFor="">{t('first_name')}</label>
-                        <InputField type="text" name="first_name" value={values.first_name} />
+                        <InputField type="text" name="first_name" value={values.first_name} label={t("first_name")} controlId="clientForm-first_name" />
                       </div>
                       <div className="col-sm-6 mb-3">
-                        <label htmlFor="">{t('last_name')}</label>
-                        <InputField type="text" name="last_name" value={values.last_name}/>
+                        <InputField type="text" name="last_name" value={values.last_name} label={t("last_name")} controlId="clientForm-last_name" />
                       </div>
                     </div>
                     <div className="row gx-2">
                       <div className="col-sm-6 mb-3">
-                        <label htmlFor="">{t('phone_number')}</label>
-                        <InputField type="text" name="phone_number" value={values.phone_number} mask="999-999-9999"/>
+                        <InputField type="text" name="phone_number" value={values.phone_number} mask="999-999-9999" label={t("phone_number")} controlId="clientForm-phone_number" />
                       </div>
                       <div className="col-sm-6 mb-3">
-                        <label htmlFor="">{t('email')}</label>
-                        <InputField type="text" name="email" value={values.email}/>
+                        <InputField type="text" name="email" value={values.email} label={t("email")} controlId="clientForm-email" />
                       </div>
                     </div>
                     <div className="row gx-2">
                       <div className="col-sm-6 mb-3">
-                        <label htmlFor="">{t('date_of_birth')}</label>
-                        <InputField type="text" className="form-control" name="date_of_birth" value={values.date_of_birth}/>
+                        <InputField type="text" name="date_of_birth" value={values.date_of_birth} label={t("date_of_birth")} controlId="clientForm-date_of_birth" />
                       </div>
                       <div className="col-sm-6 mb-3">
-                        <label htmlFor="">Gender</label>
-                        <input type="text" className="form-control" />
+                        <ReactSelectField name="gender" label={t("gender")} options={genderOptions} placeholder={t("--select--")} controlId="clientForm-gender" />
                       </div>
                     </div>
                     <div className="mb-3 search">
@@ -142,9 +148,7 @@ const ClientForm = (props) => {
                             </a>
                           </li>
                           <li>
-                            <a className="d-flex cursor-pointer">
-                              test
-                            </a>
+                            <a className="d-flex cursor-pointer">test</a>
                           </li>
                         </ul>
                       </div>
@@ -191,7 +195,7 @@ const ClientForm = (props) => {
                     <div className="mb-3">
                       <label htmlFor="">Notifcations</label>
                       <div className="form-check form-switch">
-                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"  />
+                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" />
                         <span>Send SMS notifications to client</span>
                       </div>
                       <div className="form-check form-switch">

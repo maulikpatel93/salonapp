@@ -23,3 +23,7 @@
 .btn.btn-primary-outline.active {
     color: $primary;
 }
+
+.is-invalid .css-1s2u09g-control {
+    border-color: $danger;
+}
