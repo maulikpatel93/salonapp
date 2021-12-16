@@ -5,9 +5,9 @@ const initialState = {
   opened: '',
 };
 
-export const clientCreate = createAsyncThunk("client/create", async () => {
+export const clientCreate = createAsyncThunk("client/create", async (formData, thunkAPI) => {
   try {
-    const resposedata = await clientApiController.create();
+    const resposedata = await clientApiController.create(formData);
   } catch (error) {
     console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -26,7 +26,15 @@ export const clientSlice = createSlice({
     closeclientform: (state = initialState) => {
       state.opened = ''
     }
-  }
+  },
+  extraReducers: {
+    [clientCreate.fulfilled]: (state, action) => {
+      // state.isLoggedIn = false;
+    },
+    [clientCreate.rejected]: (state, action) => {
+      // state.isLoggedIn = false;
+    }
+  },
 })
 
 // Action creators are generated for each case reducer function

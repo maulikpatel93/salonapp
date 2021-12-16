@@ -70,7 +70,7 @@ const ClientForm = (props) => {
 
 
   const handleClientSubmit = (values) => {
-    const formData = new FormData();
+    const formData = new FormData(values);
     console.log(formData);
     setLoading(true);
     try {
@@ -152,7 +152,7 @@ const ClientForm = (props) => {
                       <TextareaField type="text" name="description" value={values.description} label={t("description")} controlId="clientForm-description" />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="">{t("notification")}</label>
+                      <label htmlFor="">Notifcations</label>
                       <SwitchField name="send_sms_notification" label={t("send_sms_notification")} controlId="clientForm-send_sms_notification" />
                       <SwitchField name="send_email_notification" label={t("send_email_notification")} controlId="clientForm-send_email_notification" />
                       <SwitchField name="recieve_marketing_email" label={t("recieve_marketing_email")} controlId="clientForm-recieve_marketing_email" />

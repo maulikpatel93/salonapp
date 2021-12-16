@@ -5,16 +5,16 @@ import authHeader from "./auth-header";
 
 const API_URL = config.API_URL;
 
-const create = () => {
+const create = (values) => {
       const auth = store.getState().auth;
       const auth_key = auth.user.auth_key;
+      const formData = new FormData();
+      formData.append('auth_key', auth_key);
+      formData.append('action', 'logout');
       return axios
         .post(
           API_URL + "afterlogin/client/store",
-          {
-            action: "logout",
-            auth_key,
-          },
+          formData,
           { headers: authHeader() },
         )
         .then((response) => {
