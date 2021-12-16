@@ -2,6 +2,7 @@ import axios from "axios";
 import { store } from "../store";
 import config from "../config";
 import authHeader from "./auth-header";
+import { setMessage } from "../store/slices/message";
 
 const API_URL = config.API_URL;
 
@@ -26,6 +27,7 @@ const create = (values, thunkAPI) => {
     })
     .catch((error) => {
       const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+      thunkAPI.dispatch(setMessage(message));
       return thunkAPI.rejectWithValue(message);
     });
 };

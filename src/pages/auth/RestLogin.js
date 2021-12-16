@@ -17,12 +17,11 @@ import { clearMessage } from "../../store/slices/message";
 
 const RestLogin = (props) => {
   const [loading, setLoading] = useState(false);
+  const { message } = useSelector((state) => state.message);
   const account = useSelector((state) => state.auth);
   const { isLoggedIn } = account;
-  const { message } = useSelector((state) => state.message);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -47,7 +46,7 @@ const RestLogin = (props) => {
     setLoading(true);
     try {
       dispatch(login({ email, password, remember_me }));
-      if (isLoggedIn == false) {
+      if (message) {
         setLoading(false);
       }
     } catch (err) {
