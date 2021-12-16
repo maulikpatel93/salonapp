@@ -17,6 +17,10 @@ import { clearMessage } from "../../store/slices/message";
 
 const RestLogin = (props) => {
   const [loading, setLoading] = useState(false);
+  const account = useSelector((state) => state.auth);
+  const { isLoggedIn } = account;
+  const { message } = useSelector((state) => state.message);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -43,6 +47,9 @@ const RestLogin = (props) => {
     setLoading(true);
     try {
       dispatch(login({ email, password, remember_me }));
+      if (isLoggedIn == false) {
+        setLoading(false);
+      }
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -58,6 +65,13 @@ const RestLogin = (props) => {
           </div>
           <FloatLabelInputField name="email" type="text" placeholder="" label={t("email")} controlId="login-email" />
           <FloatLabelInputField name="password" type="password" placeholder="" autoComplete="off" label={t("password")} controlId="login-password" />
+          
+          {message && (
+              <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                {message}
+                <button type="button" className="btn-close" onClick={() => dispatch(clearMessage())} data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+          )}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <div className="form-check mb-0">
               <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3" />

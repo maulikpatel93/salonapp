@@ -2,6 +2,7 @@ import axios from "axios";
 import { store } from "../store";
 import config from "../config";
 import authHeader from "./auth-header";
+import { setMessage } from "../store/slices/message";
 
 const API_URL = config.API_URL;
 
@@ -53,22 +54,19 @@ const logout = () => {
 const getUser = (authenticate) => {
   const token = authenticate.token;
   const auth_key = authenticate.auth_key;
+  const action = "afterlogin/user";
   return axios
     .post(
-      API_URL + "afterlogin/user",
+      API_URL + action,
       {
-        action: "user",
+        action: "afterlogin/user",
         auth_key,
       },
-      { headers: authHeader(token) },
+      { headers: authHeader({token:token}) },
     )
     .then((response) => {
       if (response.status == 200) {
-        if (response.data.status == 200) {
-          return response.data.data;
-        } else {
-          return response.data.message;
-        }
+        return response.data;
       }
     });
 };

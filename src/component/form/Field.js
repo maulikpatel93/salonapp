@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useField } from "formik";
+import { useField, useFormikContext } from "formik";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -87,37 +87,59 @@ const SwitchField = ({ label, controlId, ...props }) => {
 const FileInputField = ({ label, controlId, page, ...props }) => {
   const { t } = useTranslation();
   const [field, meta] = useField(props);
+  const { setFieldValue, values } = useFormikContext();
   const [selectedImage, setSelectedImage] = useState("");
   // This function will be triggered when the file field change
   const imageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedImage(e.target.files[0]);
+      setFieldValue(props.name, e.target.files[0]);
     }
+    e.target.value = null;
   };
-
+  field.onChange = imageChange;
   // This function will be triggered when the "Remove This Image" button is clicked
   const removeSelectedImage = () => {
-    setSelectedImage('');
+    setSelectedImage("");
   };
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>
-        <div className="insert-photo d-flex flex-column justify-content-center align-items-center ms-md-auto" >
-          <img src={selectedImage ? URL.createObjectURL(selectedImage) : config.imagepath + "addphoto-box.png"} alt="" className="mb-3"/>
-          <button type="button" className={selectedImage ? "d-none" : "btn btn-sm position-relative" }>
-            <Form.Control type="file" rows={3} {...field} {...props} isInvalid={!!meta.error} onChange={imageChange} />
+        <div className="insert-photo d-flex flex-column justify-content-center align-items-center ms-md-auto">
+          <img src={selectedImage ? URL.createObjectURL(selectedImage) : config.imagepath + "addphoto-box.png"} alt="" className="mb-3" />
+          <button type="button" className={selectedImage ? "d-none" : "btn btn-sm position-relative"}>
+            <Form.Control type="file" onChange={field.onChange} {...props} isInvalid={!!meta.error} />
             {label}
           </button>
-          <button type="button" className={selectedImage ? "btn btn-sm position-relative" : 'd-none' } onClick={removeSelectedImage}>
-            {t('remove')}
+          <button type="button" className={selectedImage ? "btn btn-sm position-relative" : "d-none"} onClick={removeSelectedImage}>
+            {t("remove")}
           </button>
-          <Form.Control.Feedback type="invalid" className={selectedImage ? "d-none" : "d-block" }>
+          <Form.Control.Feedback type="invalid" className={selectedImage ? "d-none" : "d-block"}>
             {meta.error}
           </Form.Control.Feedback>
         </div>
       </Form.Group>
     </>
   );
+    //Multiple Formik image
+   // validationSchema={Yup.object({
+  //profile:Yup.array().min(1,"select at least 1 file")
+  // })}
+  // let data = new FormData();
+  //       values.profile.forEach((photo, index) => {
+  //         data.append(`photo${index}`, values.profile[index]);
+  //       });
+  // <input
+  //   id="file"
+  //   name="profile"
+  //   type="file"
+  //   onChange={(event) => {
+  //     const files = event.target.files;
+  //     let myFiles = Array.from(files);
+  //     formik.setFieldValue("profile", myFiles);
+  //   }}
+  //   multiple
+  // />;
 };
 
 const ReactSelectField = ({ label, controlId, options, ...props }) => {
@@ -157,7 +179,6 @@ const MapAddressField = ({ label, controlId, ...props }) => {
     </>
   );
 };
-
 
 const DatePickerField = ({ label, controlId, ...props }) => {
   const [field, meta] = useField(props);

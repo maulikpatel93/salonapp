@@ -70,11 +70,9 @@ const ClientForm = (props) => {
 
 
   const handleClientSubmit = (values) => {
-    const formData = new FormData();
-    console.log(formData);
     setLoading(true);
     try {
-      dispatch(clientCreate(formData));
+      dispatch(clientCreate(values));
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -88,6 +86,7 @@ const ClientForm = (props) => {
   ];
 
   return (
+    <React.Fragment>
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleClientSubmit}>
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
         <Form>
@@ -129,7 +128,7 @@ const ClientForm = (props) => {
                     <MapAddressField name="address" label={t("address")} value={values.address} placeholder={t("typing_address")} controlId="clientForm-address" />
                   </div>
                   <div className="col-md-5 mb-md-0 mb-3">
-                    <FileInputField name="profile_photo" type="file" accept="image/*" label={t("profile_photo")} page="profile_photo" controlId="clientForm-profile_photo"/>
+                    <FileInputField name="profile_photo" accept="image/*" label={t("profile_photo")} page="profile_photo" controlId="clientForm-profile_photo"/>
                   </div>
                 </div>
                 <div className="row">
@@ -170,6 +169,7 @@ const ClientForm = (props) => {
         </Form>
       )}
     </Formik>
+    </React.Fragment>
   );
 };
 
