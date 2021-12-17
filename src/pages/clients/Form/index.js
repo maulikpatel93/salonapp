@@ -11,14 +11,17 @@ import { InputField, MapAddressField, ReactSelectField, TextareaField, SwitchFie
 
 import { clearMessage } from "../../../store/slices/message";
 import { closeclientform, clientCreate } from "../../../store/slices/clientSlice";
+import useScriptRef from '../../../hooks/useScriptRef';
+import useErrorsRef from '../../../hooks/useErrorsRef';
 
 const ClientForm = (props) => {
   const [loading, setLoading] = useState(false);
-  const { message } = useSelector((state) => state.message);
   const rightDrawerOpened = useSelector((state) => state.client.opened);
-
+  
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const scriptedRef = useScriptRef();
+  const serverErrors = useErrorsRef();
 
   const handleCloseClientForm = () => {
     dispatch(closeclientform());
@@ -72,20 +75,33 @@ const ClientForm = (props) => {
   });
   yupconfig();
   
-  const handleClientSubmit = (values) => {
-    
+  const handleClientSubmit = (values, { setErrors, setStatus, setSubmitting }) => {
     setLoading(true);
     try {
       dispatch(clientCreate(values));
-      
+      let errors = {};
+      if (serverErrors.current) {
+        for (let key in serverErrors.current) {
+          errors[key] = serverErrors.current[key][0]; // for now only take the first error of the array
+        }
+      }
+      console.log(serverErrors.current);
+      if (scriptedRef.current) {
+        setStatus({ success: true });
+        setSubmitting(false);
+        setErrors(errors);
+      }
     } catch (err) {
       console.error(err);
+      if (scriptedRef.current) {
+          setStatus({ success: false });
+          setErrors({ submit: err.message });
+          setSubmitting(false);
+      }
       setLoading(false);
     }
   };
-  if(message){
-    console.log(message);
-  }
+ 
   const genderOptions = [
     { value: "Male", label: t("male") },
     { value: "Female", label: t("female") },
@@ -96,7 +112,7 @@ const ClientForm = (props) => {
     <React.Fragment>
       <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleClientSubmit} >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-          <Form>
+         <form noValidate onSubmit={handleSubmit}>
             {/* {console.log(errors)} */}
             <div className={"drawer client-drawer " + rightDrawerOpened} id="addclient-drawer">
               <div className="drawer-wrp position-relative include-footer">
@@ -169,12 +185,12 @@ const ClientForm = (props) => {
                 </div>
                 <div className="drawer-footer">
                   <div className="col-md-7 pe-2">
-                    <input type="submit" className="btn w-100 btn-lg" value="Create Client" />
+                    <input type="submit" className="btn w-100 btn-lg" value="Create Client" disabled={isSubmitting}/>
                   </div>
                 </div>
               </div>
             </div>
-          </Form>
+            </form>
         )}
       </Formik>
     </React.Fragment>
