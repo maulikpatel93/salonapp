@@ -14,9 +14,10 @@ const store = configureStore({
   reducer:rootReducer,
   devTools: true,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-    }
+    // serializableCheck: {
+    //   ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+    // }
+    serializableCheck: false,
   }),
 });
 const persister = persistStore(store);

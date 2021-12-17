@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useField, useFormikContext } from "formik";
+import { useDispatch, useSelector } from "react-redux";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -8,6 +9,7 @@ import InputMask from "react-input-mask";
 import Select from "react-select";
 import Autocomplete from "react-google-autocomplete";
 import config from "../../config";
+import { selectImage, removeImage } from "../../store/slices/imageSlice";
 
 const FloatLabelInputField = ({ label, controlId, ...props }) => {
   const [field, meta] = useField(props);
@@ -86,13 +88,15 @@ const SwitchField = ({ label, controlId, ...props }) => {
 };
 const FileInputField = ({ label, controlId, page, ...props }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const [field, meta] = useField(props);
   const { setFieldValue, values } = useFormikContext();
-  const [selectedImage, setSelectedImage] = useState("");
+  // const [selectedImage, setSelectedImage] = useState("");
+  const selectedImage = useSelector((state) => state.selectedImage);
   // This function will be triggered when the file field change
   const imageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      setSelectedImage(e.target.files[0]);
+      dispatch(selectImage({ name: e.target.files[0].name, size: e.target.files[0].size, type: e.target.files[0].type, url: URL.createObjectURL(e.target.files[0]) }));
       setFieldValue(props.name, e.target.files[0]);
     }
     e.target.value = null;
@@ -121,8 +125,8 @@ const FileInputField = ({ label, controlId, page, ...props }) => {
       </Form.Group>
     </>
   );
-    //Multiple Formik image
-   // validationSchema={Yup.object({
+  //Multiple Formik image
+  // validationSchema={Yup.object({
   //profile:Yup.array().min(1,"select at least 1 file")
   // })}
   // let data = new FormData();

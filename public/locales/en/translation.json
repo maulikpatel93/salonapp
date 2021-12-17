@@ -72,5 +72,13 @@
     "male": "Male",
     "female": "Female",
     "other": "Other",
-    "notification": "Notification"
+    "notification": "Notification",
+    "success": "Success",
+    "error": "Error",
+    "created_successfully": "Created Successfully",
+    "updated_successfully": "Updated Successfully",
+    "saved_successfully": "Saved Successfully",
+    "deleted_successfully": "Deleted Successfully",
+    "submited_successfully": "Submited Successfully"
+
 }

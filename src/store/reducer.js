@@ -5,6 +5,7 @@ import storage from "redux-persist/lib/storage";
 import authReducer from "./slices/auth";
 import messageReducer from "./slices/message";
 import clientReducer from "../store/slices/clientSlice";
+import imageReducer from "../store/slices/imageSlice";
 //-----------------------|| COMBINE REDUCER ||-----------------------//
 
 const reducer = combineReducers({
@@ -20,6 +21,7 @@ const reducer = combineReducers({
   ),
   message: messageReducer,
   client: clientReducer,
+  image: imageReducer,
 });
 
 export default reducer;
