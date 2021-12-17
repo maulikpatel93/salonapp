@@ -32,6 +32,15 @@
     color: $gray-800;
 }
 
+.my-custom-react-select__menu {
+    z-index: 2;
+}
+
+.Select.is-open {
+    position: relative;
+    z-index: 1000;
+}
+
 .my-custom-react-select__control {
     border-width: 1px !important;
     border-color: #cbd5e0 !important;

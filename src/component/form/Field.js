@@ -91,8 +91,8 @@ const FileInputField = ({ label, controlId, page, ...props }) => {
   const dispatch = useDispatch();
   const [field, meta] = useField(props);
   const { setFieldValue, values } = useFormikContext();
-  // const [selectedImage, setSelectedImage] = useState("");
-  const selectedImage = useSelector((state) => state.selectedImage);
+  const image = useSelector((state) => state.image);
+  console.log(image);
   // This function will be triggered when the file field change
   const imageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -104,21 +104,21 @@ const FileInputField = ({ label, controlId, page, ...props }) => {
   field.onChange = imageChange;
   // This function will be triggered when the "Remove This Image" button is clicked
   const removeSelectedImage = () => {
-    setSelectedImage("");
+    dispatch(removeImage());
   };
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>
         <div className="insert-photo d-flex flex-column justify-content-center align-items-center ms-md-auto">
-          <img src={selectedImage ? URL.createObjectURL(selectedImage) : config.imagepath + "addphoto-box.png"} alt="" className="mb-3" />
-          <button type="button" className={selectedImage ? "d-none" : "btn btn-sm position-relative"}>
+          <img src={image && image.selected ? image.url : config.imagepath + "addphoto-box.png"} alt="" className="mb-3" />
+          <button type="button" className={image && image.selected ? "d-none" : "btn btn-sm position-relative"}>
             <Form.Control type="file" onChange={field.onChange} {...props} isInvalid={!!meta.error} />
             {label}
           </button>
-          <button type="button" className={selectedImage ? "btn btn-sm position-relative" : "d-none"} onClick={removeSelectedImage}>
+          <button type="button" className={image && image.selected ? "btn btn-sm position-relative" : "d-none"} onClick={removeSelectedImage}>
             {t("remove")}
           </button>
-          <Form.Control.Feedback type="invalid" className={selectedImage ? "d-none" : "d-block"}>
+          <Form.Control.Feedback type="invalid" className={image && image.selected ? "d-none" : "d-block"}>
             {meta.error}
           </Form.Control.Feedback>
         </div>
@@ -154,11 +154,16 @@ const ReactSelectField = ({ label, controlId, options, ...props }) => {
     setValueState(event);
   };
 
+  const customStyles = {
+    menuPortal: provided => ({ ...provided, zIndex: 3 }),
+    menu: provided => ({ ...provided, zIndex: 3 })
+  }
+
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>
         <Form.Label>{label}</Form.Label>
-        <Select {...field} {...props} isInvalid={!!meta.error} className={meta.touched && meta.error ? "is-invalid" : ""} isClearable={true} onChange={handler} options={options} onBlur={() => helpers.setTouched(true)} classNamePrefix={"my-custom-react-select"} />
+        <Select {...field} {...props} isInvalid={!!meta.error} className={meta.touched && meta.error ? "is-invalid" : ""} isClearable={true} onChange={handler} options={options} onBlur={() => helpers.setTouched(true)} classNamePrefix={"my-custom-react-select"} styles={customStyles}/>
         <Form.Control.Feedback type="invalid">{meta.error}</Form.Control.Feedback>
       </Form.Group>
     </>

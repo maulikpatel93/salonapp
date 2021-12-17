@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   selected: 0,
-  imageName: "",
-  imageSize: "",
-  imageType: "",
-  imageUrl: "",
+  name: "",
+  size: "",
+  type: "",
+  url: "",
 };
 
 export const imageSlice = createSlice({
@@ -14,17 +14,17 @@ export const imageSlice = createSlice({
   reducers: {
     selectImage: (state, action) => {
       state.selected = 1;
-      state.imageName = action.payload.name;
-      state.imageSize = action.payload.size;
-      state.imageType = action.payload.type;
-      state.imageUrl = action.payload.url;
+      state.name = action.payload.name;
+      state.size = action.payload.size;
+      state.type = action.payload.type;
+      state.url = action.payload.url;
     },
     removeImage: (state) => {
       state.selected = 0;
-      state.imageName = "";
-      state.imageSize = "";
-      state.imageType = "";
-      state.imageUrl = "";
+      state.name = "";
+      state.size = "";
+      state.type = "";
+      state.url = "";
     },
   },
 });

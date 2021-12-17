@@ -12,6 +12,7 @@ import { sweatalert } from "../../../component/Sweatalert2";
 
 import { clearMessage } from "../../../store/slices/message";
 import { closeclientform, clientCreate } from "../../../store/slices/clientSlice";
+import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
 import useErrorsRef from "../../../hooks/useErrorsRef";
 
@@ -94,6 +95,7 @@ const ClientForm = (props) => {
             setStatus(status);
             showFormModal(status);
             resetForm();
+            dispatch(removeImage());
           }
           setSubmitting(false);
           setLoading(false);
@@ -107,7 +109,6 @@ const ClientForm = (props) => {
       setLoading(false);
     }
   };
-
   const genderOptions = [
     { value: "Male", label: t("male") },
     { value: "Female", label: t("female") },
