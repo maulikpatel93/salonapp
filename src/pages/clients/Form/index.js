@@ -109,6 +109,7 @@ const ClientForm = (props) => {
       setLoading(false);
     }
   };
+  
   const genderOptions = [
     { value: "Male", label: t("male") },
     { value: "Female", label: t("female") },
