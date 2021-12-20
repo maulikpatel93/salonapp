@@ -79,6 +79,12 @@
     "updated_successfully": "Updated Successfully",
     "saved_successfully": "Saved Successfully",
     "deleted_successfully": "Deleted Successfully",
-    "submited_successfully": "Submited Successfully"
-
+    "submited_successfully": "Submited Successfully",
+    "all": "All",
+    "display_as": "Display as",
+    "new_client": "New Client",
+    "add_new": "Add New",
+    "edit": "Edit",
+    "sms": "SMS",
+    "delete": "Delete"
 }

@@ -92,7 +92,6 @@ const FileInputField = ({ label, controlId, page, ...props }) => {
   const [field, meta] = useField(props);
   const { setFieldValue, values } = useFormikContext();
   const image = useSelector((state) => state.image);
-  console.log(image);
   // This function will be triggered when the file field change
   const imageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
