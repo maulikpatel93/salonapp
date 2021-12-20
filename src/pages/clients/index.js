@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 
 import config from "../../config";
 import ClientForm from "./Form";
-import ClientList from "./List";
+import ClientGridView from "./List/gridview";
+import ClientListView from "./List/listview";
 import { openclientform, clientView } from "../../store/slices/clientSlice";
 
 const Clients = () => {
@@ -141,7 +142,7 @@ const Clients = () => {
                   <h5 className="mb-0 fw-normal">William Wella</h5>
                 </div>
               </a> */}
-              <ClientList />
+              <ClientGridView />
             </div>
           </div>
           <div className="tab-pane" id="listview">
@@ -168,154 +169,7 @@ const Clients = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="pe-0" width="60px">
-                      <div className="user-initial">jd</div>
-                    </td>
-                    <td>Doe</td>
-                    <td>John</td>
-                    <td>0400 000 000</td>
-                    <td>
-                      <Link to="mailto:email@gmail.com">email@gmail.com</Link>
-                    </td>
-                    <td className="ps-0 text-end" width="60px">
-                      <div className="dropdown d-inline-block setting-dropdown">
-                        <button className="dropdown-toggle dropdown-toggle-icon-none" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
-                          <i className="far fa-ellipsis-v"></i>
-                        </button>
-                        <div className="dropdown-menu dropdown-box dropdown-menu-end" aria-labelledby="dropdownMenuButton1" data-popper-placement="bottom-end">
-                          <ul className="p-0 m-0 list-unstyled">
-                            <li>
-                              <a className="d-flex align-items-center edit-service cursor-pointer">
-                                <img src={config.imagepath + "edit.png"} className="me-3" alt="" />
-                                Edit
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="pe-0" width="60px">
-                      <div className="user">
-                        <img src={config.imagepath + "Avatar.png"} alt="" />
-                      </div>
-                    </td>
-                    <td>Doe</td>
-                    <td>John</td>
-                    <td>0400 000 000</td>
-                    <td>
-                      <Link to="mailto:email@gmail.com">email@gmail.com</Link>
-                    </td>
-                    <td className="ps-0 text-end" width="60px">
-                      <div className="dropdown d-inline-block setting-dropdown">
-                        <button className="dropdown-toggle dropdown-toggle-icon-none" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
-                          <i className="far fa-ellipsis-v"></i>
-                        </button>
-                        <div className="dropdown-menu dropdown-box dropdown-menu-end" aria-labelledby="dropdownMenuButton1" data-popper-placement="bottom-end">
-                          <ul className="p-0 m-0 list-unstyled">
-                            <li>
-                              <a className="d-flex align-items-center edit-service cursor-pointer">
-                                <img src={config.imagepath + "edit.png"} className="me-3" alt="" />
-                                Edit
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="pe-0" width="60px">
-                      <div className="user">
-                        <img src={config.imagepath + "Avatar.png"} alt="" />
-                      </div>
-                    </td>
-                    <td>Doe</td>
-                    <td>John</td>
-                    <td>0400 000 000</td>
-                    <td>
-                      <Link to="mailto:email@gmail.com">email@gmail.com</Link>
-                    </td>
-                    <td className="ps-0 text-end" width="60px">
-                      <div className="dropdown d-inline-block setting-dropdown">
-                        <button className="dropdown-toggle dropdown-toggle-icon-none" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
-                          <i className="far fa-ellipsis-v"></i>
-                        </button>
-                        <div className="dropdown-menu dropdown-box dropdown-menu-end" aria-labelledby="dropdownMenuButton1" data-popper-placement="bottom-end">
-                          <ul className="p-0 m-0 list-unstyled">
-                            <li>
-                              <a className="d-flex align-items-center edit-service cursor-pointer">
-                                <img src={config.imagepath + "edit.png"} className="me-3" alt="" />
-                                Edit
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="pe-0" width="60px">
-                      <div className="user">
-                        <img src={config.imagepath + "Avatar.png"} alt="" />
-                      </div>
-                    </td>
-                    <td>Doe</td>
-                    <td>John</td>
-                    <td>0400 000 000</td>
-                    <td>
-                      <Link to="mailto:email@gmail.com">email@gmail.com</Link>
-                    </td>
-                    <td className="ps-0 text-end" width="60px">
-                      <div className="dropdown d-inline-block setting-dropdown">
-                        <button className="dropdown-toggle dropdown-toggle-icon-none" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
-                          <i className="far fa-ellipsis-v"></i>
-                        </button>
-                        <div className="dropdown-menu dropdown-box dropdown-menu-end" aria-labelledby="dropdownMenuButton1" data-popper-placement="bottom-end">
-                          <ul className="p-0 m-0 list-unstyled">
-                            <li>
-                              <a className="d-flex align-items-center edit-service cursor-pointer">
-                                <img src={config.imagepath + "edit.png"} className="me-3" alt="" />
-                                Edit
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="pe-0" width="60px">
-                      <div className="user">
-                        <img src={config.imagepath + "Avatar.png"} alt="" />
-                      </div>
-                    </td>
-                    <td>Doe</td>
-                    <td>John</td>
-                    <td>0400 000 000</td>
-                    <td>
-                      <Link to="mailto:email@gmail.com">email@gmail.com</Link>
-                    </td>
-                    <td className="ps-0 text-end" width="60px">
-                      <div className="dropdown d-inline-block setting-dropdown">
-                        <button className="dropdown-toggle dropdown-toggle-icon-none" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
-                          <i className="far fa-ellipsis-v"></i>
-                        </button>
-                        <div className="dropdown-menu dropdown-box dropdown-menu-end" aria-labelledby="dropdownMenuButton1" data-popper-placement="bottom-end">
-                          <ul className="p-0 m-0 list-unstyled">
-                            <li>
-                              <a className="d-flex align-items-center edit-service cursor-pointer cursor-pointer">
-                                <img src={config.imagepath + "edit.png"} className="me-3" alt="" />
-                                Edit
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
+                  <ClientListView />
                 </tbody>
               </table>
             </div>

@@ -4,7 +4,7 @@ import { setMessage } from "./message";
 
 const initialState = {
   opened: "",
-  view:"",
+  view:[],
   deleted:false,
 };
 
@@ -61,22 +61,20 @@ export const clientSlice = createSlice({
     [clientCreate.fulfilled]: (state, action) => {},
     [clientCreate.rejected]: (state, action) => {},
     [clientView.pending]: (state, action) => {
-      state.view = "";
+      state.view = [];
     },
     [clientView.fulfilled]: (state, action) => {
       state.view = action.payload;
     },
     [clientView.rejected]: (state, action) => {
-      state.view = "";
+      state.view = [];
     },
     [clientDelete.pending]: (state, action) => {
       state.deleted = false;
     },
     [clientDelete.fulfilled]: (state, action) => {
       const { id } = action.payload; 
-      console.log(id);
-      state.view = state.view.filter(item => item.id !== id);
-      // // state.deleted = true;
+      state.view = state.view.filter(item => item.id != id);
     },
     [clientDelete.rejected]: (state, action) => {
       state.deleted = false;

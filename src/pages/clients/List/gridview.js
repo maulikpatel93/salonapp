@@ -9,7 +9,7 @@ import { clientDelete } from "../../../store/slices/clientSlice";
 // import InfiniteScroll from "react-infinite-scroll-component";
 // import ReactPaginate from 'react-paginate';
 
-const ClientList = (props) => {
+const ClientGridView = (props) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const auth = useSelector((state) => state.auth);
@@ -32,6 +32,7 @@ const ClientList = (props) => {
         let first_name = objectData[item].first_name;
         let last_name = objectData[item].last_name;
         let mobile = objectData[item].mobile;
+        let profile_photo = objectData[item].profile_photo;
         return (
           <div className="box-image-cover" key={i}>
             <div className="dropdown d-inline-block setting-dropdown">
@@ -67,8 +68,11 @@ const ClientList = (props) => {
                 </ul>
               </div>
             </div>
+            <div class="tabs-image user-initial mx-auto">
+                {first_name.charAt(0)+''+last_name.charAt(0)}
+            </div>
             <div className="tabs-image">
-              <img src={config.imagepath + "user-big.png"} alt="" />
+              
             </div>
             <div className="image-content">
               <h5 className="fw-semibold mb-1">{mobile}</h5>
@@ -81,4 +85,4 @@ const ClientList = (props) => {
   );
 };
 
-export default ClientList;
+export default ClientGridView;
