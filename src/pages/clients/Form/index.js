@@ -11,7 +11,7 @@ import { InputField, MapAddressField, ReactSelectField, TextareaField, SwitchFie
 import { sweatalert } from "../../../component/Sweatalert2";
 
 import { clearMessage } from "../../../store/slices/message";
-import { closeclientform, clientCreate } from "../../../store/slices/clientSlice";
+import { closeclientform, clientCreate, clientView } from "../../../store/slices/clientSlice";
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
 import useErrorsRef from "../../../hooks/useErrorsRef";
@@ -57,7 +57,7 @@ const ClientForm = (props) => {
     first_name: Yup.string().max(50).label(t("first_name")).required(),
     last_name: Yup.string().max(50).label(t("last_name")).required(),
     profile_photo: Yup.string().label(t("profile_photo")).required(),
-    email: Yup.string().max(100).label(t("email")).required(),
+    email: Yup.string().max(100).email().label(t("email")).required(),
     phone_number: Yup.string().matches(config.phone_number_pattern, t(config.phone_number_334_error)).label(t("phone_number")).required(),
     date_of_birth: Yup.string().label(t("date_of_birth")).required(),
     gender: Yup.object()
@@ -120,6 +120,7 @@ const ClientForm = (props) => {
     if (status.success) {
       sweatalert({ title: t("success"), message: t("created_successfully"), icon: "success" });
       handleCloseClientForm();
+      dispatch(clientView());
     } else {
       sweatalert({ title: t("error"), message: t("failed"), icon: "error" });
     }

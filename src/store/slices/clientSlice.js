@@ -4,7 +4,8 @@ import { setMessage } from "./message";
 
 const initialState = {
   opened: "",
-  view:""
+  view:"",
+  deleted:false,
 };
 
 export const clientCreate = createAsyncThunk("client/create", async (formValues, thunkAPI) => {
@@ -23,6 +24,18 @@ export const clientCreate = createAsyncThunk("client/create", async (formValues,
 export const clientView = createAsyncThunk("client/view", async (formValues, thunkAPI) => {
   try {
     const resposedata = await clientApiController.view(formValues, thunkAPI);
+    return resposedata;
+  } catch (error) {
+    console.log(error);
+    const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    thunkAPI.dispatch(setMessage(message));
+    return thunkAPI.rejectWithValue();
+  }
+});
+
+export const clientDelete = createAsyncThunk("client/delete", async (formValues, thunkAPI) => {
+  try {
+    const resposedata = await clientApiController.deleted(formValues, thunkAPI);
     return resposedata;
   } catch (error) {
     console.log(error);
@@ -55,6 +68,18 @@ export const clientSlice = createSlice({
     },
     [clientView.rejected]: (state, action) => {
       state.view = "";
+    },
+    [clientDelete.pending]: (state, action) => {
+      state.deleted = false;
+    },
+    [clientDelete.fulfilled]: (state, action) => {
+      const { id } = action.payload; 
+      console.log(id);
+      state.view = state.view.filter(item => item.id !== id);
+      // // state.deleted = true;
+    },
+    [clientDelete.rejected]: (state, action) => {
+      state.deleted = false;
     },
   },
 });

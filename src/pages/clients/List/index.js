@@ -3,7 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useTranslation } from "react-i18next";
 import config from "../../../config";
-import { ucfirst } from '../../../helpers/functions';
+import { ucfirst } from "../../../helpers/functions";
+import { swalConfirm } from "../../../component/Sweatalert2";
+import { clientDelete } from "../../../store/slices/clientSlice";
+// import InfiniteScroll from "react-infinite-scroll-component";
+// import ReactPaginate from 'react-paginate';
 
 const ClientList = (props) => {
   const dispatch = useDispatch();
@@ -13,11 +17,20 @@ const ClientList = (props) => {
   const view = useSelector((state) => state.client.view);
 
   const objectData = view && view.data ? view.data : view;
+
+  const handleClientDelete = (e) => {
+    const props = JSON.parse(e.currentTarget.dataset.obj);
+    const name = ucfirst(props.first_name + " " + props.last_name);
+    let confirmbtn = swalConfirm(e.currentTarget, { title: t("are_you_sure_delete_client"), message: name, confirmButtonText: t("yes_delete_it") });
+    if (confirmbtn == true) {
+      dispatch(clientDelete({ id: props.id }));
+    }
+  };
   return (
     <>
       {Object.keys(objectData).map((item, i) => {
-        let firstName = objectData[item].first_name;
-        let lastName = objectData[item].last_name;
+        let first_name = objectData[item].first_name;
+        let last_name = objectData[item].last_name;
         let mobile = objectData[item].mobile;
         return (
           <div className="box-image-cover" key={i}>
@@ -30,19 +43,25 @@ const ClientList = (props) => {
                   <li>
                     <a className="d-flex align-items-center cursor-pointer">
                       <img src={config.imagepath + "edit.png"} className="me-3" alt="" />
-                      Edit
+                      {t("edit")}
                     </a>
                   </li>
                   <li>
                     <a className="d-flex align-items-center cursor-pointer">
                       <img src={config.imagepath + "sms.png"} className="me-3" alt="" />
-                      SMS
+                      {t("sms")}
                     </a>
                   </li>
                   <li>
                     <a className="d-flex align-items-center cursor-pointer">
                       <img src={config.imagepath + "email.png"} className="me-3" alt="" />
-                      Email
+                      {t("email")}
+                    </a>
+                  </li>
+                  <li>
+                    <a className="d-flex align-items-center cursor-pointer" data-obj={JSON.stringify(objectData[item])} onClick={handleClientDelete}>
+                      <i className="far fa-trash me-3"></i>
+                      {t("delete")}
                     </a>
                   </li>
                 </ul>
@@ -53,10 +72,10 @@ const ClientList = (props) => {
             </div>
             <div className="image-content">
               <h5 className="fw-semibold mb-1">{mobile}</h5>
-              <h5 className="mb-0 fw-normal">{ucfirst(firstName+' '+lastName)}</h5>
+              <h5 className="mb-0 fw-normal">{ucfirst(first_name + " " + last_name)}</h5>
             </div>
           </div>
-        )
+        );
       })}
     </>
   );

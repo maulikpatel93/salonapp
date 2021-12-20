@@ -41,14 +41,13 @@ const create = (values, thunkAPI) => {
 const view = (values, thunkAPI) => {
   const auth = store.getState().auth;
   const auth_key = auth.user.auth_key;
-  const page = values && values.page ? '?page='+values.page : '';
-  const action = "afterlogin/client/view"+page;
+  const action = values && values.nextPage ? values.nextPage : "afterlogin/client/view";
   const data = {
     auth_key:auth_key,
     action:action,
     role_id:6,
     salon_id:auth.user.salon_id,
-    pagination:true, //true or false
+    pagination:false, //true or false
     // id:1,
     field:"first_name,last_name,email", // first_name,last_name,email
     salon_field:false //business_name,owner_name
@@ -58,7 +57,29 @@ const view = (values, thunkAPI) => {
     .then((response) => {
       if (response.status == 200) {
         thunkAPI.dispatch(clearMessage());
-        console.log(response.data);
+        return response.data;
+      }
+    })
+    .catch((error) => {
+      const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    });
+};
+
+const deleted = (values, thunkAPI) => {
+  const auth = store.getState().auth;
+  const auth_key = auth.user.auth_key;
+  const action = `afterlogin/client/delete/${values.id}`;
+  const data = {
+    auth_key:auth_key,
+    action:action
+  }
+  return axios
+    .post(API_URL + action, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status == 200) {
+        thunkAPI.dispatch(clearMessage());
         return response.data;
       }
     })
@@ -71,6 +92,7 @@ const view = (values, thunkAPI) => {
 
 const clientApiController = {
   create,
-  view
+  view,
+  deleted
 };
 export default clientApiController;
