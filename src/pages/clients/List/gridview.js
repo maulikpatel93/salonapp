@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import config from "../../../config";
 import { ucfirst } from "../../../helpers/functions";
 import { swalConfirm } from "../../../component/Sweatalert2";
-import { clientDelete, openclientDetail } from "../../../store/slices/clientSlice";
+import { clientDelete, openclientDetail, clientDetail } from "../../../store/slices/clientSlice";
 // import InfiniteScroll from "react-infinite-scroll-component";
 // import ReactPaginate from 'react-paginate';
 
@@ -25,17 +25,19 @@ const ClientGridView = (props) => {
       dispatch(clientDelete({ id: props.id }));
     }
   };
-  const handleClientDetail = () => {
+  const handleClientDetail = (e) => {
+    const id = e.currentTarget.dataset.id;
     dispatch(openclientDetail());
+    dispatch(clientDetail({ id }));
   };
   return (
     <>
       {Object.keys(objectData).map((item, i) => {
+        let id = objectData[item].id;
         let first_name = objectData[item].first_name;
         let last_name = objectData[item].last_name;
         let phone_number = objectData[item].phone_number;
         let profile_photo_url = objectData[item].profile_photo_url;
-        console.log(objectData[item]);
         return (
           <div className="box-image-cover" key={i}>
             <div className="dropdown d-inline-block setting-dropdown">
@@ -71,7 +73,7 @@ const ClientGridView = (props) => {
                 </ul>
               </div>
             </div>
-            <a className="client-detail cursor-pointer" onClick={handleClientDetail}>
+            <a className="client-detail cursor-pointer" data-id={id} onClick={handleClientDetail}>
               {profile_photo_url ? (
                 <div className="tabs-image">
                   <img src={profile_photo_url} alt="" className="rounded-circle wh-118" />

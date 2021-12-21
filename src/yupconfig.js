@@ -16,7 +16,7 @@ const YupLocale = () => {
         length: t("mixed.string.length"),
         min: t("mixed.string.min"),
         max: t("mixed.string.max"),
-        matches: t('mixed.string.matches"'),
+        matches: t('mixed.string.matches'),
         email: t("mixed.string.email"),
         url: t("mixed.string.url"),
         uuid: t("mixed.string.uuid"),

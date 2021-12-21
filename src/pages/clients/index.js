@@ -8,6 +8,7 @@ import ClientForm from "./Form";
 import ClientDetail from "./Detail";
 import ClientGridView from "./List/gridview";
 import ClientListView from "./List/listview";
+import { clearMessage } from "../../store/slices/message";
 import { openclientform, clientView, tabListView, tabGridView } from "../../store/slices/clientSlice";
 
 const Clients = () => {
@@ -21,9 +22,7 @@ const Clients = () => {
   const handleOpenClientForm = () => {
     dispatch(openclientform());
   };
-  // useEffect(() => {
-  //   dispatch(clientView());
-  // }, [dispatch]);
+
   return (
     <>
       <div className="page-content bg-pink service">
@@ -175,8 +174,8 @@ const Clients = () => {
             </div>
           </div>
         </div>
-        <ClientForm currentUser={currentUser}/>
-        <ClientDetail currentUser={currentUser}/>
+        <ClientForm />
+        <ClientDetail />
       </div>
     </>
   );

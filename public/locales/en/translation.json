@@ -91,5 +91,20 @@
     "confirmation_delete_text": "You won't be able to revert this!",
     "are_you_sure": "Are you sure?",
     "are_you_sure_delete_client": "Are you sure want to delete this client?",
-    "yes_delete_it": "Yes, delete it!"
+    "yes_delete_it": "Yes, delete it!",
+    "appointments": "Appointments",
+    "appointment": "Appointment",
+    "edit_client": "Edit Client",
+    "vouchers": "Vouchers",
+    "sell_gift_voucher": "Sell Gift Voucher",
+    "subscriptions": "Subscriptions",
+    "memberships": "Memberships",
+    "photos": "Photos",
+    "invoices": "Invoices",
+    "print_statement": "Print Statement",
+    "documents": "Documents",
+    "notes": "Notes",
+    "search": "Search",
+    "client_details": "Client Details",
+    "client_notes": "Client Notes"
 }

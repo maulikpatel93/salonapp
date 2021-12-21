@@ -19,7 +19,8 @@ import useErrorsRef from "../../../hooks/useErrorsRef";
 const ClientForm = (props) => {
   const [loading, setLoading] = useState(false);
   const rightDrawerOpened = useSelector((state) => state.client.opened);
-  const currentUser = props.currentUser;
+  const auth = useSelector((state) => state.auth);
+  const currentUser = auth.user;
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -64,6 +65,7 @@ const ClientForm = (props) => {
         value: Yup.string(),
         label: Yup.string(),
       })
+      .label(t("gender"))
       .required()
       .nullable(),
     address: Yup.string().label(t("address")).required(),

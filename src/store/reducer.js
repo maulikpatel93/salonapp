@@ -11,7 +11,7 @@ const rootPersistConfig = {
   key: "root",
   timeout: 500,
   storage,
-  blacklist: ["message", "image", "auth",'client']
+  // blacklist: ["message", "image", 'client']
 };
 
 const reducer = combineReducers({
@@ -39,4 +39,4 @@ const reducer = combineReducers({
   image: imageReducer,
 });
 
-export default persistReducer(rootPersistConfig, reducer);
+export default reducer;
