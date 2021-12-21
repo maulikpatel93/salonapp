@@ -49,7 +49,7 @@ const view = (values, thunkAPI) => {
     salon_id:auth.user.salon_id,
     pagination:false, //true or false
     // id:1,
-    field:"first_name,last_name,email,profile_photo", // first_name,last_name,email
+    field:"first_name,last_name,email,profile_photo,phone_number", // first_name,last_name,email
     salon_field:false //business_name,owner_name
   }
   return axios

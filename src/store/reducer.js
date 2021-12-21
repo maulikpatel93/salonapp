@@ -7,6 +7,12 @@ import messageReducer from "./slices/message";
 import clientReducer from "../store/slices/clientSlice";
 import imageReducer from "../store/slices/imageSlice";
 //-----------------------|| COMBINE REDUCER ||-----------------------//
+const rootPersistConfig = {
+  key: "root",
+  timeout: 500,
+  storage,
+  blacklist: ["message", "image", "auth",'client']
+};
 
 const reducer = combineReducers({
   auth: persistReducer(
@@ -15,13 +21,22 @@ const reducer = combineReducers({
       storage,
       keyPrefix: "salon-",
       debug: false,
-      timeout: 20000
+      timeout: 20000,
     },
     authReducer,
   ),
   message: messageReducer,
-  client: clientReducer,
+  client: persistReducer(
+    {
+      key: "client",
+      storage,
+      keyPrefix: "salon-",
+      debug: false,
+      timeout: 20000,
+    },
+    clientReducer,
+  ),
   image: imageReducer,
 });
 
-export default reducer;
+export default persistReducer(rootPersistConfig, reducer);

@@ -6,6 +6,7 @@ const initialState = {
   opened: "",
   view:[],
   deleted:false,
+  tabview:'grid'
 };
 
 export const clientCreate = createAsyncThunk("client/create", async (formValues, thunkAPI) => {
@@ -49,11 +50,18 @@ export const clientSlice = createSlice({
   name: "client",
   initialState,
   reducers: {
+    reset: () => initialState,
     openclientform: (state = initialState) => {
       state.opened = "open";
     },
     closeclientform: (state = initialState) => {
       state.opened = "";
+    },
+    tabListView: (state) => {
+      state.tabview = "list";
+    },
+    tabGridView: (state) => {
+      state.tabview = "grid";
     },
   },
   extraReducers: {
@@ -83,6 +91,6 @@ export const clientSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { openclientform, closeclientform } = clientSlice.actions;
+export const { openclientform, closeclientform, tabListView, tabGridView } = clientSlice.actions;
 export const isOpenClientForm = (state) => state.isOpen;
 export default clientSlice.reducer;

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { useTranslation } from "react-i18next";
 import config from "../../../config";
@@ -13,9 +13,8 @@ import { clientDelete } from "../../../store/slices/clientSlice";
 const ClientListView = (props) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const auth = useSelector((state) => state.auth);
-  const currentUser = auth.user;
-  const view = useSelector((state) => state.client.view);
+  const currentUser = props.currentUser;
+  const view = props.view;
 
   const objectData = view && view.data ? view.data : view;
 
@@ -32,15 +31,21 @@ const ClientListView = (props) => {
       {Object.keys(objectData).map((item, i) => {
         let first_name = objectData[item].first_name;
         let last_name = objectData[item].last_name;
-        let mobile = objectData[item].mobile;
+        let phone_number = objectData[item].phone_number;
+        let profile_photo_url = objectData[item].profile_photo_url;
         return (
           <tr key={i}>
             <td className="pe-0" width="60px">
-              <div className="user-initial">jd</div>
+            {profile_photo_url
+              ? (
+                  <div className="user">
+                    <img src={profile_photo_url} alt="" className="rounded-circle wh-40"/>
+                  </div>
+                )
+              : (<div className="user-initial">{first_name.charAt(0) + "" + last_name.charAt(0)}</div>)}
             </td>
-            <td>Doe</td>
-            <td>John</td>
-            <td>0400 000 000</td>
+            <td>{ucfirst(first_name + " " + last_name)}</td>
+            <td>{phone_number}</td>
             <td>
               <Link to="mailto:email@gmail.com">email@gmail.com</Link>
             </td>

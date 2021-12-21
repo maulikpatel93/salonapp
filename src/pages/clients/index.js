@@ -7,18 +7,22 @@ import config from "../../config";
 import ClientForm from "./Form";
 import ClientGridView from "./List/gridview";
 import ClientListView from "./List/listview";
-import { openclientform, clientView } from "../../store/slices/clientSlice";
+import { openclientform, clientView, tabListView, tabGridView } from "../../store/slices/clientSlice";
 
 const Clients = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const currentUser = auth.user;
+  const view = useSelector((state) => state.client.view);
+  const tabview = useSelector((state) => state.client.tabview);
+
   const handleOpenClientForm = () => {
     dispatch(openclientform());
   };
-
-  useEffect(() => {
-    dispatch(clientView());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(clientView());
+  // }, [dispatch]);
   return (
     <>
       <div className="page-content bg-pink service">
@@ -86,12 +90,12 @@ const Clients = () => {
             <span className="list-view-lable me-1">{t("display_as")}</span>
             <ul className="nav nav-tabs mb-0 d-inline-block list-view-tab border-0 me-xl-3" role="tablist">
               <li className="nav-item d-inline-block">
-                <a className="nav-link active border-0 cursor-pointer" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">
+                <a className={tabview && tabview == 'grid' ? 'active' : '' + "nav-link border-0 cursor-pointer"} id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true" onClick={() => dispatch(tabGridView())}>
                   <img src={config.imagepath + "block-view.png"} alt="" />
                 </a>
               </li>
               <li className="nav-item d-inline-block">
-                <a className="nav-link border-0 cursor-pointer" id="listview-tab" data-bs-toggle="tab" data-bs-target="#listview" type="button" role="tab" aria-controls="listview" aria-selected="true">
+                <a className={tabview && tabview == 'list' ? 'active' : '' + "nav-link border-0 cursor-pointer"} id="listview-tab" data-bs-toggle="tab" data-bs-target="#listview" type="button" role="tab" aria-controls="listview" aria-selected="true" onClick={() => dispatch(tabListView())}>
                   <img src={config.imagepath + "list-view.png"} alt="" />
                 </a>
               </li>
@@ -123,7 +127,7 @@ const Clients = () => {
           </div>
         </div>
         <div className="tab-content list-view-content">
-          <div className="tab-pane show active" id="all">
+          <div className={tabview && tabview == 'grid' ? 'active' : '' + "tab-pane"} id="all">
             <div className="row">
               <a className="box-image-cover cursor-pointer" onClick={handleOpenClientForm}>
                 <div className="tabs-image">
@@ -142,23 +146,18 @@ const Clients = () => {
                   <h5 className="mb-0 fw-normal">William Wella</h5>
                 </div>
               </a> */}
-              <ClientGridView />
+              <ClientGridView currentUser={currentUser} view={view}/>
             </div>
           </div>
-          <div className="tab-pane" id="listview">
+          <div className={tabview && tabview == 'list' ? 'active' : '' + "tab-pane"} id="listview">
             <div className="table-responsive bg-white">
               <table className="table mb-0">
                 <thead>
                   <tr>
-                    <th colSpan="2">
-                      Last Name{" "}
-                      <span className="down-up-arrow">
-                        <i className="fal fa-angle-up"></i>
-                        <i className="fal fa-angle-down"></i>
-                      </span>
+                    <th>
                     </th>
                     <th>
-                      First Name
+                      {t('name')}
                       <span className="down-up-arrow">
                         <i className="fal fa-angle-up"></i>
                         <i className="fal fa-angle-down"></i>
@@ -169,7 +168,7 @@ const Clients = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <ClientListView />
+                  <ClientListView currentUser={currentUser} view={view}/>
                 </tbody>
               </table>
             </div>

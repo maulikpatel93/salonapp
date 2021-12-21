@@ -17,7 +17,7 @@ const ProfileSection = () => {
     <>
       <div className="dropdown">
         <Link to="#" className="position-relative user-profile-icon ms-lg-4 ms-2 " id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src={config.imagepath + "Avatar.png"} alt="" />
+          <img src={currentUser && currentUser.profile_photo_url ? currentUser.profile_photo_url : config.imagepath + "Avatar.png"} alt="" />
           <span className="user-status online"></span>
         </Link>
         <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">

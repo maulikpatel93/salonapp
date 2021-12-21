@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+// import React from "react";
+import { useDispatch } from "react-redux";
 
 import { useTranslation } from "react-i18next";
 import config from "../../../config";
@@ -12,9 +12,8 @@ import { clientDelete } from "../../../store/slices/clientSlice";
 const ClientGridView = (props) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const auth = useSelector((state) => state.auth);
-  const currentUser = auth.user;
-  const view = useSelector((state) => state.client.view);
+  const currentUser = props.currentUser;
+  const view = props.view;
 
   const objectData = view && view.data ? view.data : view;
 
@@ -31,9 +30,9 @@ const ClientGridView = (props) => {
       {Object.keys(objectData).map((item, i) => {
         let first_name = objectData[item].first_name;
         let last_name = objectData[item].last_name;
-        let mobile = objectData[item].mobile;
-        let profile_photo = objectData[item].profile_photo;
-        console.log(profile_photo);
+        let phone_number = objectData[item].phone_number;
+        let profile_photo_url = objectData[item].profile_photo_url;
+        console.log(objectData[item]);
         return (
           <div className="box-image-cover" key={i}>
             <div className="dropdown d-inline-block setting-dropdown">
@@ -69,16 +68,16 @@ const ClientGridView = (props) => {
                 </ul>
               </div>
             </div>
-            {profile_photo
+            {profile_photo_url
               ? (
                   <div className="tabs-image">
-                    <img src={config.imagepath + "" + profile_photo} alt="" />
+                    <img src={profile_photo_url} alt="" className="rounded-circle wh-118"/>
                   </div>
                 )
               : (<div className="tabs-image user-initial mx-auto">{first_name.charAt(0) + "" + last_name.charAt(0)}</div>)}
             <div className="image-content">
-              <h5 className="fw-semibold mb-1">{mobile}</h5>
-              <h5 className="mb-0 fw-normal">{ucfirst(first_name + " " + last_name)}</h5>
+              <h5 className="fw-semibold mb-1">{ucfirst(first_name + " " + last_name)}</h5>
+              <h5 className="mb-0 fw-normal">{phone_number}</h5>
             </div>
           </div>
         );
