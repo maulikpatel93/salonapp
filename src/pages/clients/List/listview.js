@@ -36,13 +36,13 @@ const ClientListView = (props) => {
         return (
           <tr key={i}>
             <td className="pe-0" width="60px">
-            {profile_photo_url
-              ? (
-                  <div className="user">
-                    <img src={profile_photo_url} alt="" className="rounded-circle wh-40"/>
-                  </div>
-                )
-              : (<div className="user-initial">{first_name.charAt(0) + "" + last_name.charAt(0)}</div>)}
+              {profile_photo_url ? (
+                <div className="user">
+                  <img src={profile_photo_url} alt="" className="rounded-circle wh-40" />
+                </div>
+              ) : (
+                <div className="user-initial">{first_name.charAt(0) + "" + last_name.charAt(0)}</div>
+              )}
             </td>
             <td>{ucfirst(first_name + " " + last_name)}</td>
             <td>{phone_number}</td>
@@ -59,7 +59,13 @@ const ClientListView = (props) => {
                     <li>
                       <a className="d-flex align-items-center edit-service cursor-pointer">
                         <img src={config.imagepath + "edit.png"} className="me-3" alt="" />
-                        Edit
+                        {t("edit")}
+                      </a>
+                    </li>
+                    <li>
+                      <a className="d-flex align-items-center cursor-pointer" data-obj={JSON.stringify(objectData[item])} onClick={handleClientDelete}>
+                        <i className="far fa-trash me-3"></i>
+                        {t("delete")}
                       </a>
                     </li>
                   </ul>

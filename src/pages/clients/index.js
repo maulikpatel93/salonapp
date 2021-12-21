@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import config from "../../config";
 import ClientForm from "./Form";
+import ClientDetail from "./Detail";
 import ClientGridView from "./List/gridview";
 import ClientListView from "./List/listview";
 import { openclientform, clientView, tabListView, tabGridView } from "../../store/slices/clientSlice";
@@ -174,7 +175,8 @@ const Clients = () => {
             </div>
           </div>
         </div>
-        <ClientForm />
+        <ClientForm currentUser={currentUser}/>
+        <ClientDetail currentUser={currentUser}/>
       </div>
     </>
   );

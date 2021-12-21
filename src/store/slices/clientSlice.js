@@ -4,6 +4,7 @@ import { setMessage } from "./message";
 
 const initialState = {
   opened: "",
+  detail: "",
   view:[],
   deleted:false,
   tabview:'grid'
@@ -52,17 +53,32 @@ export const clientSlice = createSlice({
   reducers: {
     reset: () => initialState,
     openclientform: (state = initialState) => {
+      state.detail = "";
       state.opened = "open";
     },
     closeclientform: (state = initialState) => {
+      state.detail = "";
       state.opened = "";
     },
     tabListView: (state) => {
+      state.opened=""
+      state.detail = "";
       state.tabview = "list";
     },
     tabGridView: (state) => {
+      state.opened=""
+      state.detail = "";
       state.tabview = "grid";
     },
+    openclientDetail: (state = initialState) => {
+      state.opened=""
+      state.detail = "open";
+    },
+    closeclientDetail: (state = initialState) => {
+      state.opened=""
+      state.detail = "";
+    },
+    
   },
   extraReducers: {
     [clientCreate.pending]: (state, action) => {},
@@ -91,6 +107,6 @@ export const clientSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { openclientform, closeclientform, tabListView, tabGridView } = clientSlice.actions;
+export const { openclientform, closeclientform, tabListView, tabGridView, openclientDetail, closeclientDetail } = clientSlice.actions;
 export const isOpenClientForm = (state) => state.isOpen;
 export default clientSlice.reducer;

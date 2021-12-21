@@ -82,3 +82,11 @@
     width: 40px !important;
     height: 40px !important;
 }
+
+.box-image-cover a.client-detail {
+    color: $themeTextColor;
+    text-decoration: none;
+    &:hover {
+        color: $themePrimary;
+    }
+}

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import config from "../../../config";
 import { ucfirst } from "../../../helpers/functions";
 import { swalConfirm } from "../../../component/Sweatalert2";
-import { clientDelete } from "../../../store/slices/clientSlice";
+import { clientDelete, openclientDetail } from "../../../store/slices/clientSlice";
 // import InfiniteScroll from "react-infinite-scroll-component";
 // import ReactPaginate from 'react-paginate';
 
@@ -24,6 +24,9 @@ const ClientGridView = (props) => {
     if (confirmbtn == true) {
       dispatch(clientDelete({ id: props.id }));
     }
+  };
+  const handleClientDetail = () => {
+    dispatch(openclientDetail());
   };
   return (
     <>
@@ -68,17 +71,19 @@ const ClientGridView = (props) => {
                 </ul>
               </div>
             </div>
-            {profile_photo_url
-              ? (
-                  <div className="tabs-image">
-                    <img src={profile_photo_url} alt="" className="rounded-circle wh-118"/>
-                  </div>
-                )
-              : (<div className="tabs-image user-initial mx-auto">{first_name.charAt(0) + "" + last_name.charAt(0)}</div>)}
-            <div className="image-content">
-              <h5 className="fw-semibold mb-1">{ucfirst(first_name + " " + last_name)}</h5>
-              <h5 className="mb-0 fw-normal">{phone_number}</h5>
-            </div>
+            <a className="client-detail cursor-pointer" onClick={handleClientDetail}>
+              {profile_photo_url ? (
+                <div className="tabs-image">
+                  <img src={profile_photo_url} alt="" className="rounded-circle wh-118" />
+                </div>
+              ) : (
+                <div className="tabs-image user-initial mx-auto">{first_name.charAt(0) + "" + last_name.charAt(0)}</div>
+              )}
+              <div className="image-content">
+                <h5 className="fw-semibold mb-1">{ucfirst(first_name + " " + last_name)}</h5>
+                <h5 className="mb-0 fw-normal">{phone_number}</h5>
+              </div>
+            </a>
           </div>
         );
       })}

@@ -19,8 +19,7 @@ import useErrorsRef from "../../../hooks/useErrorsRef";
 const ClientForm = (props) => {
   const [loading, setLoading] = useState(false);
   const rightDrawerOpened = useSelector((state) => state.client.opened);
-  const auth = useSelector((state) => state.auth);
-  const currentUser = auth.user;
+  const currentUser = props.currentUser;
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
