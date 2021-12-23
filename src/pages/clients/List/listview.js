@@ -37,7 +37,7 @@ const ClientListView = (props) => {
   };
   return (
     <>
-      {Object.keys(objectData).map((item, i) => {
+      {objectData && Object.keys(objectData).map((item, i) => {
         let id = objectData[item].id;
         let first_name = objectData[item].first_name;
         let last_name = objectData[item].last_name;

@@ -5,64 +5,107 @@ import { setMessage } from "./message";
 export const clientStoreApi = createAsyncThunk("client/create", async (formvalues, thunkAPI) => {
   try {
     const resposedata = await clientApiController
-      .create(formvalues.values, thunkAPI)
+      .create(formvalues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
-          formvalues.setStatus({ success: true });
-          formvalues.resetForm();
-          thunkAPI.dispatch(closeNewClientForm());
-          thunkAPI.dispatch(clientViewApi());
           return thunkAPI.fulfillWithValue(response.data);
-        }else{
-          formvalues.setStatus({ success: false });
-          formvalues.setSubmitting(false);
+        } else {
           return thunkAPI.rejectWithValue();
         }
       })
       .catch((error) => {
-        console.log('dsad');
         const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        formvalues.setStatus({ success: false});
-        formvalues.setErrors(message.errors);
-        formvalues.setSubmitting(false);
-        return thunkAPI.rejectWithValue();
+        return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
       });
     return resposedata;
   } catch (error) {
-    console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    thunkAPI.dispatch(setMessage(message));
-    return thunkAPI.rejectWithValue();
+    return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
+  }
+});
+
+export const clientUpdateApi = createAsyncThunk("client/update", async (formvalues, thunkAPI) => {
+  try {
+    const resposedata = await clientApiController
+      .update(formvalues, thunkAPI)
+      .then((response) => {
+        if (response.status == 200) {
+          return thunkAPI.fulfillWithValue(response.data);
+        } else {
+          return thunkAPI.rejectWithValue();
+        }
+      })
+      .catch((error) => {
+        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
+      });
+    return resposedata;
+  } catch (error) {
+    const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
   }
 });
 
 export const clientViewApi = createAsyncThunk("client/view", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await clientApiController.view(formValues, thunkAPI);
+    const resposedata = await clientApiController
+      .view(formValues, thunkAPI)
+      .then((response) => {
+        if (response.status == 200) {
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+        }
+        return thunkAPI.rejectWithValue({ status: error.response.status });
+      });
     return resposedata;
   } catch (error) {
-    console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    thunkAPI.dispatch(setMessage(message));
     return thunkAPI.rejectWithValue();
   }
 });
 
 export const clientDetailApi = createAsyncThunk("client/detail", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await clientApiController.view(formValues, thunkAPI);
+    const resposedata = await clientApiController
+      .view(formValues, thunkAPI)
+      .then((response) => {
+        if (response.status == 200) {
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+        }
+        return thunkAPI.rejectWithValue({ status: error.response.status });
+      });
     return resposedata;
   } catch (error) {
     console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    thunkAPI.dispatch(setMessage(message));
     return thunkAPI.rejectWithValue();
   }
 });
 
 export const clientDeleteApi = createAsyncThunk("client/delete", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await clientApiController.deleted(formValues, thunkAPI);
+    const resposedata = await clientApiController
+      .deleted(formValues, thunkAPI)
+      .then((response) => {
+        if (response.status == 200) {
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+      });
     return resposedata;
   } catch (error) {
     console.log(error);
@@ -86,7 +129,9 @@ export const clientSlice = createSlice({
   name: "client",
   initialState,
   reducers: {
-    reset: () => initialState,
+    reset: () => {
+      console.log("Hello");
+    },
     openNewClientForm: (state = initialState) => {
       state.isOpenedDetailModal = "";
       state.isOpenedCreateForm = "open";
@@ -131,7 +176,7 @@ export const clientSlice = createSlice({
       state.isView = [];
     },
     [clientDetailApi.pending]: (state, action) => {
-      state.isDetailData = "";
+      // state.isDetailData = "";
     },
     [clientDetailApi.fulfilled]: (state, action) => {
       state.isDetailData = action.payload;
@@ -152,6 +197,6 @@ export const clientSlice = createSlice({
   },
 });
 // Action creators are generated for each case reducer function
-export const { openNewClientForm, closeNewClientForm, clientTabListView, clientTabGridView, openClientDetailModal, closeClientDetailModal, clientDetailTab } = clientSlice.actions;
-export const selectAllClient = (state) => state.isView;
+export const { reset, openNewClientForm, closeNewClientForm, clientTabListView, clientTabGridView, openClientDetailModal, closeClientDetailModal, clientDetailTab } = clientSlice.actions;
+export const selectAllClient = (state) => state.client.isView;
 export default clientSlice.reducer;

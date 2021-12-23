@@ -10,29 +10,23 @@ import yupconfig from "../../../yupconfig";
 import { InputField, MapAddressField, ReactSelectField, TextareaField, SwitchField, FileInputField, DatePickerField } from "../../../component/form/Field";
 import { sweatalert } from "../../../component/Sweatalert2";
 
-import { clearMessage } from "../../../store/slices/message";
-import { closeNewClientForm, clientStoreApi } from "../../../store/slices/clientSlice";
+import { closeNewClientForm, clientStoreApi, clientViewApi } from "../../../store/slices/clientSlice";
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
 
 const ClientForm = (props) => {
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
-  console.log("dsa");
-  const scriptedRef = useScriptRef();
-
   const [loading, setLoading] = useState(false);
   const rightDrawerOpened = useSelector((state) => state.client.isOpenedCreateForm);
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
+
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+  const scriptedRef = useScriptRef();
+
   const handleCloseNewClientForm = () => {
     dispatch(closeNewClientForm());
   };
-  console.log(currentUser);
-  // useEffect(() => {
-  //   dispatch(clientViewApi());
-  // }, [dispatch]);
-
   const initialValues = {
     first_name: "",
     last_name: "",
@@ -82,7 +76,25 @@ const ClientForm = (props) => {
   const handleClientSubmit = (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
     setLoading(true);
     try {
-      dispatch(clientStoreApi({values, setErrors, setStatus, setSubmitting, resetForm}));
+      dispatch(clientStoreApi(values)).then((action) => {
+        console.log(action);
+        if(action.meta.requestStatus == 'fulfilled'){
+          setStatus({ success: true });
+          resetForm();
+          dispatch(removeImage());
+          dispatch(closeNewClientForm());
+          dispatch(clientViewApi());
+          sweatalert({title:t('created'), text:t('created_successfully'), icon:"success"});
+        }else if(action.meta.requestStatus == 'rejected'){
+          const status = action.payload && action.payload.status;
+          const errors = action.payload && action.payload.message && action.payload.message.errors;
+          if(status == 422){
+            setErrors(errors);
+          }
+          setStatus({ success: false });
+          setSubmitting(false);
+        }
+      });
       if (scriptedRef.current) {
         setLoading(false);
       }
@@ -188,7 +200,7 @@ const ClientForm = (props) => {
                   </div>
                   <div className="drawer-footer">
                     <div className="col-md-7 pe-2">
-                      <input type="submit" className="btn w-100 btn-lg" value="Create Client" />
+                      <input type="submit" className="btn w-100 btn-lg" value={t("create_client")} />
                     </div>
                   </div>
                 </div>

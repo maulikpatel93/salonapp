@@ -2,30 +2,34 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+// import storage from 'redux-persist/lib/storage';
 
 import config from "../../config";
 import ClientForm from "./Form";
 import ClientDetailModal from "./Detail";
 import ClientGridView from "./List/gridview";
 import ClientListView from "./List/listview";
-import { openNewClientForm, clientTabListView, clientTabGridView, clientViewApi } from "../../store/slices/clientSlice";
+import { openNewClientForm, clientTabListView, clientTabGridView, clientViewApi, selectAllClient, closeClientDetailModal, clientDetailApi, reset } from "../../store/slices/clientSlice";
 
 
 const Clients = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-      dispatch(clientViewApi());
-  }, []);
-
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
-  const view = useSelector((state) => state.client.isView);
+  const view = useSelector(selectAllClient);
+  
   const tabview = useSelector((state) => state.client.isTabView);
   const handleOpenNewClientForm = () => {
     dispatch(openNewClientForm());
   };
+
+  useEffect(() => {
+      // dispatch(closeClientDetailModal());
+      // dispatch({type:"client/detail/rejected"});
+      dispatch(clientViewApi());
+  }, []);
   return (
     <>
       <div className="page-content bg-pink service">

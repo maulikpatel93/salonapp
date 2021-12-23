@@ -106,5 +106,13 @@
     "notes": "Notes",
     "search": "Search",
     "client_details": "Client Details",
-    "client_notes": "Client Notes"
+    "client_notes": "Client Notes",
+    "sale": "Sale",
+    "create_client": "Create Client",
+    "update_client": "Update Client",
+    "created": "Created",
+    "updated": "Updated",
+    "deleted": "Deleted",
+    "saved": "Saved",
+    "submited": "Submited"
 }

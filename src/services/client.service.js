@@ -25,6 +25,25 @@ const create = (values, thunkAPI) => {
   return axios.post(API_URL + action, formData, { headers: authHeader({ contentType: "multipart/form-data" }) });
 };
 
+const update = (values, thunkAPI) => {
+  const auth = store.getState().auth;
+  const auth_key = auth.user.auth_key;
+  const formData = new FormData();
+  for (let value in values) {
+    if (["gender"].includes(value) && values[value] && typeof values[value] === "object") {
+      formData.append(value, values[value].value);
+    } else {
+      formData.append(value, values[value]);
+    }
+  }
+  const action = "afterlogin/client/update/"+values.id;
+  formData.append("auth_key", auth_key);
+  formData.append("action", action);
+  formData.append("role_id", 6);
+  formData.append("salon_id", auth.user.salon_id);
+  return axios.post(API_URL + action, formData, { headers: authHeader({ contentType: "multipart/form-data" }) });
+};
+
 const view = (values, thunkAPI) => {
   const auth = store.getState().auth;
   const auth_key = auth.user.auth_key;
@@ -40,18 +59,7 @@ const view = (values, thunkAPI) => {
     salon_field: false, //business_name,owner_name
   };
   return axios
-    .post(API_URL + action, data, { headers: authHeader() })
-    .then((response) => {
-      if (response.status == 200) {
-        thunkAPI.dispatch(clearMessage());
-        return response.data;
-      }
-    })
-    .catch((error) => {
-      const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-      thunkAPI.dispatch(setMessage(message));
-      return thunkAPI.rejectWithValue(message);
-    });
+    .post(API_URL + action, data, { headers: authHeader() });
 };
 
 const deleted = (values, thunkAPI) => {
@@ -63,22 +71,12 @@ const deleted = (values, thunkAPI) => {
     action: action,
   };
   return axios
-    .post(API_URL + action, data, { headers: authHeader() })
-    .then((response) => {
-      if (response.status == 200) {
-        thunkAPI.dispatch(clearMessage());
-        return response.data;
-      }
-    })
-    .catch((error) => {
-      const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-      thunkAPI.dispatch(setMessage(message));
-      return thunkAPI.rejectWithValue(message);
-    });
+    .post(API_URL + action, data, { headers: authHeader() });
 };
 
 const clientApiController = {
   create,
+  update,
   view,
   deleted,
 };

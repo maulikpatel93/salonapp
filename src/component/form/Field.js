@@ -78,10 +78,11 @@ const SelectField = ({ label, controlId, options, ...props }) => {
 
 const SwitchField = ({ label, controlId, ...props }) => {
   const [field, meta] = useField(props);
+  const checked = field.value == 1 ? true : "";
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>
-        <Form.Check {...field} {...props} label={label} type="switch" id={controlId} />
+        <Form.Check {...field} {...props} label={label} type="switch" id={controlId} checked={checked} />
       </Form.Group>
     </>
   );
@@ -154,15 +155,15 @@ const ReactSelectField = ({ label, controlId, options, ...props }) => {
   };
 
   const customStyles = {
-    menuPortal: provided => ({ ...provided, zIndex: 3 }),
-    menu: provided => ({ ...provided, zIndex: 3 })
-  }
+    menuPortal: (provided) => ({ ...provided, zIndex: 3 }),
+    menu: (provided) => ({ ...provided, zIndex: 3 }),
+  };
 
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>
         <Form.Label>{label}</Form.Label>
-        <Select {...field} {...props} isInvalid={!!meta.error} className={meta.touched && meta.error ? "is-invalid" : ""} isClearable={true} onChange={handler} options={options} onBlur={() => helpers.setTouched(true)} classNamePrefix={"my-custom-react-select"} styles={customStyles}/>
+        <Select {...field} {...props} isInvalid={!!meta.error} className={meta.touched && meta.error ? "is-invalid" : ""} isClearable={true} onChange={handler} options={options} onBlur={() => helpers.setTouched(true)} classNamePrefix={"my-custom-react-select"} styles={customStyles} />
         <Form.Control.Feedback type="invalid">{meta.error}</Form.Control.Feedback>
       </Form.Group>
     </>
