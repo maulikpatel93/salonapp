@@ -5,7 +5,7 @@ import rootReducer from './reducer';
 
 const actionMiddleware = (store) => (next) => (action) => {
   if(action.type == "auth/logout/fulfilled"){
-    store.dispatch({type: 'client/view/reset'})
+    store.dispatch({type: 'client/view/reset'});
     persistStore(store).purge();
   }
   return next(action);

@@ -2,18 +2,31 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import clientApiController from "../../services/client.service";
 import { setMessage } from "./message";
 
-const initialState = {
-  opened: "",
-  openedDetail: "",
-  view:[],
-  detail:[],
-  deleted:false,
-  tabview:'grid'
-};
-
-export const clientCreate = createAsyncThunk("client/create", async (formValues, thunkAPI) => {
+export const clientStoreApi = createAsyncThunk("client/create", async (formvalues, thunkAPI) => {
   try {
-    const resposedata = await clientApiController.create(formValues, thunkAPI);
+    const resposedata = await clientApiController
+      .create(formvalues.values, thunkAPI)
+      .then((response) => {
+        if (response.status == 200) {
+          formvalues.setStatus({ success: true });
+          formvalues.resetForm();
+          thunkAPI.dispatch(closeNewClientForm());
+          thunkAPI.dispatch(clientViewApi());
+          return thunkAPI.fulfillWithValue(response.data);
+        }else{
+          formvalues.setStatus({ success: false });
+          formvalues.setSubmitting(false);
+          return thunkAPI.rejectWithValue();
+        }
+      })
+      .catch((error) => {
+        console.log('dsad');
+        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        formvalues.setStatus({ success: false});
+        formvalues.setErrors(message.errors);
+        formvalues.setSubmitting(false);
+        return thunkAPI.rejectWithValue();
+      });
     return resposedata;
   } catch (error) {
     console.log(error);
@@ -23,7 +36,7 @@ export const clientCreate = createAsyncThunk("client/create", async (formValues,
   }
 });
 
-export const clientView = createAsyncThunk("client/view", async (formValues, thunkAPI) => {
+export const clientViewApi = createAsyncThunk("client/view", async (formValues, thunkAPI) => {
   try {
     const resposedata = await clientApiController.view(formValues, thunkAPI);
     return resposedata;
@@ -35,7 +48,7 @@ export const clientView = createAsyncThunk("client/view", async (formValues, thu
   }
 });
 
-export const clientDetail = createAsyncThunk("client/detail", async (formValues, thunkAPI) => {
+export const clientDetailApi = createAsyncThunk("client/detail", async (formValues, thunkAPI) => {
   try {
     const resposedata = await clientApiController.view(formValues, thunkAPI);
     return resposedata;
@@ -47,7 +60,7 @@ export const clientDetail = createAsyncThunk("client/detail", async (formValues,
   }
 });
 
-export const clientDelete = createAsyncThunk("client/delete", async (formValues, thunkAPI) => {
+export const clientDeleteApi = createAsyncThunk("client/delete", async (formValues, thunkAPI) => {
   try {
     const resposedata = await clientApiController.deleted(formValues, thunkAPI);
     return resposedata;
@@ -59,75 +72,86 @@ export const clientDelete = createAsyncThunk("client/delete", async (formValues,
   }
 });
 
+const initialState = {
+  isOpenedCreateForm: "",
+  isOpenedDetailModal: "",
+  isView: [],
+  isDetailData: "",
+  isDeleted: false,
+  isTabView: "grid",
+  isClientDetailTab: "appointment",
+};
+
 export const clientSlice = createSlice({
   name: "client",
   initialState,
   reducers: {
     reset: () => initialState,
-    openclientform: (state = initialState) => {
-      state.openedDetail = "";
-      state.opened = "open";
+    openNewClientForm: (state = initialState) => {
+      state.isOpenedDetailModal = "";
+      state.isOpenedCreateForm = "open";
     },
-    closeclientform: (state = initialState) => {
-      state.openedDetail = "";
-      state.opened = "";
+    closeNewClientForm: (state = initialState) => {
+      state.isOpenedDetailModal = "";
+      state.isOpenedCreateForm = "";
     },
-    tabListView: (state) => {
-      state.opened=""
-      state.openedDetail = "";
-      state.tabview = "list";
+    clientTabListView: (state) => {
+      state.isOpenedCreateForm = "";
+      state.isOpenedDetailModal = "";
+      state.isTabView = "list";
     },
-    tabGridView: (state) => {
-      state.opened=""
-      state.openedDetail = "";
-      state.tabview = "grid";
+    clientTabGridView: (state) => {
+      state.isOpenedCreateForm = "";
+      state.isOpenedDetailModal = "";
+      state.isTabView = "grid";
     },
-    openclientDetail: (state = initialState) => {
-      state.opened=""
-      state.openedDetail = "open";
+    openClientDetailModal: (state = initialState) => {
+      state.isOpenedCreateForm = "";
+      state.isOpenedDetailModal = "open";
     },
-    closeclientDetail: (state = initialState) => {
-      state.opened=""
-      state.openedDetail = "";
+    closeClientDetailModal: (state = initialState) => {
+      state.isOpenedCreateForm = "";
+      state.isOpenedDetailModal = "";
     },
-    
+    clientDetailTab: (state, action) => {
+      state.isClientDetailTab = action.payload;
+    },
   },
   extraReducers: {
-    [clientCreate.pending]: (state, action) => {},
-    [clientCreate.fulfilled]: (state, action) => {},
-    [clientCreate.rejected]: (state, action) => {},
-    [clientView.pending]: (state, action) => {
-      state.view = [];
+    [clientStoreApi.pending]: (state, action) => {},
+    [clientStoreApi.fulfilled]: (state, action) => {},
+    [clientStoreApi.rejected]: (state, action) => {},
+    [clientViewApi.pending]: (state, action) => {
+      // state.isView = [];
     },
-    [clientView.fulfilled]: (state, action) => {
-      state.view = action.payload;
+    [clientViewApi.fulfilled]: (state, action) => {
+      state.isView = action.payload;
     },
-    [clientView.rejected]: (state, action) => {
-      state.view = [];
+    [clientViewApi.rejected]: (state, action) => {
+      state.isView = [];
     },
-    [clientDetail.pending]: (state, action) => {
-      state.detail = [];
+    [clientDetailApi.pending]: (state, action) => {
+      state.isDetailData = "";
     },
-    [clientDetail.fulfilled]: (state, action) => {
-      state.detail = action.payload;
+    [clientDetailApi.fulfilled]: (state, action) => {
+      state.isDetailData = action.payload;
     },
-    [clientDetail.rejected]: (state, action) => {
-      state.detail = [];
+    [clientDetailApi.rejected]: (state, action) => {
+      state.isDetailData = "";
     },
-    [clientDelete.pending]: (state, action) => {
-      state.deleted = false;
+    [clientDeleteApi.pending]: (state, action) => {
+      state.isDeleted = false;
     },
-    [clientDelete.fulfilled]: (state, action) => {
-      const { id } = action.payload; 
-      state.view = state.view.filter(item => item.id != id);
+    [clientDeleteApi.fulfilled]: (state, action) => {
+      const { id } = action.payload;
+      state.isView = state.isView.filter((item) => item.id != id);
     },
-    [clientDelete.rejected]: (state, action) => {
-      state.deleted = false;
+    [clientDeleteApi.rejected]: (state, action) => {
+      state.isDeleted = false;
     },
   },
 });
-
 // Action creators are generated for each case reducer function
-export const { openclientform, closeclientform, tabListView, tabGridView, openclientDetail, closeclientDetail } = clientSlice.actions;
-export const isOpenClientForm = (state) => state.isOpen;
+export const { openNewClientForm, closeNewClientForm, clientTabListView, clientTabGridView, openClientDetailModal, closeClientDetailModal, clientDetailTab } = clientSlice.actions;
+export const selectAllClient = (state) => state.isView;
 export default clientSlice.reducer;

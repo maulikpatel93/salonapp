@@ -11,7 +11,7 @@ import { InputField, MapAddressField, ReactSelectField, TextareaField, SwitchFie
 import { sweatalert } from "../../../component/Sweatalert2";
 
 import { clearMessage } from "../../../store/slices/message";
-import { closeclientform, clientCreate, clientView } from "../../../store/slices/clientSlice";
+import { closeclientform, clientStoreApi, clientViewApi } from "../../../store/slices/clientSlice";
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
 import useErrorsRef from "../../../hooks/useErrorsRef";
@@ -20,14 +20,15 @@ const ClientEditForm = (props) => {
   const [loading, setLoading] = useState(false);
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
-
+  const detail = useSelector((state) => state.client.detail);
+  
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const scriptedRef = useScriptRef();
   const serverErrors = useErrorsRef();
 
-  const handleCloseClientForm = () => {
-    dispatch(closeclientform());
+  const handleCloseClientDetailModal = () => {
+    dispatch(closeClientDetailModal());
   };
   useEffect(() => {
     dispatch(clearMessage());
@@ -82,7 +83,7 @@ const ClientEditForm = (props) => {
   const handleClientSubmit = (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
     setLoading(true);
     try {
-      dispatch(clientCreate(values));
+      dispatch(clientStoreApi(values));
       setTimeout(() => {
         if (scriptedRef.current) {
           if (serverErrors.current) {
@@ -119,8 +120,8 @@ const ClientEditForm = (props) => {
   const showFormModal = (status) => {
     if (status.success) {
       sweatalert({ title: t("success"), message: t("created_successfully"), icon: "success" });
-      handleCloseClientForm();
-      dispatch(clientView());
+      handleCloseClientDetailModal();
+      dispatch(clientViewApi());
     } else {
       sweatalert({ title: t("error"), message: t("failed"), icon: "error" });
     }

@@ -9,7 +9,6 @@ const Dashboard = () => {
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
   const dispatch = useDispatch();
-
   return (
     <>
       <div className="page-content">

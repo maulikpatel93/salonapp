@@ -22,19 +22,7 @@ const create = (values, thunkAPI) => {
   formData.append("action", action);
   formData.append("role_id", 6);
   formData.append("salon_id", auth.user.salon_id);
-  return axios
-    .post(API_URL + action, formData, { headers: authHeader({ contentType: "multipart/form-data" }) })
-    .then((response) => {
-      if (response.status == 200) {
-        thunkAPI.dispatch(clearMessage());
-        return response.data;
-      }
-    })
-    .catch((error) => {
-      const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-      thunkAPI.dispatch(setMessage(message));
-      return thunkAPI.rejectWithValue(message);
-    });
+  return axios.post(API_URL + action, formData, { headers: authHeader({ contentType: "multipart/form-data" }) });
 };
 
 const view = (values, thunkAPI) => {

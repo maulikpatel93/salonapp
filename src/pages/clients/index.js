@@ -5,24 +5,27 @@ import { useTranslation } from "react-i18next";
 
 import config from "../../config";
 import ClientForm from "./Form";
-import ClientDetail from "./Detail";
+import ClientDetailModal from "./Detail";
 import ClientGridView from "./List/gridview";
 import ClientListView from "./List/listview";
-import { clearMessage } from "../../store/slices/message";
-import { openclientform, clientView, tabListView, tabGridView } from "../../store/slices/clientSlice";
+import { openNewClientForm, clientTabListView, clientTabGridView, clientViewApi } from "../../store/slices/clientSlice";
+
 
 const Clients = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+      dispatch(clientViewApi());
+  }, []);
+
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
-  const view = useSelector((state) => state.client.view);
-  const tabview = useSelector((state) => state.client.tabview);
-
-  const handleOpenClientForm = () => {
-    dispatch(openclientform());
+  const view = useSelector((state) => state.client.isView);
+  const tabview = useSelector((state) => state.client.isTabView);
+  const handleOpenNewClientForm = () => {
+    dispatch(openNewClientForm());
   };
-
   return (
     <>
       <div className="page-content bg-pink service">
@@ -90,17 +93,17 @@ const Clients = () => {
             <span className="list-view-lable me-1">{t("display_as")}</span>
             <ul className="nav nav-tabs mb-0 d-inline-block list-view-tab border-0 me-xl-3" role="tablist">
               <li className="nav-item d-inline-block">
-                <a className={tabview && tabview == 'grid' ? 'active' : '' + "nav-link border-0 cursor-pointer"} id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true" onClick={() => dispatch(tabGridView())}>
+                <a className={"nav-link border-0 cursor-pointer" + (tabview && tabview == "grid" ? " active" : "")} id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true" onClick={() => dispatch(clientTabGridView())}>
                   <img src={config.imagepath + "block-view.png"} alt="" />
                 </a>
               </li>
               <li className="nav-item d-inline-block">
-                <a className={tabview && tabview == 'list' ? 'active' : '' + "nav-link border-0 cursor-pointer"} id="listview-tab" data-bs-toggle="tab" data-bs-target="#listview" type="button" role="tab" aria-controls="listview" aria-selected="true" onClick={() => dispatch(tabListView())}>
+                <a className={"nav-link border-0 cursor-pointer" + (tabview && tabview == "list" ? " active" : "")} id="listview-tab" data-bs-toggle="tab" data-bs-target="#listview" type="button" role="tab" aria-controls="listview" aria-selected="true" onClick={() => dispatch(clientTabListView())}>
                   <img src={config.imagepath + "list-view.png"} alt="" />
                 </a>
               </li>
             </ul>
-            <a id="addclient-drawer-link" className="add-new-btn btn me-1 px-lg-4  cursor-pointer" onClick={handleOpenClientForm}>
+            <a id="addclient-drawer-link" className="add-new-btn btn me-1 px-lg-4  cursor-pointer" onClick={handleOpenNewClientForm}>
               {t("new_client")}
             </a>
             <div className="dropdown d-inline-block setting-dropdown">
@@ -127,9 +130,9 @@ const Clients = () => {
           </div>
         </div>
         <div className="tab-content list-view-content">
-          <div className={tabview && tabview == 'grid' ? 'active' : '' + "tab-pane"} id="all">
+          <div className={"tab-pane" + (tabview && tabview == "grid" ? " show active" : "")} id="all">
             <div className="row">
-              <a className="box-image-cover cursor-pointer" onClick={handleOpenClientForm}>
+              <a className="box-image-cover cursor-pointer" onClick={handleOpenNewClientForm}>
                 <div className="tabs-image">
                   <img src={config.imagepath + "tabs-image.png"} alt="" />
                 </div>
@@ -146,18 +149,17 @@ const Clients = () => {
                   <h5 className="mb-0 fw-normal">William Wella</h5>
                 </div>
               </a> */}
-              <ClientGridView currentUser={currentUser} view={view}/>
+              <ClientGridView currentUser={currentUser} view={view} />
             </div>
           </div>
-          <div className={tabview && tabview == 'list' ? 'active' : '' + "tab-pane"} id="listview">
+          <div className={"tab-pane" + (tabview && tabview == "list" ? " show active" : "")} id="listview">
             <div className="table-responsive bg-white">
               <table className="table mb-0">
                 <thead>
                   <tr>
+                    <th></th>
                     <th>
-                    </th>
-                    <th>
-                      {t('name')}
+                      {t("name")}
                       <span className="down-up-arrow">
                         <i className="fal fa-angle-up"></i>
                         <i className="fal fa-angle-down"></i>
@@ -168,16 +170,16 @@ const Clients = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <ClientListView currentUser={currentUser} view={view}/>
+                  <ClientListView currentUser={currentUser} view={view} />
                 </tbody>
               </table>
             </div>
           </div>
         </div>
         <ClientForm />
-        <ClientDetail />
+        <ClientDetailModal />
       </div>
-    </>
+      </>
   );
 };
 

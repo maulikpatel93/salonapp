@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import config from "../../../config";
 import { ucfirst } from "../../../helpers/functions";
 import { swalConfirm } from "../../../component/Sweatalert2";
-import { clientDelete, openclientDetail, clientDetail } from "../../../store/slices/clientSlice";
+import { clientDeleteApi, openClientDetailModal, clientDetailApi, clientDetailTab } from "../../../store/slices/clientSlice";
 // import InfiniteScroll from "react-infinite-scroll-component";
 // import ReactPaginate from 'react-paginate';
 
@@ -22,13 +22,16 @@ const ClientGridView = (props) => {
     const name = ucfirst(props.first_name + " " + props.last_name);
     let confirmbtn = swalConfirm(e.currentTarget, { title: t("are_you_sure_delete_client"), message: name, confirmButtonText: t("yes_delete_it") });
     if (confirmbtn == true) {
-      dispatch(clientDelete({ id: props.id }));
+      dispatch(clientDeleteApi({ id: props.id }));
     }
   };
-  const handleClientDetail = (e) => {
-    const id = e.currentTarget.dataset.id;
-    dispatch(openclientDetail());
-    dispatch(clientDetail({ id }));
+  const handleClientDetailModal = (e, props) => {
+    const id = e.currentTarget.closest('.box-image-cover').dataset.id;
+    dispatch(openClientDetailModal());
+    dispatch(clientDetailApi({ id }));
+    if(props && props.tab == 'clientdetail'){
+      dispatch(clientDetailTab("clientdetail"));
+    }
   };
   return (
     <>
@@ -39,7 +42,7 @@ const ClientGridView = (props) => {
         let phone_number = objectData[item].phone_number;
         let profile_photo_url = objectData[item].profile_photo_url;
         return (
-          <div className="box-image-cover" key={i}>
+          <div className="box-image-cover" key={i} data-id={id}>
             <div className="dropdown d-inline-block setting-dropdown">
               <button className="dropdown-toggle dropdown-toggle-icon-none" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
                 <i className="far fa-ellipsis-v"></i>
@@ -47,7 +50,7 @@ const ClientGridView = (props) => {
               <div className="dropdown-menu dropdown-box dropdown-menu-end" style={{ minWidth: "116px" }} aria-labelledby="dropdownMenuButton1" data-popper-placement="bottom-end">
                 <ul className="p-0 m-0 list-unstyled">
                   <li>
-                    <a className="d-flex align-items-center cursor-pointer">
+                    <a className="d-flex align-items-center cursor-pointer" onClick={(e) => handleClientDetailModal(e, { tab: "clientdetail" })}>
                       <img src={config.imagepath + "edit.png"} className="me-3" alt="" />
                       {t("edit")}
                     </a>
@@ -73,7 +76,7 @@ const ClientGridView = (props) => {
                 </ul>
               </div>
             </div>
-            <a className="client-detail cursor-pointer" data-id={id} onClick={handleClientDetail}>
+            <a className="client-detail cursor-pointer" onClick={handleClientDetailModal}>
               {profile_photo_url ? (
                 <div className="tabs-image">
                   <img src={profile_photo_url} alt="" className="rounded-circle wh-118" />
