@@ -163,14 +163,14 @@ const Clients = () => {
                   <tr>
                     <th></th>
                     <th>
-                      {t("name")}
+                      <a className="cursor-pointer" onClick={() => dispatch(clientViewApi({sort:{first_name:'asc', last_name:'asc'}}))}>{t("name")}</a>
                       <span className="down-up-arrow">
                         <i className="fal fa-angle-up"></i>
                         <i className="fal fa-angle-down"></i>
                       </span>
                     </th>
-                    <th>Phone</th>
-                    <th colSpan="2">Email</th>
+                    <th>{t("phone")}</th>
+                    <th colSpan="2">{t("email")}</th>
                   </tr>
                 </thead>
                 <tbody>

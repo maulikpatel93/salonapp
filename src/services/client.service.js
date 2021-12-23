@@ -47,7 +47,19 @@ const update = (values, thunkAPI) => {
 const view = (values, thunkAPI) => {
   const auth = store.getState().auth;
   const auth_key = auth.user.auth_key;
-  const action = values && values.nextPage ? values.nextPage : "afterlogin/client/view";
+  const sort = values && values.sort;
+  let sortstring = '';
+  if(sort){
+    let sortArray = [];
+    Object.keys(sort).map(function(key, index) {
+      sortArray[index] = `sort[${key}]=${sort[key]}`;
+    });
+    if(sortArray){
+      let jsort = sortArray.join('&');
+      sortstring = `?${jsort}`;
+    }
+  }
+  const action = values && values.nextPage ? values.nextPage+sortstring : "afterlogin/client/view"+sortstring;
   const data = {
     auth_key: auth_key,
     action: action,
