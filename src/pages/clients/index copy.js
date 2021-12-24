@@ -10,18 +10,20 @@ import ClientDetailModal from "./Detail";
 import ClientGridView from "./List/gridview";
 import ClientListView from "./List/listview";
 import { openNewClientForm, clientTabListView, clientTabGridView, clientViewApi, selectAllClient, closeClientDetailModal, clientSort, clientSortRemove } from "../../store/slices/clientSlice";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { viewport } from "@popperjs/core";
+// import InfiniteScroll from "react-infinite-scroll-component";
+
 
 const Clients = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(clientSortRemove());
+    dispatch(clientViewApi());
+  }, [dispatch]);
+
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
-
-  const GridView = useSelector((state) => state.client.isGridView);
-  const ListView = useSelector((state) => state.client.isListView);
   const tabview = useSelector((state) => state.client.isTabView);
   const sort = useSelector((state) => state.client.isSort);
 
@@ -29,26 +31,17 @@ const Clients = () => {
     dispatch(openNewClientForm());
   };
 
+  console.log('ads');
+
   const sorting = (props) => {
     dispatch(clientSort(props));
     dispatch(clientViewApi({ sort: props }));
   };
 
-  useEffect(() => {
-    dispatch(clientSortRemove());
-    dispatch(clientViewApi());
-  }, [dispatch]);
-
-  const fetchDataGrid = () => {
-    dispatch(clientViewApi({ next_page_url: GridView.next_page_url }));
-  };
-  const fetchDataList = () => {
-    dispatch(clientViewApi({ next_page_url: ListView.next_page_url }));
-  };
   return (
     <>
-      <div className="page-content bg-pink service" id="page-content">
-        <div className="row bg-white align-items-center sticky-top">
+      <div className="page-content bg-pink service">
+        <div className="row bg-white align-items-center">
           <div className="common-tab col-md-4 col-4 order-1">
             <ul className="nav nav-tabs mb-0 justify-content-start" role="tablist">
               <li className="nav-item">
@@ -150,54 +143,51 @@ const Clients = () => {
         </div>
         <div className="tab-content list-view-content">
           <div className={"tab-pane" + (tabview && tabview == "grid" ? " show active" : "")} id="all">
-            <div className="row" id="scrollableGridView">
-              <InfiniteScroll dataLength={GridView.data && GridView.data.length ? GridView.data.length : "0"} next={fetchDataGrid} scrollableTarget="page-content" hasMore={GridView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
-                <a className="box-image-cover cursor-pointer" onClick={handleOpenNewClientForm}>
-                  <div className="tabs-image">
-                    <img src={config.imagepath + "tabs-image.png"} alt="" />
-                  </div>
-                  <div className="image-content">
-                    <h5>
-                      <i className="fal fa-plus me-2"></i> {t("add_new")}
-                    </h5>
-                  </div>
-                </a>
-                {/* <a className="box-image-cover client-detail cursor-pointer">
+            <div className="row">
+              <a className="box-image-cover cursor-pointer" onClick={handleOpenNewClientForm}>
+                <div className="tabs-image">
+                  <img src={config.imagepath + "tabs-image.png"} alt="" />
+                </div>
+                <div className="image-content">
+                  <h5>
+                    <i className="fal fa-plus me-2"></i> {t("add_new")}
+                  </h5>
+                </div>
+              </a>
+              {/* <a className="box-image-cover client-detail cursor-pointer">
                 <div className="tabs-image user-initial mx-auto">jd</div>
                 <div className="image-content">
                   <h5 className="fw-semibold mb-1">Wella</h5>
                   <h5 className="mb-0 fw-normal">William Wella</h5>
                 </div>
               </a> */}
-                <ClientGridView currentUser={currentUser} view={GridView}/>
-              </InfiniteScroll>
+              <ClientGridView currentUser={currentUser} />
             </div>
           </div>
           <div className={"tab-pane" + (tabview && tabview == "list" ? " show active" : "")} id="listview">
-            <div className="table-responsive bg-white" id="scrollableListView" >
-              <InfiniteScroll dataLength={ListView.data && ListView.data.length ? ListView.data.length : "0"} next={fetchDataList} scrollableTarget="page-content" hasMore={ListView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
-                <table className="table mb-0">
-                  <thead className="position-sticky">
-                    <tr>
-                      <th></th>
-                      <th>
-                        <a className="cursor-pointer" onClick={() => sorting({ first_name: sort.first_name == "asc" ? "desc" : "asc" })}>
-                          {t("name")}
-                        </a>
-                        <span className="down-up-arrow">
-                          <i className={"fal fa-angle-up" + (sort.first_name == "asc" ? " text-dark" : "")}></i>
-                          <i className={"fal fa-angle-down" + (sort.first_name == "desc" ? " text-dark" : "")}></i>
-                        </span>
-                      </th>
-                      <th>{t("phone")}</th>
-                      <th colSpan="2">{t("email")}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <ClientListView currentUser={currentUser} view={ListView} />
-                  </tbody>
-                </table>
-              </InfiniteScroll>
+            
+            <div className="table-responsive bg-white">
+              <table className="table mb-0">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>
+                      <a className="cursor-pointer" onClick={() => sorting({ first_name: sort.first_name == "asc" ? "desc" : "asc" })}>
+                        {t("name")}
+                      </a>
+                      <span className="down-up-arrow">
+                        <i className={"fal fa-angle-up" + (sort.first_name == "asc" ? " text-dark" : "")}></i>
+                        <i className={"fal fa-angle-down" + (sort.first_name == "desc" ? " text-dark" : "")}></i>
+                      </span>
+                    </th>
+                    <th>{t("phone")}</th>
+                    <th colSpan="2">{t("email")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ClientListView currentUser={currentUser} />
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

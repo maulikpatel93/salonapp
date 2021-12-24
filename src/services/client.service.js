@@ -48,7 +48,10 @@ const view = (values, thunkAPI) => {
   const auth = store.getState().auth;
   const auth_key = auth.user.auth_key;
   const sort = values && values.sort;
-  let sortstring = '';
+  const page = values && values.page;
+  const next_page_url = values && values.next_page_url;
+  console.log(next_page_url);
+  const sortstring = '';
   if(sort){
     let sortArray = [];
     Object.keys(sort).map(function(key, index) {
@@ -56,22 +59,22 @@ const view = (values, thunkAPI) => {
     });
     if(sortArray){
       let jsort = sortArray.join('&');
-      sortstring = `?${jsort}`;
+      sortstring = `${jsort}`;
     }
   }
-  const action = values && values.nextPage ? values.nextPage+sortstring : "afterlogin/client/view"+sortstring;
+  const action = page ? `afterlogin/client/view?page=${page}&${sortstring}` : `afterlogin/client/view?${sortstring}`;
   const data = {
     auth_key: auth_key,
     action: action,
     role_id: 6,
     salon_id: auth.user.salon_id,
-    pagination: false, //true or false
+    pagination: true, //true or false
     id: values && values.id ? values.id : "",
     field: values && values.id ? "" : "first_name,last_name,email,profile_photo,phone_number", // first_name,last_name,email
     salon_field: false, //business_name,owner_name
   };
   return axios
-    .post(API_URL + action, data, { headers: authHeader() });
+    .post(next_page_url ? `${next_page_url}&${sortstring}` : API_URL + action, data, { headers: authHeader() });
 };
 
 const deleted = (values, thunkAPI) => {

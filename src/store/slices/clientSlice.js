@@ -119,10 +119,13 @@ const initialState = {
   isOpenedCreateForm: "",
   isOpenedDetailModal: "",
   isView: [],
+  isGridView: [],
+  isListView: [],
   isDetailData: "",
   isDeleted: false,
   isTabView: "grid",
   isClientDetailTab: "appointment",
+  isSort: '',
 };
 
 export const clientSlice = createSlice({
@@ -161,6 +164,13 @@ export const clientSlice = createSlice({
     clientDetailTab: (state, action) => {
       state.isClientDetailTab = action.payload;
     },
+    clientSort: (state, action) => {
+      let sort = state.isSort ? state.isSort : {};
+      state.isSort = Object.assign(sort, action.payload);
+    },
+    clientSortRemove: (state) => {
+      state.isSort = '';
+    },
   },
   extraReducers: {
     [clientStoreApi.pending]: (state, action) => {},
@@ -170,7 +180,23 @@ export const clientSlice = createSlice({
       // state.isView = [];
     },
     [clientViewApi.fulfilled]: (state, action) => {
+      // const next_page_url = action.payload && action.payload.next_page_url && action.payload && action.payload.data ? Object.assign(state.isView.data, action.payload.data) : "";
+      // console.log(next_page_url);
+      console.log(action);
+      let old_current_page = state.isGridView.current_page ? state.isGridView.current_page : '';
+      let new_current_page = action.payload.current_page ? action.payload.current_page : '';
+      let viewdata = state.isGridView && state.isGridView.data;
+      let newviewdata = action.payload && action.payload.data;
+
       state.isView = action.payload;
+      state.isGridView = action.payload;
+      
+      if(old_current_page && new_current_page && old_current_page != new_current_page){
+        let data = viewdata && newviewdata ? state.isGridView.data = [...viewdata, ...newviewdata] : action.payload;
+        console.log(data);
+      }
+      state.isView = action.payload;
+      state.isGridView = action.payload;
     },
     [clientViewApi.rejected]: (state, action) => {
       state.isView = [];
@@ -189,7 +215,7 @@ export const clientSlice = createSlice({
     },
     [clientDeleteApi.fulfilled]: (state, action) => {
       const { id } = action.payload;
-      state.isView = state.isView.filter((item) => item.id != id);
+      state.isView = state.isView.data ? state.isView.data.filter((item) => item.id != id) : state.isView.filter((item) => item.id != id);
     },
     [clientDeleteApi.rejected]: (state, action) => {
       state.isDeleted = false;
@@ -197,6 +223,5 @@ export const clientSlice = createSlice({
   },
 });
 // Action creators are generated for each case reducer function
-export const { reset, openNewClientForm, closeNewClientForm, clientTabListView, clientTabGridView, openClientDetailModal, closeClientDetailModal, clientDetailTab } = clientSlice.actions;
-export const selectAllClient = (state) => state.client.isView;
+export const { reset, openNewClientForm, closeNewClientForm, clientTabListView, clientTabGridView, openClientDetailModal, closeClientDetailModal, clientDetailTab, clientSort, clientSortRemove } = clientSlice.actions;
 export default clientSlice.reducer;

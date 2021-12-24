@@ -11,7 +11,7 @@ const rootPersistConfig = {
   key: "root",
   timeout: 500,
   storage,
-  // blacklist: ["message", "image", 'client']
+  // blacklist: ["message", "image", 'isView']
 };
 
 const reducer = combineReducers({
@@ -33,9 +33,11 @@ const reducer = combineReducers({
       keyPrefix: "salon-",
       debug: false,
       timeout: 20000,
+      whitelist:['isTabView']
     },
     clientReducer,
   ),
+  // client: clientReducer,
   image: imageReducer,
 });
 

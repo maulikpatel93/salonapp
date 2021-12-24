@@ -29,6 +29,7 @@ const store = configureStore({
       serializableCheck: false,
     }).concat(actionMiddleware),
 });
+
 const persister = persistStore(store);
 
 export { store, persister };

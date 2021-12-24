@@ -1,5 +1,5 @@
-// import React from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useTranslation } from "react-i18next";
 import config from "../../../config";
@@ -12,9 +12,11 @@ import { clientDeleteApi, openClientDetailModal, clientDetailApi, clientDetailTa
 const ClientGridView = (props) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
   const currentUser = props.currentUser;
   const view = props.view;
-
+  // const view = useSelector((state) => state.client.isView);
+  
   const objectData = view && view.data ? view.data : view;
 
   const handleClientDelete = (e) => {
