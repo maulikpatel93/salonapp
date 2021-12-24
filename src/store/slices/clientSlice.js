@@ -190,6 +190,7 @@ export const clientSlice = createSlice({
 
       state.isView = action.payload;
       state.isGridView = action.payload;
+      // state.isListView = action.payload;
       
       if(old_current_page && new_current_page && old_current_page != new_current_page){
         let data = viewdata && newviewdata ? state.isGridView.data = [...viewdata, ...newviewdata] : action.payload;
@@ -197,6 +198,7 @@ export const clientSlice = createSlice({
       }
       state.isView = action.payload;
       state.isGridView = action.payload;
+      // state.isListView = action.payload;
     },
     [clientViewApi.rejected]: (state, action) => {
       state.isView = [];
