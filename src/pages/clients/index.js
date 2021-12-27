@@ -83,6 +83,13 @@ const Clients = () => {
       });
     }
   };
+  const handleCloseSearch = () => {
+    setInput('');
+    dispatch(clientRemoveSearchList());
+    dispatch(clientGridViewApi());
+    dispatch(clientListViewApi());
+  }
+  
 
   return (
     <>
@@ -103,8 +110,8 @@ const Clients = () => {
                 <span className="input-group-text">
                   <i className="far fa-search"></i>
                 </span>
-                <input type="text" className="form-control search-input" placeholder={t("search")} onInput={(e) => setInput(e.target.value)} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} />
-                <a className="close cursor-pointer" style={{ display: isSearchList ? "block" : "none" }} onClick={() => dispatch(clientRemoveSearchList())}>
+                <input type="text" className="form-control search-input" placeholder={t("search")} value={input} onInput={(e) => setInput(e.target.value)} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} />
+                <a className="close cursor-pointer" style={{ display: input ? "block":'none' }} onClick={handleCloseSearch}>
                   <i className="fal fa-times"></i>
                 </a>
               </div>
