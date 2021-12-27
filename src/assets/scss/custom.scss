@@ -83,12 +83,30 @@
     height: 40px !important;
 }
 
+.wh-32 {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+.search .search-result {
+    max-height: 210px !important;
+    overflow-y: auto !important;
+}
+
 .box-image-cover a.client-detail {
     color: $themeTextColor;
     text-decoration: none;
     &:hover {
         color: $themePrimary;
     }
+}
+
+header {
+    z-index: 1049 !important;
+}
+
+.drawer {
+    z-index: 1050 !important;
 }
 
 .hover-primary {

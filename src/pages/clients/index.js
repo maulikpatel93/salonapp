@@ -9,9 +9,9 @@ import ClientForm from "./Form";
 import ClientDetailModal from "./Detail";
 import ClientGridView from "./List/gridview";
 import ClientListView from "./List/listview";
-import { openNewClientForm, clientTabListView, clientTabGridView, clientViewApi, selectAllClient, closeClientDetailModal, clientSort, clientSortRemove } from "../../store/slices/clientSlice";
+import { openNewClientForm, clientTabListView, clientTabGridView, clientGridViewApi, clientListViewApi, clientSort, clientSortRemove, clientOpenSearchList, clientRemoveSearchList, clientSuggetionListApi } from "../../store/slices/clientSlice";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { viewport } from "@popperjs/core";
+import SuggetionListView from "./List/SuggetionListView";
 
 const Clients = () => {
   const { t } = useTranslation();
@@ -24,6 +24,8 @@ const Clients = () => {
   const ListView = useSelector((state) => state.client.isListView);
   const tabview = useSelector((state) => state.client.isTabView);
   const sort = useSelector((state) => state.client.isSort);
+  const isSearchList = useSelector((state) => state.client.isSearchList);
+  const SuggetionView = useSelector((state) => state.client.isSuggetionListView);
 
   const handleOpenNewClientForm = () => {
     dispatch(openNewClientForm());
@@ -31,20 +33,57 @@ const Clients = () => {
 
   const sorting = (props) => {
     dispatch(clientSort(props));
-    dispatch(clientViewApi({ sort: props }));
+    dispatch(clientListViewApi({ sort: props }));
   };
 
   useEffect(() => {
     dispatch(clientSortRemove());
-    dispatch(clientViewApi());
+    dispatch(clientGridViewApi());
+    dispatch(clientListViewApi());
   }, [dispatch]);
 
   const fetchDataGrid = () => {
-    dispatch(clientViewApi({ next_page_url: GridView.next_page_url }));
+    dispatch(clientGridViewApi({ next_page_url: GridView.next_page_url }));
   };
   const fetchDataList = () => {
-    dispatch(clientViewApi({ next_page_url: ListView.next_page_url }));
+    dispatch(clientListViewApi({ next_page_url: ListView.next_page_url }));
   };
+  const [input, setInput] = useState("");
+  const fetchDataSuggetionList = () => {
+    dispatch(clientSuggetionListApi({ next_page_url: SuggetionView.next_page_url, q: input }));
+  };
+
+  const [isFetching, setIsFetching] = useState(false);
+  const loadMoreItems = () => {
+    setIsFetching(true);
+    dispatch(clientGridViewApi({ next_page_url: GridView.next_page_url }));
+    dispatch(clientListViewApi({ next_page_url: ListView.next_page_url }));
+    //mocking an API call
+    setTimeout(() => {
+      setIsFetching(false);
+    }, 2000);
+  };
+
+  const handleClickSearch = (e) => {
+    let q = e.currentTarget.value;
+    if (q && q.length > 0) {
+      dispatch(clientOpenSearchList());
+      dispatch(clientSuggetionListApi({ q: q }));
+    }
+  };
+  const handleKeyUpSearch = (e) => {
+    let q = e.currentTarget.value;
+    setInput(q);
+    if (q && q.length > 0) {
+      dispatch(clientOpenSearchList());
+      dispatch(clientSuggetionListApi({ q: q })).then((action) => {
+        if(action.meta.requestStatus == 'rejected'){
+          // dispatch(clientRemoveSearchList());
+        }
+      });
+    }
+  };
+
   return (
     <>
       <div className="page-content bg-pink service" id="page-content">
@@ -64,47 +103,17 @@ const Clients = () => {
                 <span className="input-group-text">
                   <i className="far fa-search"></i>
                 </span>
-                <input type="text" className="form-control search-input" placeholder={t("search")} />
-                <a className="close cursor-pointer" style={{ display: "none" }}>
+                <input type="text" className="form-control search-input" placeholder={t("search")} onInput={(e) => setInput(e.target.value)} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} />
+                <a className="close cursor-pointer" style={{ display: isSearchList ? "block" : "none" }} onClick={() => dispatch(clientRemoveSearchList())}>
                   <i className="fal fa-times"></i>
                 </a>
               </div>
-              <div className="search-result dropdown-box">
-                <ul className="p-0 m-0 list-unstyled">
-                  <li>
-                    <Link to="#" className="d-flex">
-                      <div className="user-img me-2">
-                        <img src={config.imagepath + "Avatar.png"} alt="" />
-                      </div>
-                      <div className="user-id">
-                        <span className="user-name">Jo Smith</span>
-                        <span className="user-id">jo.smith@gmail.com</span>
-                      </div>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="#" className="d-flex">
-                      <div className="user-img me-2">
-                        <img src={config.imagepath + "Avatar.png"} alt="" />
-                      </div>
-                      <div className="user-id">
-                        <span className="user-name">Jo Smith</span>
-                        <span className="user-id">jo.smith@gmail.com</span>
-                      </div>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="#" className="d-flex">
-                      <div className="user-img me-2">
-                        <img src={config.imagepath + "Avatar.png"} alt="" />
-                      </div>
-                      <div className="user-id">
-                        <span className="user-name">Jo Smith</span>
-                        <span className="user-id">jo.smith@gmail.com</span>
-                      </div>
-                    </Link>
-                  </li>
-                </ul>
+              <div className={"search-result dropdown-box " + isSearchList} id="search-content">
+                <InfiniteScroll className="" dataLength={SuggetionView.data && SuggetionView.data.length ? SuggetionView.data.length : "0"} next={fetchDataSuggetionList} scrollableTarget="search-content" hasMore={SuggetionView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
+                  <ul className="p-0 m-0 list-unstyled">
+                    <SuggetionListView view={SuggetionView} />
+                  </ul>
+                </InfiniteScroll>
               </div>
             </div>
           </div>
@@ -150,8 +159,8 @@ const Clients = () => {
         </div>
         <div className="tab-content list-view-content">
           <div className={"tab-pane" + (tabview && tabview == "grid" ? " show active" : "")} id="all">
-            <div className="row" id="scrollableGridView">
-              <InfiniteScroll dataLength={GridView.data && GridView.data.length ? GridView.data.length : "0"} next={fetchDataGrid} scrollableTarget="page-content" hasMore={GridView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
+            <div className="" id="scrollableGridView">
+              <InfiniteScroll className="row" dataLength={GridView.data && GridView.data.length ? GridView.data.length : "0"} next={fetchDataGrid} scrollableTarget="page-content" hasMore={GridView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
                 <a className="box-image-cover cursor-pointer" onClick={handleOpenNewClientForm}>
                   <div className="tabs-image">
                     <img src={config.imagepath + "tabs-image.png"} alt="" />
@@ -169,12 +178,19 @@ const Clients = () => {
                   <h5 className="mb-0 fw-normal">William Wella</h5>
                 </div>
               </a> */}
-                <ClientGridView currentUser={currentUser} view={GridView}/>
+                <ClientGridView currentUser={currentUser} view={GridView} />
+                <div className="col-2 m-auto text-center">
+                  {!isFetching && GridView.next_page_url && (
+                    <button onClick={loadMoreItems} className="btn btn-primary">
+                      {t("more")}
+                    </button>
+                  )}
+                </div>
               </InfiniteScroll>
             </div>
           </div>
           <div className={"tab-pane" + (tabview && tabview == "list" ? " show active" : "")} id="listview">
-            <div className="table-responsive bg-white" id="scrollableListView" >
+            <div className="table-responsive bg-white" id="scrollableListView">
               <InfiniteScroll dataLength={ListView.data && ListView.data.length ? ListView.data.length : "0"} next={fetchDataList} scrollableTarget="page-content" hasMore={ListView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
                 <table className="table mb-0">
                   <thead className="position-sticky">
@@ -197,6 +213,13 @@ const Clients = () => {
                     <ClientListView currentUser={currentUser} view={ListView} />
                   </tbody>
                 </table>
+                <div className="col-2 m-auto p-3">
+                  {!isFetching && GridView.next_page_url && (
+                    <button onClick={loadMoreItems} className="btn btn-primary">
+                      {t("more")}
+                    </button>
+                  )}
+                </div>
               </InfiniteScroll>
             </div>
           </div>

@@ -11,7 +11,7 @@ import { InputField, MapAddressField, SelectField, TextareaField, SwitchField, F
 import { sweatalert } from "../../../component/Sweatalert2";
 
 import { clearMessage } from "../../../store/slices/message";
-import { closeClientDetailModal, clientUpdateApi, clientDetailApi, clientViewApi } from "../../../store/slices/clientSlice";
+import { closeClientDetailModal, clientUpdateApi, clientDetailApi, clientGridViewApi, clientListViewApi } from "../../../store/slices/clientSlice";
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
 import useErrorsRef from "../../../hooks/useErrorsRef";
@@ -84,7 +84,8 @@ const ClientEditForm = (props) => {
         if(action.meta.requestStatus == 'fulfilled'){
           setStatus({ success: true });
           dispatch(clientDetailApi({ id: action.payload.id }));
-          dispatch(clientViewApi());
+          dispatch(clientGridViewApi());
+          dispatch(clientListViewApi());
           sweatalert({title:t('updated'), text:t('updated_successfully'), icon:"success"});
         }else if(action.meta.requestStatus == 'rejected'){
           const status = action.payload && action.payload.status;

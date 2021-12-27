@@ -115,5 +115,7 @@
     "deleted": "Deleted",
     "saved": "Saved",
     "submited": "Submited",
-    "phone": "Phone"
+    "phone": "Phone",
+    "more": "More",
+    "no_data_found": "No data found"
 }

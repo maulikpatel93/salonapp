@@ -31,8 +31,6 @@ const Clients = () => {
     dispatch(openNewClientForm());
   };
 
-  console.log('ads');
-
   const sorting = (props) => {
     dispatch(clientSort(props));
     dispatch(clientViewApi({ sort: props }));

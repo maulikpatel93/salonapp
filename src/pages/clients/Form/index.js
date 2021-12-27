@@ -10,7 +10,7 @@ import yupconfig from "../../../yupconfig";
 import { InputField, MapAddressField, ReactSelectField, TextareaField, SwitchField, FileInputField, DatePickerField } from "../../../component/form/Field";
 import { sweatalert } from "../../../component/Sweatalert2";
 
-import { closeNewClientForm, clientStoreApi, clientViewApi } from "../../../store/slices/clientSlice";
+import { closeNewClientForm, clientStoreApi, clientGridViewApi, clientListViewApi } from "../../../store/slices/clientSlice";
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
 
@@ -83,7 +83,8 @@ const ClientForm = (props) => {
           resetForm();
           dispatch(removeImage());
           dispatch(closeNewClientForm());
-          dispatch(clientViewApi());
+          dispatch(clientGridViewApi());
+          dispatch(clientListViewApi());
           sweatalert({title:t('created'), text:t('created_successfully'), icon:"success"});
         }else if(action.meta.requestStatus == 'rejected'){
           const status = action.payload && action.payload.status;

@@ -16,9 +16,9 @@ const ClientGridView = (props) => {
   const currentUser = props.currentUser;
   const view = props.view;
   // const view = useSelector((state) => state.client.isView);
-  
+ 
   const objectData = view && view.data ? view.data : view;
-
+ 
   const handleClientDelete = (e) => {
     const props = JSON.parse(e.currentTarget.dataset.obj);
     const name = ucfirst(props.first_name + " " + props.last_name);

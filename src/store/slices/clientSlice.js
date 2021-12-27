@@ -46,7 +46,30 @@ export const clientUpdateApi = createAsyncThunk("client/update", async (formvalu
   }
 });
 
-export const clientViewApi = createAsyncThunk("client/view", async (formValues, thunkAPI) => {
+export const clientListViewApi = createAsyncThunk("client/gridview", async (formValues, thunkAPI) => {
+  try {
+    const resposedata = await clientApiController
+      .view(formValues, thunkAPI)
+      .then((response) => {
+        if (response.status == 200) {
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+        }
+        return thunkAPI.rejectWithValue({ status: error.response.status });
+      });
+    return resposedata;
+  } catch (error) {
+    const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    return thunkAPI.rejectWithValue();
+  }
+});
+
+export const clientGridViewApi = createAsyncThunk("client/listview", async (formValues, thunkAPI) => {
   try {
     const resposedata = await clientApiController
       .view(formValues, thunkAPI)
@@ -115,17 +138,40 @@ export const clientDeleteApi = createAsyncThunk("client/delete", async (formValu
   }
 });
 
+export const clientSuggetionListApi = createAsyncThunk("client/suggetionlist", async (formValues, thunkAPI) => {
+  try {
+    const resposedata = await clientApiController
+      .suggetionlist(formValues, thunkAPI)
+      .then((response) => {
+        if (response.status == 200) {
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+      });
+    return resposedata;
+  } catch (error) {
+    console.log(error);
+    const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    thunkAPI.dispatch(setMessage(message));
+    return thunkAPI.rejectWithValue();
+  }
+});
+
 const initialState = {
   isOpenedCreateForm: "",
   isOpenedDetailModal: "",
-  isView: [],
   isGridView: [],
   isListView: [],
+  isSuggetionListView: [],
   isDetailData: "",
   isDeleted: false,
   isTabView: "grid",
   isClientDetailTab: "appointment",
-  isSort: '',
+  isSort: "",
+  isSearchList: "",
 };
 
 export const clientSlice = createSlice({
@@ -169,39 +215,69 @@ export const clientSlice = createSlice({
       state.isSort = Object.assign(sort, action.payload);
     },
     clientSortRemove: (state) => {
-      state.isSort = '';
+      state.isSort = "";
+    },
+    clientOpenSearchList: (state) => {
+      state.isSearchList = "open";
+    },
+    clientRemoveSearchList: (state) => {
+      state.isSearchList = "";
     },
   },
   extraReducers: {
     [clientStoreApi.pending]: (state, action) => {},
     [clientStoreApi.fulfilled]: (state, action) => {},
     [clientStoreApi.rejected]: (state, action) => {},
-    [clientViewApi.pending]: (state, action) => {
-      // state.isView = [];
+    [clientGridViewApi.pending]: (state, action) => {
+      // state.isGridView = [];
     },
-    [clientViewApi.fulfilled]: (state, action) => {
-      // const next_page_url = action.payload && action.payload.next_page_url && action.payload && action.payload.data ? Object.assign(state.isView.data, action.payload.data) : "";
-      // console.log(next_page_url);
-      console.log(action);
-      let old_current_page = state.isGridView.current_page ? state.isGridView.current_page : '';
-      let new_current_page = action.payload.current_page ? action.payload.current_page : '';
+    [clientGridViewApi.fulfilled]: (state, action) => {
+      let old_current_page = state.isGridView.current_page ? state.isGridView.current_page : "";
+      let new_current_page = action.payload.current_page ? action.payload.current_page : "";
       let viewdata = state.isGridView && state.isGridView.data;
       let newviewdata = action.payload && action.payload.data;
-
-      state.isView = action.payload;
       state.isGridView = action.payload;
-      // state.isListView = action.payload;
-      
-      if(old_current_page && new_current_page && old_current_page != new_current_page){
-        let data = viewdata && newviewdata ? state.isGridView.data = [...viewdata, ...newviewdata] : action.payload;
-        console.log(data);
+      if (old_current_page && new_current_page && old_current_page != new_current_page) {
+        let data = viewdata && newviewdata ? (state.isGridView.data = [...viewdata, ...newviewdata]) : action.payload;
       }
-      state.isView = action.payload;
       state.isGridView = action.payload;
-      // state.isListView = action.payload;
     },
-    [clientViewApi.rejected]: (state, action) => {
-      state.isView = [];
+    [clientGridViewApi.rejected]: (state, action) => {
+      state.isGridView = [];
+    },
+    [clientListViewApi.pending]: (state, action) => {
+      // state.isListView = [];
+    },
+    [clientListViewApi.fulfilled]: (state, action) => {
+      let old_current_page = state.isListView.current_page ? state.isListView.current_page : "";
+      let new_current_page = action.payload.current_page ? action.payload.current_page : "";
+      let viewdata = state.isListView && state.isListView.data;
+      let newviewdata = action.payload && action.payload.data;
+      state.isListView = action.payload;
+      if (old_current_page && new_current_page && old_current_page != new_current_page) {
+        let data = viewdata && newviewdata ? (state.isListView.data = [...viewdata, ...newviewdata]) : action.payload;
+      }
+      state.isListView = action.payload;
+    },
+    [clientListViewApi.rejected]: (state, action) => {
+      state.isListView = [];
+    },
+    [clientSuggetionListApi.pending]: (state, action) => {
+      // state.isSuggetionListView = [];
+    },
+    [clientSuggetionListApi.fulfilled]: (state, action) => {
+      let old_current_page = state.isSuggetionListView.current_page ? state.isSuggetionListView.current_page : "";
+      let new_current_page = action.payload.current_page ? action.payload.current_page : "";
+      let viewdata = state.isSuggetionListView && state.isSuggetionListView.data;
+      let newviewdata = action.payload && action.payload.data;
+      state.isSuggetionListView = action.payload;
+      if (old_current_page && new_current_page && old_current_page != new_current_page) {
+        let data = viewdata && newviewdata ? (state.isSuggetionListView.data = [...viewdata, ...newviewdata]) : action.payload;
+      }
+      state.isSuggetionListView = action.payload;
+    },
+    [clientSuggetionListApi.rejected]: (state, action) => {
+      state.isSuggetionListView = [];
     },
     [clientDetailApi.pending]: (state, action) => {
       // state.isDetailData = "";
@@ -225,5 +301,5 @@ export const clientSlice = createSlice({
   },
 });
 // Action creators are generated for each case reducer function
-export const { reset, openNewClientForm, closeNewClientForm, clientTabListView, clientTabGridView, openClientDetailModal, closeClientDetailModal, clientDetailTab, clientSort, clientSortRemove } = clientSlice.actions;
+export const { reset, openNewClientForm, closeNewClientForm, clientTabListView, clientTabGridView, openClientDetailModal, closeClientDetailModal, clientDetailTab, clientSort, clientSortRemove, clientOpenSearchList, clientRemoveSearchList } = clientSlice.actions;
 export default clientSlice.reducer;
