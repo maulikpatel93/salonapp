@@ -54,7 +54,7 @@ const Sidebar = () => {
           <li>
             <Link to="/clients" data-bs-toggle="tooltip" data-bs-placement="right" title="Clients">
               <span className="icon">
-                <img src={config.imagepath + "dashboard.png"} alt="" />
+                <img src={config.imagepath + "user.png"} alt="" />
               </span>
               <span className="d-lg-none ps-3">Clients</span>
             </Link>
@@ -62,7 +62,7 @@ const Sidebar = () => {
           <li>
             <Link to="/staff" data-bs-toggle="tooltip" data-bs-placement="right" title="Staff">
               <span className="icon">
-                <img src={config.imagepath + "user.png"} alt="" />
+                <img src={config.imagepath + "staff.png"} alt="" />
               </span>
               <span className="d-lg-none ps-3">Staff</span>
             </Link>

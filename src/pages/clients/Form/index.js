@@ -77,7 +77,6 @@ const ClientForm = (props) => {
     setLoading(true);
     try {
       dispatch(clientStoreApi(values)).then((action) => {
-        console.log(action);
         if(action.meta.requestStatus == 'fulfilled'){
           setStatus({ success: true });
           resetForm();
