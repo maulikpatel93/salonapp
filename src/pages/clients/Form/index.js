@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { unwrapResult } from '@reduxjs/toolkit'
+import { unwrapResult } from "@reduxjs/toolkit";
 import { useTranslation } from "react-i18next";
 // validation Formik
 import * as Yup from "yup";
@@ -77,18 +77,18 @@ const ClientForm = (props) => {
     setLoading(true);
     try {
       dispatch(clientStoreApi(values)).then((action) => {
-        if(action.meta.requestStatus == 'fulfilled'){
+        if (action.meta.requestStatus == "fulfilled") {
           setStatus({ success: true });
           resetForm();
           dispatch(removeImage());
           dispatch(closeNewClientForm());
           dispatch(clientGridViewApi());
           dispatch(clientListViewApi());
-          sweatalert({title:t('created'), text:t('created_successfully'), icon:"success"});
-        }else if(action.meta.requestStatus == 'rejected'){
+          sweatalert({ title: t("created"), text: t("created_successfully"), icon: "success" });
+        } else if (action.meta.requestStatus == "rejected") {
           const status = action.payload && action.payload.status;
           const errors = action.payload && action.payload.message && action.payload.message.errors;
-          if(status == 422){
+          if (status == 422) {
             setErrors(errors);
           }
           setStatus({ success: false });
@@ -128,9 +128,9 @@ const ClientForm = (props) => {
       <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleClientSubmit}>
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, status }) => {
           return (
-            <form noValidate onSubmit={handleSubmit}>
-              <div className={"drawer client-drawer " + rightDrawerOpened} id="addclient-drawer">
-                <div className="drawer-wrp position-relative include-footer">
+            <div className={"drawer client-drawer " + rightDrawerOpened} id="addclient-drawer">
+              <div className="drawer-wrp position-relative include-footer">
+                <form noValidate onSubmit={handleSubmit}>
                   <div className="drawer-header">
                     <h2 className="mb-4 pe-md-5 pe-3">New Client</h2>
                     <a className="close-drawer cursor-pointer" onClick={handleCloseNewClientForm}>
@@ -167,7 +167,7 @@ const ClientForm = (props) => {
                         <MapAddressField name="address" label={t("address")} value={values.address} placeholder={t("typing_address")} controlId="clientForm-address" />
                       </div>
                       <div className="col-md-5 mb-md-0 mb-3">
-                        <FileInputField name="profile_photo" accept="image/*" label={t("profile_photo")} page="profile_photo" controlId="clientForm-profile_photo" />
+                        <FileInputField name="profile_photo" accept="image/*" label={t("profile_photo")} page="client-addform" controlId="clientForm-profile_photo" />
                       </div>
                     </div>
                     <div className="row">
@@ -203,10 +203,10 @@ const ClientForm = (props) => {
                       <input type="submit" className="btn w-100 btn-lg" value={t("create_client")} />
                     </div>
                   </div>
-                </div>
+                </form>
               </div>
-            </form>
-          )
+            </div>
+          );
         }}
       </Formik>
     </React.Fragment>

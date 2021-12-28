@@ -104,24 +104,62 @@ const FileInputField = ({ label, controlId, page, ...props }) => {
   field.onChange = imageChange;
   // This function will be triggered when the "Remove This Image" button is clicked
   const removeSelectedImage = () => {
+    setFieldValue(props.name, '');
     dispatch(removeImage());
   };
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>
-        <div className="insert-photo d-flex flex-column justify-content-center align-items-center ms-md-auto">
-          <img src={image && image.selected ? image.url : config.imagepath + "addphoto-box.png"} alt="" className="mb-3" />
-          <button type="button" className={image && image.selected ? "d-none" : "btn btn-sm position-relative"}>
-            <Form.Control type="file" onChange={field.onChange} {...props} isInvalid={!!meta.error} />
-            {label}
-          </button>
-          <button type="button" className={image && image.selected ? "btn btn-sm position-relative" : "d-none"} onClick={removeSelectedImage}>
-            {t("remove")}
-          </button>
-          <Form.Control.Feedback type="invalid" className={image && image.selected ? "d-none" : "d-block"}>
-            {meta.error}
-          </Form.Control.Feedback>
-        </div>
+        {page == "client-addform" ? (
+          <div className="insert-photo d-flex flex-column justify-content-center align-items-center ms-md-auto">
+            <img src={image && image.selected ? image.url : config.imagepath + "addphoto-box.png"} alt="" className="mb-3" />
+            <button type="button" className={image && image.selected ? "d-none" : "btn btn-sm position-relative"}>
+              <Form.Control type="file" onChange={field.onChange} {...props} isInvalid={!!meta.error} />
+              {label}
+            </button>
+            <button type="button" className={image && image.selected ? "btn btn-sm position-relative" : "d-none"} onClick={removeSelectedImage}>
+              {t("remove")}
+            </button>
+            <Form.Control.Feedback type="invalid" className={image && image.selected ? "d-none" : "d-block"}>
+              {meta.error}
+            </Form.Control.Feedback>
+          </div>
+        ) : (
+          ""
+        )}
+
+        {page == "supplier-form" ? (
+          <>
+            <div className="input-file position-relative d-flex align-content-center flex-wrap justify-content-center ms-lg-5">
+              <Form.Control type="file" onChange={field.onChange} {...props} isInvalid={!!meta.error} className={image && image.selected ? "input-photo d-none" : "input-photo"} />
+              <img src={image && image.selected ? image.url : config.imagepath + "addphoto.png"} alt="" className="mb-3" />
+              <span className={"cursor-pointer " + (image && image.selected ? "d-block" : "d-none")} onClick={removeSelectedImage}>
+                {t("remove")}
+              </span>
+              <span className={"cursor-pointer " + (image && image.selected ? "d-none" : "d-block")}>{t("add_supplier_Logo")}</span>
+            </div>
+            <div className="d-flex align-content-center flex-wrap justify-content-center ms-lg-5">
+              <Form.Control.Feedback type="invalid" className={image && image.selected ? "d-none" : "d-block"}>
+                {meta.error}
+              </Form.Control.Feedback>
+            </div>
+          </>
+        ) : (
+          // <div className="insert-photo d-flex flex-column justify-content-center align-items-center ms-md-auto">
+          //   <img src={image && image.selected ? image.url : config.imagepath + "addphoto-box.png"} alt="" className="mb-3" />
+          //   <button type="button" className={image && image.selected ? "d-none" : "btn btn-sm position-relative"}>
+          //     <Form.Control type="file" onChange={field.onChange} {...props} isInvalid={!!meta.error} />
+          //     {label}
+          //   </button>
+          //   <button type="button" className={image && image.selected ? "btn btn-sm position-relative" : "d-none"} onClick={removeSelectedImage}>
+          //     {t("remove")}
+          //   </button>
+          //   <Form.Control.Feedback type="invalid" className={image && image.selected ? "d-none" : "d-block"}>
+          //     {meta.error}
+          //   </Form.Control.Feedback>
+          // </div>
+          ""
+        )}
       </Form.Group>
     </>
   );

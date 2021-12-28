@@ -15,7 +15,7 @@ const Membership = (props) => {
   const currentUser = props.currentUser;
   return (
     <>
-      <div className="complete-box text-center d-flex flex-column justify-content-center mt-xl-4">
+      <div className="complete-box text-center d-flex flex-column justify-content-center mt-xs-4">
         <div className="complete-box-wrp text-center">
           <img src="assets/images/voucher.png" alt="" className="mb-md-4 mb-3" />
           <h5 className="mb-2 fw-semibold">

@@ -4,8 +4,10 @@ import storage from "redux-persist/lib/storage";
 
 import authReducer from "./slices/auth";
 import messageReducer from "./slices/message";
-import clientReducer from "../store/slices/clientSlice";
 import imageReducer from "../store/slices/imageSlice";
+import clientReducer from "../store/slices/clientSlice";
+import supplierReducer from "../store/slices/supplierSlice";
+import productReducer from "../store/slices/productSlice";
 //-----------------------|| COMBINE REDUCER ||-----------------------//
 const rootPersistConfig = {
   key: "root",
@@ -37,7 +39,28 @@ const reducer = combineReducers({
     },
     clientReducer,
   ),
-  // client: clientReducer,
+  product: persistReducer(
+    {
+      key: "product",
+      storage,
+      keyPrefix: "salon-",
+      debug: false,
+      timeout: 20000,
+      whitelist:['isTabView']
+    },
+    productReducer,
+  ),
+  supplier: persistReducer(
+    {
+      key: "supplier",
+      storage,
+      keyPrefix: "salon-",
+      debug: false,
+      timeout: 20000,
+      whitelist:['isTabView']
+    },
+    supplierReducer,
+  ),
   image: imageReducer,
 });
 

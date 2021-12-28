@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import clientApiController from "../../services/client.service";
+import supplierApiController from "../../services/supplier.service";
 import { setMessage } from "./message";
 
-export const clientStoreApi = createAsyncThunk("client/create", async (formvalues, thunkAPI) => {
+export const supplierStoreApi = createAsyncThunk("supplier/create", async (formvalues, thunkAPI) => {
   try {
-    const resposedata = await clientApiController
+    const resposedata = await supplierApiController
       .create(formvalues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -24,9 +24,9 @@ export const clientStoreApi = createAsyncThunk("client/create", async (formvalue
   }
 });
 
-export const clientUpdateApi = createAsyncThunk("client/update", async (formvalues, thunkAPI) => {
+export const supplierUpdateApi = createAsyncThunk("supplier/update", async (formvalues, thunkAPI) => {
   try {
-    const resposedata = await clientApiController
+    const resposedata = await supplierApiController
       .update(formvalues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -46,9 +46,9 @@ export const clientUpdateApi = createAsyncThunk("client/update", async (formvalu
   }
 });
 
-export const clientListViewApi = createAsyncThunk("client/listview", async (formValues, thunkAPI) => {
+export const supplierGridViewApi = createAsyncThunk("supplier/gridview", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await clientApiController
+    const resposedata = await supplierApiController
       .view(formValues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -69,32 +69,9 @@ export const clientListViewApi = createAsyncThunk("client/listview", async (form
   }
 });
 
-export const clientGridViewApi = createAsyncThunk("client/gridview", async (formValues, thunkAPI) => {
+export const supplierDetailApi = createAsyncThunk("supplier/detail", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await clientApiController
-      .view(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-        }
-        return thunkAPI.rejectWithValue({ status: error.response.status });
-      });
-    return resposedata;
-  } catch (error) {
-    const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    return thunkAPI.rejectWithValue();
-  }
-});
-
-export const clientDetailApi = createAsyncThunk("client/detail", async (formValues, thunkAPI) => {
-  try {
-    const resposedata = await clientApiController
+    const resposedata = await supplierApiController
       .view(formValues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -116,9 +93,9 @@ export const clientDetailApi = createAsyncThunk("client/detail", async (formValu
   }
 });
 
-export const clientDeleteApi = createAsyncThunk("client/delete", async (formValues, thunkAPI) => {
+export const supplierDeleteApi = createAsyncThunk("supplier/delete", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await clientApiController
+    const resposedata = await supplierApiController
       .deleted(formValues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -138,9 +115,9 @@ export const clientDeleteApi = createAsyncThunk("client/delete", async (formValu
   }
 });
 
-export const clientSuggetionListApi = createAsyncThunk("client/suggetionlist", async (formValues, thunkAPI) => {
+export const supplierSuggetionListApi = createAsyncThunk("supplier/suggetionlist", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await clientApiController
+    const resposedata = await supplierApiController
       .suggetionlist(formValues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -164,72 +141,71 @@ const initialState = {
   isOpenedCreateForm: "",
   isOpenedDetailModal: "",
   isGridView: [],
-  isListView: [],
   isSuggetionListView: [],
   isDetailData: "",
   isDeleted: false,
   isTabView: "grid",
-  isClientDetailTab: "appointment",
+  issupplierDetailTab: "appointment",
   isSort: "",
   isSearchList: "",
 };
 
-export const clientSlice = createSlice({
-  name: "client",
+export const supplierSlice = createSlice({
+  name: "supplier",
   initialState,
   reducers: {
     reset: () => initialState,
-    openNewClientForm: (state = initialState) => {
+    openNewSupplierForm: (state = initialState) => {
       state.isOpenedDetailModal = "";
       state.isOpenedCreateForm = "open";
     },
-    closeNewClientForm: (state = initialState) => {
+    closeNewSupplierForm: (state = initialState) => {
       state.isOpenedDetailModal = "";
       state.isOpenedCreateForm = "";
     },
-    clientTabListView: (state) => {
+    supplierTabListView: (state) => {
       state.isOpenedCreateForm = "";
       state.isOpenedDetailModal = "";
       state.isTabView = "list";
     },
-    clientTabGridView: (state) => {
+    supplierTabGridView: (state) => {
       state.isOpenedCreateForm = "";
       state.isOpenedDetailModal = "";
       state.isTabView = "grid";
     },
-    openClientDetailModal: (state = initialState) => {
+    opensupplierDetailModal: (state = initialState) => {
       state.isOpenedCreateForm = "";
       state.isOpenedDetailModal = "open";
     },
-    closeClientDetailModal: (state = initialState) => {
+    closesupplierDetailModal: (state = initialState) => {
       state.isOpenedCreateForm = "";
       state.isOpenedDetailModal = "";
     },
-    clientDetailTab: (state, action) => {
-      state.isClientDetailTab = action.payload;
+    supplierDetailTab: (state, action) => {
+      state.issupplierDetailTab = action.payload;
     },
-    clientSort: (state, action) => {
+    supplierSort: (state, action) => {
       let sort = state.isSort ? state.isSort : {};
       state.isSort = Object.assign(sort, action.payload);
     },
-    clientSortRemove: (state) => {
+    supplierSortRemove: (state) => {
       state.isSort = "";
     },
-    clientOpenSearchList: (state) => {
+    supplierOpenSearchList: (state) => {
       state.isSearchList = "open";
     },
-    clientRemoveSearchList: (state) => {
+    supplierRemoveSearchList: (state) => {
       state.isSearchList = "";
     },
   },
   extraReducers: {
-    [clientStoreApi.pending]: (state, action) => {},
-    [clientStoreApi.fulfilled]: (state, action) => {},
-    [clientStoreApi.rejected]: (state, action) => {},
-    [clientGridViewApi.pending]: (state, action) => {
+    [supplierStoreApi.pending]: (state, action) => {},
+    [supplierStoreApi.fulfilled]: (state, action) => {},
+    [supplierStoreApi.rejected]: (state, action) => {},
+    [supplierGridViewApi.pending]: (state, action) => {
       // state.isGridView = [];
     },
-    [clientGridViewApi.fulfilled]: (state, action) => {
+    [supplierGridViewApi.fulfilled]: (state, action) => {
       let old_current_page = state.isGridView.current_page ? state.isGridView.current_page : "";
       let new_current_page = action.payload.current_page ? action.payload.current_page : "";
       let viewdata = state.isGridView && state.isGridView.data;
@@ -240,30 +216,13 @@ export const clientSlice = createSlice({
       }
       state.isGridView = action.payload;
     },
-    [clientGridViewApi.rejected]: (state, action) => {
+    [supplierGridViewApi.rejected]: (state, action) => {
       state.isGridView = [];
     },
-    [clientListViewApi.pending]: (state, action) => {
-      // state.isListView = [];
-    },
-    [clientListViewApi.fulfilled]: (state, action) => {
-      let old_current_page = state.isListView.current_page ? state.isListView.current_page : "";
-      let new_current_page = action.payload.current_page ? action.payload.current_page : "";
-      let viewdata = state.isListView && state.isListView.data;
-      let newviewdata = action.payload && action.payload.data;
-      state.isListView = action.payload;
-      if (old_current_page && new_current_page && old_current_page != new_current_page) {
-        let data = viewdata && newviewdata ? (state.isListView.data = [...viewdata, ...newviewdata]) : action.payload;
-      }
-      state.isListView = action.payload;
-    },
-    [clientListViewApi.rejected]: (state, action) => {
-      state.isListView = [];
-    },
-    [clientSuggetionListApi.pending]: (state, action) => {
+    [supplierSuggetionListApi.pending]: (state, action) => {
       // state.isSuggetionListView = [];
     },
-    [clientSuggetionListApi.fulfilled]: (state, action) => {
+    [supplierSuggetionListApi.fulfilled]: (state, action) => {
       let old_current_page = state.isSuggetionListView.current_page ? state.isSuggetionListView.current_page : "";
       let new_current_page = action.payload.current_page ? action.payload.current_page : "";
       let viewdata = state.isSuggetionListView && state.isSuggetionListView.data;
@@ -274,30 +233,30 @@ export const clientSlice = createSlice({
       }
       state.isSuggetionListView = action.payload;
     },
-    [clientSuggetionListApi.rejected]: (state, action) => {
+    [supplierSuggetionListApi.rejected]: (state, action) => {
       state.isSuggetionListView = [];
     },
-    [clientDetailApi.pending]: (state, action) => {
+    [supplierDetailApi.pending]: (state, action) => {
       // state.isDetailData = "";
     },
-    [clientDetailApi.fulfilled]: (state, action) => {
+    [supplierDetailApi.fulfilled]: (state, action) => {
       state.isDetailData = action.payload;
     },
-    [clientDetailApi.rejected]: (state, action) => {
+    [supplierDetailApi.rejected]: (state, action) => {
       state.isDetailData = "";
     },
-    [clientDeleteApi.pending]: (state, action) => {
+    [supplierDeleteApi.pending]: (state, action) => {
       state.isDeleted = false;
     },
-    [clientDeleteApi.fulfilled]: (state, action) => {
+    [supplierDeleteApi.fulfilled]: (state, action) => {
       const { id } = action.payload;
       state.isView = state.isView.data ? state.isView.data.filter((item) => item.id != id) : state.isView.filter((item) => item.id != id);
     },
-    [clientDeleteApi.rejected]: (state, action) => {
+    [supplierDeleteApi.rejected]: (state, action) => {
       state.isDeleted = false;
     },
   },
 });
 // Action creators are generated for each case reducer function
-export const { reset, openNewClientForm, closeNewClientForm, clientTabListView, clientTabGridView, openClientDetailModal, closeClientDetailModal, clientDetailTab, clientSort, clientSortRemove, clientOpenSearchList, clientRemoveSearchList } = clientSlice.actions;
-export default clientSlice.reducer;
+export const { reset, openNewSupplierForm, closeNewSupplierForm, supplierTabListView, supplierTabGridView, opensupplierDetailModal, closesupplierDetailModal, supplierDetailTab, supplierSort, supplierSortRemove, supplierOpenSearchList, supplierRemoveSearchList } = supplierSlice.actions;
+export default supplierSlice.reducer;

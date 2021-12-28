@@ -2,7 +2,6 @@ import axios from "axios";
 import { store } from "../store";
 import config from "../config";
 import authHeader from "./auth-header";
-import { setMessage, clearMessage } from "../store/slices/message";
 
 const API_URL = config.API_URL;
 
@@ -17,7 +16,7 @@ const create = (values) => {
       formData.append(value, values[value]);
     }
   }
-  const action = "afterlogin/client/store";
+  const action = "afterlogin/products/store";
   formData.append("auth_key", auth_key);
   formData.append("action", action);
   formData.append("role_id", 6);
@@ -36,7 +35,7 @@ const update = (values) => {
       formData.append(value, values[value]);
     }
   }
-  const action = "afterlogin/client/update/" + values.id;
+  const action = "afterlogin/products/update/" + values.id;
   formData.append("auth_key", auth_key);
   formData.append("action", action);
   formData.append("role_id", 6);
@@ -62,15 +61,14 @@ const view = (values) => {
       sortstring = jsort;
     }
   }
-  const action = page ? `afterlogin/client/view?page=${page}&${sortstring}` : `afterlogin/client/view?${sortstring}`;
+  const action = page ? `afterlogin/products/view?page=${page}&${sortstring}` : `afterlogin/products/view?${sortstring}`;
   const data = {
     auth_key: auth_key,
     action: action,
-    role_id: 6,
     salon_id: auth.user.salon_id,
     pagination: values && values.id ? false : true, //true or false
     id: values && values.id ? values.id : "",
-    field: values && values.id ? "" : "first_name,last_name,email,profile_photo,phone_number", // first_name,last_name,email
+    field: values && values.id ? "" : "name,image,sku,description,cost_price,retail_price,stock_quantity", // first_name,last_name,email
     salon_field: false, //business_name,owner_name
     result: result, //business_name,owner_name
   };
@@ -80,7 +78,7 @@ const view = (values) => {
 const deleted = (values) => {
   const auth = store.getState().auth;
   const auth_key = auth.user.auth_key;
-  const action = `afterlogin/client/delete/${values.id}`;
+  const action = `afterlogin/products/delete/${values.id}`;
   const data = {
     auth_key: auth_key,
     action: action,
@@ -94,25 +92,24 @@ const suggetionlist = (values) => {
   const page = values && values.page;
   const next_page_url = values && values.next_page_url;
   let q = values && values.q ? values.q : "";
-  const action = page ? `afterlogin/client/view?page=${page}&q=${q}` : `afterlogin/client/view?q=${q}`;
+  const action = page ? `afterlogin/products/view?page=${page}&q=${q}` : `afterlogin/products/view?q=${q}`;
   const data = {
     auth_key: auth_key,
     action: action,
-    role_id: 6,
     salon_id: auth.user.salon_id,
     pagination: true, //true or false
     id: values && values.id ? values.id : "",
-    field: values && values.id ? "" : "first_name,last_name,email,profile_photo,phone_number", // first_name,last_name,email
+    field: values && values.id ? "" : "name,image,sku,description,cost_price,retail_price,stock_quantity", // first_name,last_name,email
     salon_field: false, //business_name,owner_name
   };
   return axios.post(next_page_url ? `${next_page_url}&q=${q}` : API_URL + action, data, { headers: authHeader() });
 };
 
-const clientApiController = {
+const productApiController = {
   create,
   update,
   view,
   deleted,
   suggetionlist,
 };
-export default clientApiController;
+export default productApiController;

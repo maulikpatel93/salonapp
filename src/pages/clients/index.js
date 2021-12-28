@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-// import storage from 'redux-persist/lib/storage';
+import InfiniteScroll from "react-infinite-scroll-component";
+import { openNewClientForm, clientTabListView, clientTabGridView, clientGridViewApi, clientListViewApi, clientSort, clientSortRemove, clientOpenSearchList, clientRemoveSearchList, clientSuggetionListApi } from "../../store/slices/clientSlice";
 
 import config from "../../config";
 import ClientForm from "./Form";
 import ClientDetailModal from "./Detail";
 import ClientGridView from "./List/gridview";
 import ClientListView from "./List/listview";
-import { openNewClientForm, clientTabListView, clientTabGridView, clientGridViewApi, clientListViewApi, clientSort, clientSortRemove, clientOpenSearchList, clientRemoveSearchList, clientSuggetionListApi } from "../../store/slices/clientSlice";
-import InfiniteScroll from "react-infinite-scroll-component";
 import SuggetionListView from "./List/SuggetionListView";
 
 const Clients = () => {
@@ -27,6 +26,12 @@ const Clients = () => {
   const isSearchList = useSelector((state) => state.client.isSearchList);
   const SuggetionView = useSelector((state) => state.client.isSuggetionListView);
 
+  useEffect(() => {
+    dispatch(clientSortRemove());
+    dispatch(clientGridViewApi());
+    dispatch(clientListViewApi());
+  }, [dispatch]);
+
   const handleOpenNewClientForm = () => {
     dispatch(openNewClientForm());
   };
@@ -35,13 +40,7 @@ const Clients = () => {
     dispatch(clientSort(props));
     dispatch(clientListViewApi({ sort: props }));
   };
-
-  useEffect(() => {
-    dispatch(clientSortRemove());
-    dispatch(clientGridViewApi());
-    dispatch(clientListViewApi());
-  }, [dispatch]);
-
+  
   const fetchDataGrid = () => {
     dispatch(clientGridViewApi({ next_page_url: GridView.next_page_url }));
   };
@@ -128,7 +127,7 @@ const Clients = () => {
           </div>
           <div className="col-md-4 col-8 text-end ps-0 mb-md-0 mb-2 order-3">
             <span className="list-view-lable me-1">{t("display_as")}</span>
-            <ul className="nav nav-tabs mb-0 d-inline-block list-view-tab border-0 me-xl-3" role="tablist">
+            <ul className="nav nav-tabs mb-0 d-inline-block list-view-tab border-0 me-xs-3" role="tablist">
               <li className="nav-item d-inline-block">
                 <a className={"nav-link border-0 cursor-pointer" + (tabview && tabview == "grid" ? " active" : "")} id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true" onClick={() => dispatch(clientTabGridView())}>
                   <img src={config.imagepath + "block-view.png"} alt="" />
