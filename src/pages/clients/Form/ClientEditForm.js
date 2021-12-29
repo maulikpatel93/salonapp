@@ -31,21 +31,22 @@ const ClientEditForm = (props) => {
   };
 
   const initialValues = {
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone_number: "",
-    date_of_birth: "",
-    gender: "",
-    address: "",
-    street: "",
-    suburb: "",
-    state: "",
-    postcode: "",
-    description: "",
-    send_sms_notification: "",
-    send_email_notification: "",
-    recieve_marketing_email: "",
+    id: detail && detail.id,
+    first_name: detail && detail.first_name,
+    last_name: detail && detail.last_name,
+    email: detail && detail.email,
+    phone_number: detail && detail.phone_number,
+    date_of_birth: detail && detail.date_of_birth,
+    gender: detail && detail.gender,
+    address: detail && detail.address,
+    street: detail && detail.street,
+    suburb: detail && detail.suburb,
+    state: detail && detail.state,
+    postcode: detail && detail.postcode,
+    description: detail && detail.description,
+    send_sms_notification: detail && detail.send_sms_notification,
+    send_email_notification: detail && detail.send_email_notification,
+    recieve_marketing_email: detail && detail.recieve_marketing_email,
   };
 
   const validationSchema = Yup.object().shape({
@@ -68,10 +69,7 @@ const ClientEditForm = (props) => {
     suburb: Yup.string().label(t("suburb")).required(),
     state: Yup.string().label(t("state")).required(),
     postcode: Yup.string().max(12).label(t("postcode")).required(),
-    description: Yup.string().label(t("description")).required(),
-    send_sms_notification: Yup.bool().label(t("send_sms_notification")),
-    send_email_notification: Yup.bool().label(t("send_email_notification")),
-    recieve_marketing_email: Yup.bool().label(t("send_sms_notification")),
+    description: Yup.string().label(t("description")).required()
   });
   yupconfig();
 
@@ -83,8 +81,6 @@ const ClientEditForm = (props) => {
         if(action.meta.requestStatus == 'fulfilled'){
           setStatus({ success: true });
           dispatch(clientDetailApi({ id: action.payload.id }));
-          dispatch(clientGridViewApi());
-          dispatch(clientListViewApi());
           sweatalert({title:t('updated'), text:t('updated_successfully'), icon:"success"});
         }else if(action.meta.requestStatus == 'rejected'){
           const status = action.payload && action.payload.status;
@@ -116,17 +112,13 @@ const ClientEditForm = (props) => {
 
   return (
     <React.Fragment>
-      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleClientSubmit}>
+      <Formik enableReinitialize={true} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleClientSubmit}>
         {({ handleSubmit, setFieldValue, values, status }) => {
           useEffect(() => {
             if(detail){
-              values.id = detail.id;
-              const fields = ["first_name", "last_name", "email", "phone_number", "date_of_birth", "gender", "address", "street", "suburb", "state", "postcode", "description"];
-              fields.forEach((field) => setFieldValue(field, detail[field], false));
-              const checkboxfields = ["send_sms_notification", "send_email_notification", "recieve_marketing_email"];
-              checkboxfields.forEach((field) => setFieldValue(field, detail[field], false));
+              // const checkboxfields = ["send_sms_notification", "send_email_notification", "recieve_marketing_email"];
+              // checkboxfields.forEach((field) => setFieldValue(field, detail[field], false));
             }
-            // setDetaild(detail);
           }, [detail, status]);
           return (
             <form noValidate onSubmit={handleSubmit} className="px-1">

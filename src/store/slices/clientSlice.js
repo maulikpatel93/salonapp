@@ -168,6 +168,7 @@ const initialState = {
   isClientDetailTab: "appointment",
   isSort: "",
   isSearchList: "",
+  isSearchName: ""
 };
 
 export const clientSlice = createSlice({
@@ -217,20 +218,32 @@ export const clientSlice = createSlice({
     closeClientSearchList: (state) => {
       state.isSearchList = "";
     },
+    clientSearchName: (state, action) => {
+      state.isSearchName = action.payload;
+    }
   },
   extraReducers: {
     [clientStoreApi.pending]: (state, action) => {},
     [clientStoreApi.fulfilled]: (state, action) => {
       state.isGridView.data = [...state.isGridView.data, action.payload];
+      state.isListView.data = [...state.isListView.data, action.payload];
     },
     [clientStoreApi.rejected]: (state, action) => {},
     [clientUpdateApi.pending]: (state, action) => {},
     [clientUpdateApi.fulfilled]: (state, action) => {
       const { id, ...changes } = action.payload;
-      const existingData = state.isGridView.data.find(event => event.id === id);
-      if(existingData){
+      let isGridView = state.isGridView && state.isGridView.data ? state.isGridView.data : state.isGridView;
+      let isListView = state.isListView && state.isListView.data ? state.isListView.data : state.isListView;
+      const existingGridData = isGridView ? isGridView.find(event => event.id === id) : '';
+      const existingListData = isListView ? isListView.find(event => event.id === id) : '';
+      if(existingGridData){
         Object.keys(changes).map((keyName, i) => {
-          existingData[keyName] = changes[keyName];
+          existingGridData[keyName] = changes[keyName];
+        });
+      }
+      if(existingListData){
+        Object.keys(changes).map((keyName, i) => {
+          existingListData[keyName] = changes[keyName];
         });
       }
     },
@@ -291,19 +304,15 @@ export const clientSlice = createSlice({
     [clientDetailApi.rejected]: (state, action) => {
       state.isDetailData = "";
     },
-    [clientDeleteApi.pending]: (state, action) => {
-      state.isDeleted = false;
-    },
+    [clientDeleteApi.pending]: (state, action) => {},
     [clientDeleteApi.fulfilled]: (state, action) => {
       const { id } = action.payload;
       state.isGridView.data = state.isGridView.data ? state.isGridView.data.filter((item) => item.id != id) : state.isGridView.filter((item) => item.id != id);
       state.isListView.data = state.isListView.data ? state.isListView.data.filter((item) => item.id != id) : state.isListView.filter((item) => item.id != id);
     },
-    [clientDeleteApi.rejected]: (state, action) => {
-      state.isDeleted = false;
-    },
+    [clientDeleteApi.rejected]: (state, action) => {},
   },
 });
 // Action creators are generated for each case reducer function
-export const { reset, clientTabListView, clientTabGridView, openAddClientForm, closeAddClientForm, openClientDetailModal, closeClientDetailModal, clientDetailTab, clientSort, clientSortRemove, openClientSearchList, closeClientSearchList } = clientSlice.actions;
+export const { reset, clientTabListView, clientTabGridView, openAddClientForm, closeAddClientForm, openClientDetailModal, closeClientDetailModal, clientDetailTab, clientSort, clientSortRemove, openClientSearchList, closeClientSearchList, clientSearchName } = clientSlice.actions;
 export default clientSlice.reducer;

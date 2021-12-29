@@ -49,7 +49,7 @@ const ClientAddForm = (props) => {
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().max(50).label(t("first_name")).required(),
     last_name: Yup.string().max(50).label(t("last_name")).required(),
-    profile_photo: Yup.string().label(t("profile_photo")).required(),
+    profile_photo: Yup.mixed(),
     email: Yup.string().max(100).email().label(t("email")).required(),
     phone_number: Yup.string().matches(config.phone_number_pattern, t(config.phone_number_334_error)).label(t("phone_number")).required(),
     date_of_birth: Yup.string().label(t("date_of_birth")).required(),
@@ -82,8 +82,6 @@ const ClientAddForm = (props) => {
           resetForm();
           dispatch(removeImage());
           dispatch(closeAddClientForm());
-          dispatch(clientGridViewApi());
-          dispatch(clientListViewApi());
           sweatalert({ title: t("created"), text: t("created_successfully"), icon: "success" });
         } else if (action.meta.requestStatus == "rejected") {
           const status = action.payload && action.payload.status;
@@ -113,20 +111,10 @@ const ClientAddForm = (props) => {
     { value: "Other", label: t("other") },
   ];
 
-  // const showFormModal = (status) => {
-  //   if (status.success) {
-  //     sweatalert({ title: t("success"), message: t("created_successfully"), icon: "success" });
-  //     handlecloseAddClientForm();
-  //     dispatch(clientViewApi());
-  //   } else {
-  //     sweatalert({ title: t("error"), message: t("failed"), icon: "error" });
-  //   }
-  // };
-
   return (
     <React.Fragment>
       <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleClientSubmit}>
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, status }) => {
+        {({ handleSubmit, values }) => {
           return (
             <div className={"drawer client-drawer " + rightDrawerOpened} id="addclient-drawer">
               <div className="drawer-wrp position-relative include-footer">

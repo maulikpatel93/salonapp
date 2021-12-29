@@ -61,7 +61,6 @@ const SupplierEditForm = () => {
 
   const handleSupplierSubmit = (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
     setLoading(true);
-    console.log(values);
     try {
       dispatch(supplierUpdateApi(values)).then((action) => {
         if (action.meta.requestStatus == "fulfilled") {

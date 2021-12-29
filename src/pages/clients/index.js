@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { openAddClientForm, clientTabListView, clientTabGridView, clientGridViewApi, clientListViewApi, clientSort, clientSortRemove, openClientSearchList, closeClientSearchList, clientSuggetionListApi } from "../../store/slices/clientSlice";
+import { openAddClientForm, clientTabListView, clientTabGridView, clientGridViewApi, clientListViewApi, clientSort, clientSortRemove, openClientSearchList, closeClientSearchList, clientSuggetionListApi, clientSearchName } from "../../store/slices/clientSlice";
 
 import config from "../../config";
 import ClientAddForm from "./Form/ClientAddForm";
@@ -24,6 +24,7 @@ const Clients = () => {
   const tabview = useSelector((state) => state.client.isTabView);
   const sort = useSelector((state) => state.client.isSort);
   const isSearchList = useSelector((state) => state.client.isSearchList);
+  const isSearchName = useSelector((state) => state.client.isSearchName);
   const SuggetionView = useSelector((state) => state.client.isSuggetionListView);
 
   useEffect(() => {
@@ -47,9 +48,8 @@ const Clients = () => {
   const fetchDataList = () => {
     dispatch(clientListViewApi({ next_page_url: ListView.next_page_url }));
   };
-  const [input, setInput] = useState("");
   const fetchDataSuggetionList = () => {
-    dispatch(clientSuggetionListApi({ next_page_url: SuggetionView.next_page_url, q: input }));
+    dispatch(clientSuggetionListApi({ next_page_url: SuggetionView.next_page_url, q: isSearchName }));
   };
 
   const [isFetching, setIsFetching] = useState(false);
@@ -72,7 +72,7 @@ const Clients = () => {
   };
   const handleKeyUpSearch = (e) => {
     let q = e.currentTarget.value;
-    setInput(q);
+    dispatch(clientSearchName(q));
     if (q && q.length > 0) {
       dispatch(openClientSearchList());
       dispatch(clientSuggetionListApi({ q: q })).then((action) => {
@@ -83,13 +83,13 @@ const Clients = () => {
     }
   };
   const handleCloseSearch = () => {
-    setInput('');
+    dispatch(clientSearchName(''));
     dispatch(closeClientSearchList());
     dispatch(clientGridViewApi());
     dispatch(clientListViewApi());
   }
-  const handleOnBlur = () => {
-    dispatch(closeClientSearchList());
+  const handleOnBlur = (e) => {
+    setTimeout(() => {dispatch(closeClientSearchList())}, 100);
   }
 
   return (
@@ -111,8 +111,8 @@ const Clients = () => {
                 <span className="input-group-text">
                   <i className="far fa-search"></i>
                 </span>
-                <input type="text" className="form-control search-input" placeholder={t("search")} value={input} onInput={(e) => setInput(e.target.value)} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} onBlur={handleOnBlur}/>
-                <a className="close cursor-pointer" style={{ display: input ? "block":'none' }} onClick={handleCloseSearch}>
+                <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchName} onInput={(e) => dispatch(clientSearchName(e.target.value))} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} onBlur={handleOnBlur}/>
+                <a className="close cursor-pointer" style={{ display: isSearchName ? "block":'none' }} onClick={handleCloseSearch}>
                   <i className="fal fa-times"></i>
                 </a>
               </div>
