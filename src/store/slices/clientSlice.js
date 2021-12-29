@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import clientApiController from "../../services/client.service";
-import { setMessage } from "./message";
 
 export const clientStoreApi = createAsyncThunk("client/create", async (formvalues, thunkAPI) => {
   try {
@@ -133,7 +132,6 @@ export const clientDeleteApi = createAsyncThunk("client/delete", async (formValu
   } catch (error) {
     console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    thunkAPI.dispatch(setMessage(message));
     return thunkAPI.rejectWithValue();
   }
 });
@@ -155,20 +153,18 @@ export const clientSuggetionListApi = createAsyncThunk("client/suggetionlist", a
   } catch (error) {
     console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    thunkAPI.dispatch(setMessage(message));
     return thunkAPI.rejectWithValue();
   }
 });
 
 const initialState = {
-  isOpenedCreateForm: "",
+  isTabView: "grid",
+  isOpenedAddForm: "",
   isOpenedDetailModal: "",
   isGridView: [],
   isListView: [],
   isSuggetionListView: [],
   isDetailData: "",
-  isDeleted: false,
-  isTabView: "grid",
   isClientDetailTab: "appointment",
   isSort: "",
   isSearchList: "",
@@ -179,30 +175,30 @@ export const clientSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
-    openNewClientForm: (state = initialState) => {
-      state.isOpenedDetailModal = "";
-      state.isOpenedCreateForm = "open";
-    },
-    closeNewClientForm: (state = initialState) => {
-      state.isOpenedDetailModal = "";
-      state.isOpenedCreateForm = "";
-    },
     clientTabListView: (state) => {
-      state.isOpenedCreateForm = "";
+      state.isOpenedAddForm = "";
       state.isOpenedDetailModal = "";
       state.isTabView = "list";
     },
     clientTabGridView: (state) => {
-      state.isOpenedCreateForm = "";
+      state.isOpenedAddForm = "";
       state.isOpenedDetailModal = "";
       state.isTabView = "grid";
     },
+    openAddClientForm: (state = initialState) => {
+      state.isOpenedDetailModal = "";
+      state.isOpenedAddForm = "open";
+    },
+    closeAddClientForm: (state = initialState) => {
+      state.isOpenedDetailModal = "";
+      state.isOpenedAddForm = "";
+    },
     openClientDetailModal: (state = initialState) => {
-      state.isOpenedCreateForm = "";
+      state.isOpenedAddForm = "";
       state.isOpenedDetailModal = "open";
     },
     closeClientDetailModal: (state = initialState) => {
-      state.isOpenedCreateForm = "";
+      state.isOpenedAddForm = "";
       state.isOpenedDetailModal = "";
     },
     clientDetailTab: (state, action) => {
@@ -215,27 +211,38 @@ export const clientSlice = createSlice({
     clientSortRemove: (state) => {
       state.isSort = "";
     },
-    clientOpenSearchList: (state) => {
+    openClientSearchList: (state) => {
       state.isSearchList = "open";
     },
-    clientRemoveSearchList: (state) => {
+    closeClientSearchList: (state) => {
       state.isSearchList = "";
     },
   },
   extraReducers: {
     [clientStoreApi.pending]: (state, action) => {},
-    [clientStoreApi.fulfilled]: (state, action) => {},
-    [clientStoreApi.rejected]: (state, action) => {},
-    [clientGridViewApi.pending]: (state, action) => {
-      // state.isGridView = [];
+    [clientStoreApi.fulfilled]: (state, action) => {
+      state.isGridView.data = [...state.isGridView.data, action.payload];
     },
+    [clientStoreApi.rejected]: (state, action) => {},
+    [clientUpdateApi.pending]: (state, action) => {},
+    [clientUpdateApi.fulfilled]: (state, action) => {
+      const { id, ...changes } = action.payload;
+      const existingData = state.isGridView.data.find(event => event.id === id);
+      if(existingData){
+        Object.keys(changes).map((keyName, i) => {
+          existingData[keyName] = changes[keyName];
+        });
+      }
+    },
+    [clientUpdateApi.rejected]: (state, action) => {},
+    [clientGridViewApi.pending]: (state, action) => {},
     [clientGridViewApi.fulfilled]: (state, action) => {
       let old_current_page = state.isGridView.current_page ? state.isGridView.current_page : "";
       let new_current_page = action.payload.current_page ? action.payload.current_page : "";
       let viewdata = state.isGridView && state.isGridView.data;
       let newviewdata = action.payload && action.payload.data;
       state.isGridView = action.payload;
-      if (old_current_page && new_current_page && old_current_page != new_current_page) {
+      if (old_current_page && new_current_page && old_current_page < new_current_page && old_current_page != new_current_page) {
         let data = viewdata && newviewdata ? (state.isGridView.data = [...viewdata, ...newviewdata]) : action.payload;
       }
       state.isGridView = action.payload;
@@ -243,16 +250,14 @@ export const clientSlice = createSlice({
     [clientGridViewApi.rejected]: (state, action) => {
       state.isGridView = [];
     },
-    [clientListViewApi.pending]: (state, action) => {
-      // state.isListView = [];
-    },
+    [clientListViewApi.pending]: (state, action) => {},
     [clientListViewApi.fulfilled]: (state, action) => {
       let old_current_page = state.isListView.current_page ? state.isListView.current_page : "";
       let new_current_page = action.payload.current_page ? action.payload.current_page : "";
       let viewdata = state.isListView && state.isListView.data;
       let newviewdata = action.payload && action.payload.data;
       state.isListView = action.payload;
-      if (old_current_page && new_current_page && old_current_page != new_current_page) {
+      if (old_current_page && new_current_page && old_current_page < new_current_page && old_current_page != new_current_page) {
         let data = viewdata && newviewdata ? (state.isListView.data = [...viewdata, ...newviewdata]) : action.payload;
       }
       state.isListView = action.payload;
@@ -291,7 +296,8 @@ export const clientSlice = createSlice({
     },
     [clientDeleteApi.fulfilled]: (state, action) => {
       const { id } = action.payload;
-      state.isView = state.isView.data ? state.isView.data.filter((item) => item.id != id) : state.isView.filter((item) => item.id != id);
+      state.isGridView.data = state.isGridView.data ? state.isGridView.data.filter((item) => item.id != id) : state.isGridView.filter((item) => item.id != id);
+      state.isListView.data = state.isListView.data ? state.isListView.data.filter((item) => item.id != id) : state.isListView.filter((item) => item.id != id);
     },
     [clientDeleteApi.rejected]: (state, action) => {
       state.isDeleted = false;
@@ -299,5 +305,5 @@ export const clientSlice = createSlice({
   },
 });
 // Action creators are generated for each case reducer function
-export const { reset, openNewClientForm, closeNewClientForm, clientTabListView, clientTabGridView, openClientDetailModal, closeClientDetailModal, clientDetailTab, clientSort, clientSortRemove, clientOpenSearchList, clientRemoveSearchList } = clientSlice.actions;
+export const { reset, clientTabListView, clientTabGridView, openAddClientForm, closeAddClientForm, openClientDetailModal, closeClientDetailModal, clientDetailTab, clientSort, clientSortRemove, openClientSearchList, closeClientSearchList } = clientSlice.actions;
 export default clientSlice.reducer;

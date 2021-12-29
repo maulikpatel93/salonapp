@@ -138,7 +138,7 @@ export const productSuggetionListApi = createAsyncThunk("product/suggetionlist",
 });
 
 const initialState = {
-  isOpenedCreateForm: "",
+  isOpenedAddForm: "",
   isOpenedDetailModal: "",
   isListView: [],
   isSuggetionListView: [],
@@ -157,23 +157,23 @@ export const productSlice = createSlice({
     reset: () => initialState,
     openNewProductForm: (state = initialState) => {
       state.isOpenedDetailModal = "";
-      state.isOpenedCreateForm = "open";
+      state.isOpenedAddForm = "open";
     },
     closeNewProductForm: (state = initialState) => {
       state.isOpenedDetailModal = "";
-      state.isOpenedCreateForm = "";
+      state.isOpenedAddForm = "";
     },
     productTabView: (state, action) => {
-      state.isOpenedCreateForm = "";
+      state.isOpenedAddForm = "";
       state.isOpenedDetailModal = "";
       state.isTabView = action.payload;
     },
     openproductDetailModal: (state = initialState) => {
-      state.isOpenedCreateForm = "";
+      state.isOpenedAddForm = "";
       state.isOpenedDetailModal = "open";
     },
     closeproductDetailModal: (state = initialState) => {
-      state.isOpenedCreateForm = "";
+      state.isOpenedAddForm = "";
       state.isOpenedDetailModal = "";
     },
     productDetailTab: (state, action) => {

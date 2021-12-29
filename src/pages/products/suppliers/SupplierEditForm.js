@@ -6,46 +6,48 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import config from "../../../config";
 import yupconfig from "../../../yupconfig";
-import { InputField, MapAddressField, ReactSelectField, TextareaField, SwitchField, FileInputField, DatePickerField } from "../../../component/form/Field";
+import { InputField, MapAddressField, InputFieldImage } from "../../../component/form/Field";
 import { sweatalert } from "../../../component/Sweatalert2";
 
 // import { closeNewSupplierForm } from "../../../store/slices/supplierSlice";
-import { closeNewSupplierForm, supplierStoreApi, supplierGridViewApi } from "../../../store/slices/supplierSlice";
-import { removeImage } from "../../../store/slices/imageSlice";
+import { closeEditSupplierForm, supplierUpdateApi } from "../../../store/slices/supplierSlice";
+import { selectImage, removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
+import _ from "lodash";
 
-const SupplierDrawerForm = () => {
+const SupplierEditForm = () => {
   const [loading, setLoading] = useState(false);
-  const rightDrawerOpened = useSelector((state) => state.supplier.isOpenedCreateForm);
-
+  const rightDrawerOpened = useSelector((state) => state.supplier.isOpenedEditForm);
+  const detail = useSelector((state) => state.supplier.isDetailData);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const scriptedRef = useScriptRef();
 
-  const handleCloseNewSupplierForm = () => {
-    dispatch(closeNewSupplierForm());
+  const handleCloseEditSupplierForm = () => {
+    dispatch(closeEditSupplierForm());
+    dispatch({ type: "supplier/detail/rejected" });
   };
-
   const initialValues = {
-    name: "",
-    first_name: "",
-    last_name: "",
-    logo: "",
-    email: "",
-    phone_number: "",
-    website: "",
-    address: "",
-    street: "",
-    suburb: "",
-    state: "",
-    postcode: ""
+    id: detail && detail.id,
+    name: detail && detail.name,
+    first_name: detail && detail.first_name,
+    last_name: detail && detail.last_name,
+    email: detail && detail.email,
+    phone_number: detail && detail.phone_number,
+    website: detail && detail.website,
+    address: detail && detail.address,
+    street: detail && detail.street,
+    suburb: detail && detail.suburb,
+    state: detail && detail.state,
+    postcode: detail && detail.postcode,
   };
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().max(100).label(t("supplier_name")).required(),
     first_name: Yup.string().max(50).label(t("first_name")).required(),
     last_name: Yup.string().max(50).label(t("last_name")).required(),
-    logo: Yup.string().label(t("logo")).required(),
+    logo: Yup.mixed(),
+    // logo: Yup.string().label(t("logo")),
     email: Yup.string().max(100).email().label(t("email")).required(),
     phone_number: Yup.string().matches(config.phone_number_pattern, t(config.phone_number_334_error)).label(t("phone_number")).required(),
     website: Yup.string().url().label(t("website")).required(),
@@ -53,21 +55,21 @@ const SupplierDrawerForm = () => {
     street: Yup.string().label(t("street")).required(),
     suburb: Yup.string().label(t("suburb")).required(),
     state: Yup.string().label(t("state")).required(),
-    postcode: Yup.string().max(12).label(t("postcode")).required()
+    postcode: Yup.string().max(12).label(t("postcode")).required(),
   });
   yupconfig();
 
   const handleSupplierSubmit = (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
     setLoading(true);
+    console.log(values);
     try {
-      dispatch(supplierStoreApi(values)).then((action) => {
+      dispatch(supplierUpdateApi(values)).then((action) => {
         if (action.meta.requestStatus == "fulfilled") {
           setStatus({ success: true });
           resetForm();
           dispatch(removeImage());
-          dispatch(closeNewSupplierForm());
-          dispatch(supplierGridViewApi());
-          sweatalert({ title: t("created"), text: t("created_successfully"), icon: "success" });
+          dispatch(closeEditSupplierForm());
+          sweatalert({ title: t("updated"), text: t("updated_successfully"), icon: "success" });
         } else if (action.meta.requestStatus == "rejected") {
           const status = action.payload && action.payload.status;
           const errors = action.payload && action.payload.message && action.payload.message.errors;
@@ -92,8 +94,13 @@ const SupplierDrawerForm = () => {
 
   return (
     <React.Fragment>
-      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, status }) => {
+      <Formik enableReinitialize={true} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
+        {({ handleSubmit, values, status }) => {
+          useEffect(() => {
+            if (detail.logo) {
+              dispatch(selectImage({ name: detail.logo, size: "", type: "", url: detail.logo_url }));
+            }
+          }, [detail]);
           return (
             <div className={"full-screen-drawer p-0 " + rightDrawerOpened} id="addsuppliers-drawer">
               <div className="drawer-wrp position-relative">
@@ -101,7 +108,7 @@ const SupplierDrawerForm = () => {
                   <div className="drawer-header px-md-4 px-3 py-3 d-flex flex-wrap align-items-center">
                     <h3 className="mb-0 fw-semibold">New Supplier</h3>
                     <div className="ms-auto">
-                      <a className="close btn me-1 cursor-pointer" onClick={handleCloseNewSupplierForm}>
+                      <a className="close btn me-1 cursor-pointer" onClick={handleCloseEditSupplierForm}>
                         {t("cancel")}
                       </a>
                       <button type="submit" className="btn">
@@ -125,7 +132,7 @@ const SupplierDrawerForm = () => {
                         <div className="col-md-6 ps-md-0 mb-md-0 mb-3">
                           <h4 className="fw-semibold mb-2">{t("contact_information")}</h4>
                           <p>{t("add_the_contact_details_of_this_supplier")}</p>
-                          <FileInputField name="logo" accept="image/*" label={t("add_supplier_Logo")} page="supplier-form" controlId="supplierForm-logo" />
+                          <InputFieldImage name="logo" accept="image/*" label={t("add_supplier_Logo")} page="supplier-form" controlId="supplierForm-logo" imagname="" imageurl="" />
                         </div>
                         <div className="col-md-6 pe-md-0">
                           <div className="row gx-2">
@@ -183,4 +190,4 @@ const SupplierDrawerForm = () => {
   );
 };
 
-export default SupplierDrawerForm;
+export default SupplierEditForm;

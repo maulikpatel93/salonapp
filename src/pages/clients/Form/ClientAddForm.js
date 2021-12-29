@@ -7,16 +7,16 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import config from "../../../config";
 import yupconfig from "../../../yupconfig";
-import { InputField, MapAddressField, ReactSelectField, TextareaField, SwitchField, FileInputField, DatePickerField } from "../../../component/form/Field";
+import { InputField, MapAddressField, ReactSelectField, TextareaField, SwitchField, InputFieldImage } from "../../../component/form/Field";
 import { sweatalert } from "../../../component/Sweatalert2";
 
-import { closeNewClientForm, clientStoreApi, clientGridViewApi, clientListViewApi } from "../../../store/slices/clientSlice";
+import { closeAddClientForm, clientStoreApi, clientGridViewApi, clientListViewApi } from "../../../store/slices/clientSlice";
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
 
-const ClientForm = (props) => {
+const ClientAddForm = (props) => {
   const [loading, setLoading] = useState(false);
-  const rightDrawerOpened = useSelector((state) => state.client.isOpenedCreateForm);
+  const rightDrawerOpened = useSelector((state) => state.client.isOpenedAddForm);
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
 
@@ -24,8 +24,8 @@ const ClientForm = (props) => {
   const { t } = useTranslation();
   const scriptedRef = useScriptRef();
 
-  const handleCloseNewClientForm = () => {
-    dispatch(closeNewClientForm());
+  const handlecloseAddClientForm = () => {
+    dispatch(closeAddClientForm());
   };
   const initialValues = {
     first_name: "",
@@ -81,7 +81,7 @@ const ClientForm = (props) => {
           setStatus({ success: true });
           resetForm();
           dispatch(removeImage());
-          dispatch(closeNewClientForm());
+          dispatch(closeAddClientForm());
           dispatch(clientGridViewApi());
           dispatch(clientListViewApi());
           sweatalert({ title: t("created"), text: t("created_successfully"), icon: "success" });
@@ -116,7 +116,7 @@ const ClientForm = (props) => {
   // const showFormModal = (status) => {
   //   if (status.success) {
   //     sweatalert({ title: t("success"), message: t("created_successfully"), icon: "success" });
-  //     handleCloseNewClientForm();
+  //     handlecloseAddClientForm();
   //     dispatch(clientViewApi());
   //   } else {
   //     sweatalert({ title: t("error"), message: t("failed"), icon: "error" });
@@ -133,7 +133,7 @@ const ClientForm = (props) => {
                 <form noValidate onSubmit={handleSubmit}>
                   <div className="drawer-header">
                     <h2 className="mb-4 pe-md-5 pe-3">New Client</h2>
-                    <a className="close-drawer cursor-pointer" onClick={handleCloseNewClientForm}>
+                    <a className="close-drawer cursor-pointer" onClick={handlecloseAddClientForm}>
                       <img src={config.imagepath + "close-icon.svg"} alt="" />
                     </a>
                   </div>
@@ -167,7 +167,7 @@ const ClientForm = (props) => {
                         <MapAddressField name="address" label={t("address")} value={values.address} placeholder={t("typing_address")} controlId="clientForm-address" />
                       </div>
                       <div className="col-md-5 mb-md-0 mb-3">
-                        <FileInputField name="profile_photo" accept="image/*" label={t("profile_photo")} page="client-addform" controlId="clientForm-profile_photo" />
+                        <InputFieldImage name="profile_photo" accept="image/*" label={t("profile_photo")} page="client-addform" controlId="clientForm-profile_photo" />
                       </div>
                     </div>
                     <div className="row">
@@ -213,4 +213,4 @@ const ClientForm = (props) => {
   );
 };
 
-export default ClientForm;
+export default ClientAddForm;

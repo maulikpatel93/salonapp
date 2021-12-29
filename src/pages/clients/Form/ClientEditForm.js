@@ -7,10 +7,9 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import config from "../../../config";
 import yupconfig from "../../../yupconfig";
-import { InputField, MapAddressField, SelectField, TextareaField, SwitchField, FileInputField, DatePickerField } from "../../../component/form/Field";
+import { InputField, MapAddressField, SelectField, TextareaField, SwitchField, InputFieldImage, DatePickerField } from "../../../component/form/Field";
 import { sweatalert } from "../../../component/Sweatalert2";
 
-import { clearMessage } from "../../../store/slices/message";
 import { closeClientDetailModal, clientUpdateApi, clientDetailApi, clientGridViewApi, clientListViewApi } from "../../../store/slices/clientSlice";
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
@@ -118,8 +117,7 @@ const ClientEditForm = (props) => {
   return (
     <React.Fragment>
       <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleClientSubmit}>
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, setFieldValue, touched, values, status }) => {
-          // const [detaild, setDetaild] = useState({});
+        {({ handleSubmit, setFieldValue, values, status }) => {
           useEffect(() => {
             if(detail){
               values.id = detail.id;

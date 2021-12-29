@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { openNewClientForm, clientTabListView, clientTabGridView, clientGridViewApi, clientListViewApi, clientSort, clientSortRemove, clientOpenSearchList, clientRemoveSearchList, clientSuggetionListApi } from "../../store/slices/clientSlice";
+import { openAddClientForm, clientTabListView, clientTabGridView, clientGridViewApi, clientListViewApi, clientSort, clientSortRemove, openClientSearchList, closeClientSearchList, clientSuggetionListApi } from "../../store/slices/clientSlice";
 
 import config from "../../config";
-import ClientForm from "./Form";
+import ClientAddForm from "./Form/ClientAddForm";
 import ClientDetailModal from "./Detail";
 import ClientGridView from "./List/gridview";
 import ClientListView from "./List/listview";
@@ -32,8 +32,8 @@ const Clients = () => {
     dispatch(clientListViewApi());
   }, [dispatch]);
 
-  const handleOpenNewClientForm = () => {
-    dispatch(openNewClientForm());
+  const handleopenAddClientForm = () => {
+    dispatch(openAddClientForm());
   };
 
   const sorting = (props) => {
@@ -66,7 +66,7 @@ const Clients = () => {
   const handleClickSearch = (e) => {
     let q = e.currentTarget.value;
     if (q && q.length > 0) {
-      dispatch(clientOpenSearchList());
+      dispatch(openClientSearchList());
       dispatch(clientSuggetionListApi({ q: q }));
     }
   };
@@ -74,22 +74,22 @@ const Clients = () => {
     let q = e.currentTarget.value;
     setInput(q);
     if (q && q.length > 0) {
-      dispatch(clientOpenSearchList());
+      dispatch(openClientSearchList());
       dispatch(clientSuggetionListApi({ q: q })).then((action) => {
         if(action.meta.requestStatus == 'rejected'){
-          // dispatch(clientRemoveSearchList());
+          // dispatch(closeClientSearchList());
         }
       });
     }
   };
   const handleCloseSearch = () => {
     setInput('');
-    dispatch(clientRemoveSearchList());
+    dispatch(closeClientSearchList());
     dispatch(clientGridViewApi());
     dispatch(clientListViewApi());
   }
   const handleOnBlur = () => {
-    dispatch(clientRemoveSearchList());
+    dispatch(closeClientSearchList());
   }
 
   return (
@@ -139,7 +139,7 @@ const Clients = () => {
                 </a>
               </li>
             </ul>
-            <a id="addclient-drawer-link" className="add-new-btn btn me-1 px-lg-4  cursor-pointer" onClick={handleOpenNewClientForm}>
+            <a id="addclient-drawer-link" className="add-new-btn btn me-1 px-lg-4  cursor-pointer" onClick={handleopenAddClientForm}>
               {t("new_client")}
             </a>
             <div className="dropdown d-inline-block setting-dropdown">
@@ -169,7 +169,7 @@ const Clients = () => {
           <div className={"tab-pane" + (tabview && tabview == "grid" ? " show active" : "")} id="all">
             <div className="" id="scrollableGridView">
               <InfiniteScroll className="row" dataLength={GridView.data && GridView.data.length ? GridView.data.length : "0"} next={fetchDataGrid} scrollableTarget="page-content" hasMore={GridView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
-                <a className="box-image-cover cursor-pointer" onClick={handleOpenNewClientForm}>
+                <a className="box-image-cover cursor-pointer" onClick={handleopenAddClientForm}>
                   <div className="tabs-image">
                     <img src={config.imagepath + "tabs-image.png"} alt="" />
                   </div>
@@ -232,7 +232,7 @@ const Clients = () => {
             </div>
           </div>
         </div>
-        <ClientForm />
+        <ClientAddForm />
         <ClientDetailModal />
       </div>
     </>

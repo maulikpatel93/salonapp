@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useTranslation } from "react-i18next";
 import config from "../../../config";
-import { clientGridViewApi, clientListViewApi, clientRemoveSearchList } from "../../../store/slices/clientSlice";
+import { clientGridViewApi, clientListViewApi, closeClientSearchList } from "../../../store/slices/clientSlice";
 import { ucfirst } from "../../../helpers/functions";
 
 // import ReactPaginate from 'react-paginate';
@@ -20,7 +20,7 @@ const SuggetionListView = (props) => {
 
   const handleSuggestedId = (e) => {
     let suggetionid = e.currentTarget.parentElement && e.currentTarget.parentElement.dataset && e.currentTarget.parentElement.dataset.id;
-    dispatch(clientRemoveSearchList());
+    dispatch(closeClientSearchList());
     dispatch(clientGridViewApi({ id: suggetionid, result:"result_array" }));
     dispatch(clientListViewApi({ id: suggetionid, result:"result_array"}));
   };

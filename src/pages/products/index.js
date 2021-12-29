@@ -8,8 +8,9 @@ import config from "../../config";
 import Suppliers from "./suppliers";
 
 import { openNewProductForm, productTabView, productTabGridView, productListViewApi, productSort, productSortRemove, productOpenSearchList, productRemoveSearchList, productSuggetionListApi } from "../../store/slices/productSlice";
-import { openNewSupplierForm, supplierGridViewApi } from "../../store/slices/supplierSlice";
-import SupplierDrawerForm from "./suppliers/SupplierDrawerForm";
+import { openAddSupplierForm, supplierGridViewApi } from "../../store/slices/supplierSlice";
+import SupplierAddForm from "./suppliers/SupplierAddForm";
+import SupplierEditForm from "./suppliers/SupplierEditForm";
 
 const Products = () => {
   const { t } = useTranslation();
@@ -42,8 +43,8 @@ const Products = () => {
     dispatch(openNewProductForm());
   };
 
-  const handleOpenNewSupplierForm = () => {
-    dispatch(openNewSupplierForm());
+  const handleOpenAddSupplierForm = () => {
+    dispatch(openAddSupplierForm());
   };
 
   return (
@@ -122,7 +123,7 @@ const Products = () => {
                 </a>
               </div>
               <div className={tabview && tabview == "supplier" ? "active" : ""} style={{ display: tabview && tabview == "supplier" ? "block" : "none" }}>
-                <a className="add-service btn me-md-3 me-1 add-new-btn px-xs-4" onClick={handleOpenNewSupplierForm}>
+                <a className="add-service btn me-md-3 me-1 add-new-btn px-xs-4" onClick={handleOpenAddSupplierForm}>
                   {t("new_supplier")}
                 </a>
               </div>
@@ -246,7 +247,8 @@ const Products = () => {
             </div>
           </div>
         </div>
-        <SupplierDrawerForm />
+        <SupplierAddForm />
+        <SupplierEditForm />
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useField, useFormikContext } from "formik";
 import { useDispatch, useSelector } from "react-redux";
@@ -87,7 +87,7 @@ const SwitchField = ({ label, controlId, ...props }) => {
     </>
   );
 };
-const FileInputField = ({ label, controlId, page, ...props }) => {
+const InputFieldImage = ({ label, controlId, page, ...props }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [field, meta] = useField(props);
@@ -96,8 +96,11 @@ const FileInputField = ({ label, controlId, page, ...props }) => {
   // This function will be triggered when the file field change
   const imageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      dispatch(selectImage({ name: e.target.files[0].name, size: e.target.files[0].size, type: e.target.files[0].type, url: URL.createObjectURL(e.target.files[0]) }));
-      setFieldValue(props.name, e.target.files[0]);
+      const SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/png'];
+      if(SUPPORTED_FORMATS.includes(e.target.files[0].type)){
+        dispatch(selectImage({ name: e.target.files[0].name, size: e.target.files[0].size, type: e.target.files[0].type, url: URL.createObjectURL(e.target.files[0]) }));
+        setFieldValue(props.name, e.target.files[0]);
+      }
     }
     e.target.value = null;
   };
@@ -107,6 +110,7 @@ const FileInputField = ({ label, controlId, page, ...props }) => {
     setFieldValue(props.name, '');
     dispatch(removeImage());
   };
+  
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>
@@ -240,4 +244,4 @@ const DatePickerField = ({ label, controlId, ...props }) => {
   );
 };
 
-export { FloatLabelInputField, InputField, SelectField, ReactSelectField, MapAddressField, TextareaField, SwitchField, FileInputField, DatePickerField };
+export { FloatLabelInputField, InputField, SelectField, ReactSelectField, MapAddressField, TextareaField, SwitchField, InputFieldImage, DatePickerField };

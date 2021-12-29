@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import config from "../../../config";
 import Appointment from "./Appointment";
-import ClientEditForm from "../Form/edit";
+import ClientEditForm from "../Form/ClientEditForm";
 import Voucher from "./Voucher";
 import Subscription from "./Subscription";
 import Membership from "./Membership";
@@ -11,7 +11,6 @@ import Photos from "./Photos";
 import Invoices from "./Invoices";
 import Documents from "./Documents";
 import Notes from "./Photos";
-import { clearMessage } from "../../../store/slices/message";
 import { closeClientDetailModal, clientDetailTab } from "../../../store/slices/clientSlice";
 import { ucfirst } from "helpers/functions";
 

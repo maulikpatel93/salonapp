@@ -101,6 +101,14 @@
     }
 }
 
+.box-image-cover a.supplier-detail {
+    color: $themeTextColor;
+    text-decoration: none;
+    &:hover {
+        color: $themePrimary;
+    }
+}
+
 header {
     z-index: 1049 !important;
 }
