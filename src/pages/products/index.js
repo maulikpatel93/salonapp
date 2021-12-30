@@ -7,11 +7,13 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import config from "../../config";
 import Suppliers from "./suppliers";
 
-import { openNewProductForm, productTabView, productTabGridView, productListViewApi, productSort, productSortRemove, productOpenSearchList, productRemoveSearchList, productSuggetionListApi } from "../../store/slices/productSlice";
+import { openAddProductForm, productTabView, productListViewApi, productSort, productSortRemove, openProductSearchList, closeProductSearchList, productSuggetionListApi, productSearchName } from "../../store/slices/productSlice";
 import { openAddSupplierForm, supplierGridViewApi, openSupplierSearchList, closeSupplierSearchList, supplierSuggetionListApi, supplierSearchName } from "../../store/slices/supplierSlice";
 import SupplierAddForm from "./suppliers/SupplierAddForm";
 import SupplierEditForm from "./suppliers/SupplierEditForm";
 import SupplierSuggetionListView from "./suppliers/SupplierSuggetionListView";
+import ProductListView from "./list/ProductListView";
+import ProductAddForm from "./form/ProductAddForm";
 
 const Products = () => {
   const { t } = useTranslation();
@@ -25,7 +27,7 @@ const Products = () => {
   const sort = useSelector((state) => state.product.isSort);
 
   const isSearchListProduct = useSelector((state) => state.product.isSearchList);
-  const isSearchNameProduct = useSelector((state) => state.supplier.isSearchName);
+  const isSearchNameProduct = useSelector((state) => state.product.isSearchName);
   const isSuggetionViewProduct = useSelector((state) => state.product.isSuggetionListView);
 
   const isSearchListSupplier = useSelector((state) => state.supplier.isSearchList);
@@ -46,26 +48,65 @@ const Products = () => {
     dispatch(productTabView("supplier"));
   };
 
-  const handleOpenNewProductForm = () => {
-    dispatch(openNewProductForm());
+  const handleopenAddProductForm = () => {
+    dispatch(openAddProductForm());
   };
 
   const handleOpenAddSupplierForm = () => {
     dispatch(openAddSupplierForm());
   };
 
-  const fetchDataSuggetionListSupplier = () => {
-    dispatch(clientSuggetionListApi({ next_page_url: isSuggetionViewSupplier.next_page_url, q: isSearchName }));
+  const fetchDataList = () => {
+    dispatch(productListViewApi({ next_page_url: ListView.next_page_url }));
+  };
+  //Product search
+  const fetchDataSuggetionListProduct = () => {
+    dispatch(productSuggetionListApi({ next_page_url: isSuggetionViewProduct.next_page_url, q: isSearchNameProduct }));
   };
 
-  const handleClickSearch = (e) => {
+  const handleClickSearchProduct = (e) => {
+    let q = e.currentTarget.value;
+    if (q && q.length > 0) {
+      dispatch(openProductSearchList());
+      dispatch(productSuggetionListApi({ q: q }));
+    }
+  };
+  const handleKeyUpSearchProduct = (e) => {
+    let q = e.currentTarget.value;
+    dispatch(productSearchName(q));
+    if (q && q.length > 0) {
+      dispatch(openProductSearchList());
+      dispatch(productSuggetionListApi({ q: q })).then((action) => {
+        if (action.meta.requestStatus == "rejected") {
+          // dispatch(closeSupplierSearchList());
+        }
+      });
+    }
+  };
+  const handleCloseSearchProduct = () => {
+    dispatch(productSearchName(""));
+    dispatch(closeProductSearchList());
+    dispatch(productListViewApi());
+  };
+  const handleOnBlurProduct = (e) => {
+    setTimeout(() => {
+      dispatch(closeProductSearchList());
+    }, 100);
+  };
+
+  //Supplier search
+  const fetchDataSuggetionListSupplier = () => {
+    dispatch(supplierSuggetionListApi({ next_page_url: isSuggetionViewSupplier.next_page_url, q: isSearchNameSupplier }));
+  };
+
+  const handleClickSearchSupplier = (e) => {
     let q = e.currentTarget.value;
     if (q && q.length > 0) {
       dispatch(openSupplierSearchList());
       dispatch(supplierSuggetionListApi({ q: q }));
     }
   };
-  const handleKeyUpSearch = (e) => {
+  const handleKeyUpSearchSupplier = (e) => {
     let q = e.currentTarget.value;
     dispatch(supplierSearchName(q));
     if (q && q.length > 0) {
@@ -77,12 +118,12 @@ const Products = () => {
       });
     }
   };
-  const handleCloseSearch = () => {
+  const handleCloseSearchSupplier = () => {
     dispatch(supplierSearchName(""));
     dispatch(closeSupplierSearchList());
     dispatch(supplierGridViewApi());
   };
-  const handleOnBlur = (e) => {
+  const handleOnBlurSupplier = (e) => {
     setTimeout(() => {
       dispatch(closeSupplierSearchList());
     }, 100);
@@ -112,24 +153,45 @@ const Products = () => {
                 <span className="input-group-text">
                   <i className="far fa-search"></i>
                 </span>
-                {tabview && tabview == "product" ? <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchNameSupplier} onInput={(e) => dispatch(supplierSearchName(e.target.value))} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} onBlur={handleOnBlur} /> : <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchNameSupplier} onInput={(e) => dispatch(supplierSearchName(e.target.value))} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} onBlur={handleOnBlur} />}
-                <a href="#" className="close" style={{ display: isSearchNameSupplier ? "block" : "none" }} onClick={handleCloseSearch}>
-                  <i className="fal fa-times"></i>
-                </a>
+                {tabview && tabview == "product" ? (
+                  <>
+                    <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchNameProduct} onInput={(e) => dispatch(productSearchName(e.target.value))} onClick={handleClickSearchProduct} onKeyUp={handleKeyUpSearchProduct} onBlur={handleOnBlurProduct} />
+                    <a href="#" className="close" style={{ display: isSearchNameProduct ? "block" : "none" }} onClick={handleCloseSearchProduct}>
+                      <i className="fal fa-times"></i>
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchNameSupplier} onInput={(e) => dispatch(supplierSearchName(e.target.value))} onClick={handleClickSearchSupplier} onKeyUp={handleKeyUpSearchSupplier} onBlur={handleOnBlurSupplier} />
+                    <a href="#" className="close" style={{ display: isSearchNameSupplier ? "block" : "none" }} onClick={handleCloseSearchSupplier}>
+                      <i className="fal fa-times"></i>
+                    </a>
+                  </>
+                )}
               </div>
-              <div className={"search-result dropdown-box " + isSearchListSupplier} id="search-content">
-                <InfiniteScroll className="" dataLength={isSuggetionViewSupplier.data && isSuggetionViewSupplier.data.length ? isSuggetionViewSupplier.data.length : "0"} next={fetchDataSuggetionListSupplier} scrollableTarget="search-content" hasMore={isSuggetionViewSupplier.next_page_url ? true : false} loader={<h4>loading...</h4>}>
-                  <ul className="p-0 m-0 list-unstyled">
-                    <SupplierSuggetionListView view={isSuggetionViewSupplier} />
-                  </ul>
-                </InfiniteScroll>
-              </div>
+              {tabview && tabview == "product" ? (
+                <div className={"search-result dropdown-box " + isSearchListProduct} id="search-content">
+                  <InfiniteScroll className="" dataLength={isSuggetionViewProduct.data && isSuggetionViewProduct.data.length ? isSuggetionViewProduct.data.length : "0"} next={fetchDataSuggetionListProduct} scrollableTarget="search-content" hasMore={isSuggetionViewProduct.next_page_url ? true : false} loader={<h4>loading...</h4>}>
+                    <ul className="p-0 m-0 list-unstyled">
+                      <SupplierSuggetionListView view={isSuggetionViewProduct} />
+                    </ul>
+                  </InfiniteScroll>
+                </div>
+              ) : (
+                <div className={"search-result dropdown-box " + isSearchListSupplier} id="search-content">
+                  <InfiniteScroll className="" dataLength={isSuggetionViewSupplier.data && isSuggetionViewSupplier.data.length ? isSuggetionViewSupplier.data.length : "0"} next={fetchDataSuggetionListSupplier} scrollableTarget="search-content" hasMore={isSuggetionViewSupplier.next_page_url ? true : false} loader={<h4>loading...</h4>}>
+                    <ul className="p-0 m-0 list-unstyled">
+                      <SupplierSuggetionListView view={isSuggetionViewSupplier} />
+                    </ul>
+                  </InfiniteScroll>
+                </div>
+              )}
             </div>
           </div>
           <div className="col-md-4 text-end col-5 ps-0 order-md-3 order-2">
             <div className="tab-content p-0 d-inline-block">
               <div className={tabview && tabview == "product" ? "active" : ""} style={{ display: tabview && tabview == "product" ? "block" : "none" }}>
-                <a className="add-service btn me-md-3 me-1 add-new-btn px-xs-4" onClick={handleOpenNewProductForm}>
+                <a className="add-service btn me-md-3 me-1 add-new-btn px-xs-4" onClick={handleopenAddProductForm}>
                   {t("new_product")}
                 </a>
               </div>
@@ -166,79 +228,66 @@ const Products = () => {
         <div className="container">
           <div className={"tab-content " + (tabview && tabview == "product" ? "px-lg-4" : "list-view-content")}>
             <div className={"tab-pane" + (tabview && tabview == "product" ? " show active" : "")} id="product" role="tabpanel" aria-labelledby="product-tab">
-              {ListView && ListView.data ? (
+              {ListView.length > 0 || ListView.data ? (
                 <section>
-                  <div className="services-table-shadow table-responsive">
-                    <table className="table bg-white">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>
-                            <div className="services-name d-flex align-items-center">
-                              Product Name
-                              <span className="down-up-arrow">
-                                <i className="fal fa-angle-up"></i>
-                                <i className="fal fa-angle-down"></i>
-                              </span>
-                            </div>
-                          </th>
-                          <th>
-                            <div className="d-flex align-items-center justify-content-center">
-                              SKU
-                              <span className="down-up-arrow">
-                                <i className="fal fa-angle-up"></i>
-                                <i className="fal fa-angle-down"></i>
-                              </span>
-                            </div>
-                          </th>
-                          <th>
-                            <div className="d-flex align-items-center justify-content-center">
-                              Supplier
-                              <span className="down-up-arrow">
-                                <i className="fal fa-angle-up"></i>
-                                <i className="fal fa-angle-down"></i>
-                              </span>
-                            </div>
-                          </th>
-                          <th>
-                            <div className="d-flex align-items-center justify-content-center">
-                              Stock
-                              <span className="down-up-arrow">
-                                <i className="fal fa-angle-up"></i>
-                                <i className="fal fa-angle-down"></i>
-                              </span>
-                            </div>
-                          </th>
-                          <th>
-                            <div className="d-flex align-items-center justify-content-center">
-                              Retail Price
-                              <span className="down-up-arrow">
-                                <i className="fal fa-angle-up"></i>
-                                <i className="fal fa-angle-down"></i>
-                              </span>
-                            </div>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="services-table-data">
-                        <tr>
-                          <td className="edit-product">
-                            <div className="pro-img">
-                              <img src={config.imagepath + "product-img.png"} alt="" />
-                            </div>
-                          </td>
-                          <td className="edit-product">
-                            <div className="pro-title">
-                              <h6 className="mb-1">Wella Fushion Intense Repair Shampoo</h6>
-                            </div>
-                          </td>
-                          <td style={{ textAlign: "center" }}>WEL18672</td>
-                          <td style={{ textAlign: "center" }}>Wella</td>
-                          <td style={{ textAlign: "center" }}>12</td>
-                          <td style={{ textAlign: "center" }}>$100.00</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                  <div className="table-responsive services-table-shadow" id="scrollableListView">
+                    <InfiniteScroll dataLength={ListView.data && ListView.data.length ? ListView.data.length : "0"} next={fetchDataList} scrollableTarget="page-content" hasMore={ListView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
+                      <table className="table bg-white">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>
+                              <div className="services-name d-flex align-items-center">
+                                Product Name
+                                <span className="down-up-arrow">
+                                  <i className="fal fa-angle-up"></i>
+                                  <i className="fal fa-angle-down"></i>
+                                </span>
+                              </div>
+                            </th>
+                            <th>
+                              <div className="d-flex align-items-center justify-content-center">
+                                SKU
+                                <span className="down-up-arrow">
+                                  <i className="fal fa-angle-up"></i>
+                                  <i className="fal fa-angle-down"></i>
+                                </span>
+                              </div>
+                            </th>
+                            <th>
+                              <div className="d-flex align-items-center justify-content-center">
+                                Supplier
+                                <span className="down-up-arrow">
+                                  <i className="fal fa-angle-up"></i>
+                                  <i className="fal fa-angle-down"></i>
+                                </span>
+                              </div>
+                            </th>
+                            <th>
+                              <div className="d-flex align-items-center justify-content-center">
+                                Stock
+                                <span className="down-up-arrow">
+                                  <i className="fal fa-angle-up"></i>
+                                  <i className="fal fa-angle-down"></i>
+                                </span>
+                              </div>
+                            </th>
+                            <th>
+                              <div className="d-flex align-items-center justify-content-center">
+                                Retail Price
+                                <span className="down-up-arrow">
+                                  <i className="fal fa-angle-up"></i>
+                                  <i className="fal fa-angle-down"></i>
+                                </span>
+                              </div>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="services-table-data">
+                          <ProductListView view={ListView} />
+                        </tbody>
+                      </table>
+                    </InfiniteScroll>
                   </div>
                 </section>
               ) : (
@@ -247,7 +296,7 @@ const Products = () => {
                     <img src={config.imagepath + "service.png"} alt="" className="mb-md-4 mb-3" />
                     <h4 className="mb-2 fw-semibold">
                       {t("no_products_have_been_created_yet")}
-                      <a className="add-product ms-1 cursor-pointer">{t("please_create_one")}</a>.
+                      <a className="add-product ms-1 cursor-pointer" onClick={() => dispatch(openAddProductForm())}>{t("please_create_one")}</a>.
                     </h4>
                   </div>
                 </div>
@@ -260,6 +309,7 @@ const Products = () => {
         </div>
         <SupplierAddForm />
         <SupplierEditForm />
+        <ProductAddForm />
       </div>
     </>
   );

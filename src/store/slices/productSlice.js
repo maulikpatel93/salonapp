@@ -139,15 +139,15 @@ export const productSuggetionListApi = createAsyncThunk("product/suggetionlist",
 
 const initialState = {
   isOpenedAddForm: "",
+  isOpenedEditForm: "",
   isOpenedDetailModal: "",
   isListView: [],
   isSuggetionListView: [],
   isDetailData: "",
-  isDeleted: false,
   isTabView: "product",
-  isproductDetailTab: "appointment",
   isSort: "",
   isSearchList: "",
+  isSearchName: "",
 };
 
 export const productSlice = createSlice({
@@ -155,29 +155,31 @@ export const productSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
-    openNewProductForm: (state = initialState) => {
-      state.isOpenedDetailModal = "";
-      state.isOpenedAddForm = "open";
-    },
-    closeNewProductForm: (state = initialState) => {
-      state.isOpenedDetailModal = "";
-      state.isOpenedAddForm = "";
-    },
     productTabView: (state, action) => {
       state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "";
       state.isOpenedDetailModal = "";
       state.isTabView = action.payload;
     },
-    openproductDetailModal: (state = initialState) => {
-      state.isOpenedAddForm = "";
-      state.isOpenedDetailModal = "open";
-    },
-    closeproductDetailModal: (state = initialState) => {
-      state.isOpenedAddForm = "";
+    openAddProductForm: (state = initialState) => {
+      state.isOpenedAddForm = "open";
+      state.isOpenedEditForm = "";
       state.isOpenedDetailModal = "";
     },
-    productDetailTab: (state, action) => {
-      state.isproductDetailTab = action.payload;
+    closeAddProductForm: (state = initialState) => {
+      state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "";
+      state.isOpenedDetailModal = "";
+    },
+    openProductDetailModal: (state = initialState) => {
+      state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "";
+      state.isOpenedDetailModal = "open";
+    },
+    closeProductDetailModal: (state = initialState) => {
+      state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "";
+      state.isOpenedDetailModal = "";
     },
     productSort: (state, action) => {
       let sort = state.isSort ? state.isSort : {};
@@ -186,27 +188,41 @@ export const productSlice = createSlice({
     productSortRemove: (state) => {
       state.isSort = "";
     },
-    productOpenSearchList: (state) => {
+    openProductSearchList: (state) => {
       state.isSearchList = "open";
     },
-    productRemoveSearchList: (state) => {
+    closeProductSearchList: (state) => {
       state.isSearchList = "";
+    },
+    productSearchName: (state, action) => {
+      state.isSearchName = action.payload;
     },
   },
   extraReducers: {
     [productStoreApi.pending]: (state, action) => {},
-    [productStoreApi.fulfilled]: (state, action) => {},
-    [productStoreApi.rejected]: (state, action) => {},
-    [productListViewApi.pending]: (state, action) => {
-      // state.isListView = [];
+    [productStoreApi.fulfilled]: (state, action) => {
+      state.isGridView.data = [...state.isGridView.data, action.payload];
     },
+    [productStoreApi.rejected]: (state, action) => {},
+    [productUpdateApi.pending]: (state, action) => {},
+    [productUpdateApi.fulfilled]: (state, action) => {
+      const { id, ...changes } = action.payload;
+      const existingData = state.isGridView.data.find((event) => event.id === id);
+      if (existingData) {
+        Object.keys(changes).map((keyName, i) => {
+          existingData[keyName] = changes[keyName];
+        });
+      }
+    },
+    [productUpdateApi.rejected]: (state, action) => {},
+    [productListViewApi.pending]: (state, action) => {},
     [productListViewApi.fulfilled]: (state, action) => {
       let old_current_page = state.isListView.current_page ? state.isListView.current_page : "";
       let new_current_page = action.payload.current_page ? action.payload.current_page : "";
       let viewdata = state.isListView && state.isListView.data;
       let newviewdata = action.payload && action.payload.data;
       state.isListView = action.payload;
-      if (old_current_page && new_current_page && old_current_page != new_current_page) {
+      if (old_current_page && new_current_page && old_current_page < new_current_page && old_current_page != new_current_page) {
         let data = viewdata && newviewdata ? (state.isListView.data = [...viewdata, ...newviewdata]) : action.payload;
       }
       state.isListView = action.payload;
@@ -214,16 +230,14 @@ export const productSlice = createSlice({
     [productListViewApi.rejected]: (state, action) => {
       state.isListView = [];
     },
-    [productSuggetionListApi.pending]: (state, action) => {
-      // state.isSuggetionListView = [];
-    },
+    [productSuggetionListApi.pending]: (state, action) => {},
     [productSuggetionListApi.fulfilled]: (state, action) => {
       let old_current_page = state.isSuggetionListView.current_page ? state.isSuggetionListView.current_page : "";
       let new_current_page = action.payload.current_page ? action.payload.current_page : "";
       let viewdata = state.isSuggetionListView && state.isSuggetionListView.data;
       let newviewdata = action.payload && action.payload.data;
       state.isSuggetionListView = action.payload;
-      if (old_current_page && new_current_page && old_current_page != new_current_page) {
+      if (old_current_page && new_current_page && old_current_page < new_current_page &&  old_current_page != new_current_page) {
         let data = viewdata && newviewdata ? (state.isSuggetionListView.data = [...viewdata, ...newviewdata]) : action.payload;
       }
       state.isSuggetionListView = action.payload;
@@ -231,27 +245,21 @@ export const productSlice = createSlice({
     [productSuggetionListApi.rejected]: (state, action) => {
       state.isSuggetionListView = [];
     },
-    [productDetailApi.pending]: (state, action) => {
-      // state.isDetailData = "";
-    },
+    [productDetailApi.pending]: (state, action) => {},
     [productDetailApi.fulfilled]: (state, action) => {
       state.isDetailData = action.payload;
     },
     [productDetailApi.rejected]: (state, action) => {
       state.isDetailData = "";
     },
-    [productDeleteApi.pending]: (state, action) => {
-      state.isDeleted = false;
-    },
+    [productDeleteApi.pending]: (state, action) => {},
     [productDeleteApi.fulfilled]: (state, action) => {
       const { id } = action.payload;
-      state.isView = state.isView.data ? state.isView.data.filter((item) => item.id != id) : state.isView.filter((item) => item.id != id);
+      state.isListView.data = state.isListView.data ? state.isListView.data.filter((item) => item.id != id) : state.isListView.filter((item) => item.id != id);
     },
-    [productDeleteApi.rejected]: (state, action) => {
-      state.isDeleted = false;
-    },
+    [productDeleteApi.rejected]: (state, action) => {},
   },
 });
 // Action creators are generated for each case reducer function
-export const { reset, productTabView, openNewProductForm, closeNewProductForm,  productTabGridView, openproductDetailModal, closeproductDetailModal, productDetailTab, productSort, productSortRemove, productOpenSearchList, productRemoveSearchList } = productSlice.actions;
+export const { reset, productTabView, openAddProductForm, closeAddProductForm,  productTabGridView, openProductDetailModal, closeProductDetailModal, productDetailTab, productSort, productSortRemove, openProductSearchList, closeProductSearchList, productSearchName } = productSlice.actions;
 export default productSlice.reducer;

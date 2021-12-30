@@ -146,9 +146,6 @@ const initialState = {
   isGridView: [],
   isSuggetionListView: [],
   isDetailData: "",
-  isTabView: "grid",
-  issupplierDetailTab: "appointment",
-  isSort: "",
   isSearchList: "",
   isSearchName: "",
 };
@@ -231,7 +228,7 @@ export const supplierSlice = createSlice({
       let viewdata = state.isSuggetionListView && state.isSuggetionListView.data;
       let newviewdata = action.payload && action.payload.data;
       state.isSuggetionListView = action.payload;
-      if (old_current_page && new_current_page && old_current_page != new_current_page) {
+      if (old_current_page && new_current_page && old_current_page < new_current_page && old_current_page != new_current_page) {
         let data = viewdata && newviewdata ? (state.isSuggetionListView.data = [...viewdata, ...newviewdata]) : action.payload;
       }
       state.isSuggetionListView = action.payload;
@@ -246,9 +243,7 @@ export const supplierSlice = createSlice({
     [supplierDetailApi.rejected]: (state, action) => {
       state.isDetailData = "";
     },
-    [supplierDeleteApi.pending]: (state, action) => {
-      state.isDeleted = false;
-    },
+    [supplierDeleteApi.pending]: (state, action) => {},
     [supplierDeleteApi.fulfilled]: (state, action) => {
       const { id } = action.payload;
       state.isGridView.data = state.isGridView.data ? state.isGridView.data.filter((item) => item.id != id) : state.isGridView.filter((item) => item.id != id);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 // validation Formik
@@ -10,36 +10,36 @@ import { InputField, MapAddressField, InputFieldImage } from "../../../component
 import { sweatalert } from "../../../component/Sweatalert2";
 
 // import { closeNewSupplierForm } from "../../../store/slices/supplierSlice";
-import { closeAddSupplierForm, supplierStoreApi } from "../../../store/slices/supplierSlice";
-import { removeImage } from "../../../store/slices/imageSlice";
+import { closeEditProductForm, productUpdateApi } from "../../../store/slices/productSlice";
+import { selectImage, removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
+import _ from "lodash";
 
-const SupplierAddForm = () => {
+const ProductEditForm = () => {
   const [loading, setLoading] = useState(false);
-  const rightDrawerOpened = useSelector((state) => state.supplier.isOpenedAddForm);
-
+  const rightDrawerOpened = useSelector((state) => state.supplier.isOpenedEditForm);
+  const detail = useSelector((state) => state.supplier.isDetailData);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const scriptedRef = useScriptRef();
 
-  const handleCloseAddSupplierForm = () => {
-    dispatch(closeAddSupplierForm());
-    dispatch({type:'supplier/detail/rejected'});
+  const handleCloseEditSupplierForm = () => {
+    dispatch(closeEditProductForm());
+    dispatch({ type: "supplier/detail/rejected" });
   };
-
   const initialValues = {
-    name: "",
-    first_name: "",
-    last_name: "",
-    logo: "",
-    email: "",
-    phone_number: "",
-    website: "",
-    address: "",
-    street: "",
-    suburb: "",
-    state: "",
-    postcode: ""
+    id: detail && detail.id,
+    name: detail && detail.name,
+    first_name: detail && detail.first_name,
+    last_name: detail && detail.last_name,
+    email: detail && detail.email,
+    phone_number: detail && detail.phone_number,
+    website: detail && detail.website,
+    address: detail && detail.address,
+    street: detail && detail.street,
+    suburb: detail && detail.suburb,
+    state: detail && detail.state,
+    postcode: detail && detail.postcode,
   };
 
   const validationSchema = Yup.object().shape({
@@ -55,20 +55,20 @@ const SupplierAddForm = () => {
     street: Yup.string().label(t("street")).required(),
     suburb: Yup.string().label(t("suburb")).required(),
     state: Yup.string().label(t("state")).required(),
-    postcode: Yup.string().max(12).label(t("postcode")).required()
+    postcode: Yup.string().max(12).label(t("postcode")).required(),
   });
   yupconfig();
 
   const handleSupplierSubmit = (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
     setLoading(true);
     try {
-      dispatch(supplierStoreApi(values)).then((action) => {
+      dispatch(productUpdateApi(values)).then((action) => {
         if (action.meta.requestStatus == "fulfilled") {
           setStatus({ success: true });
           resetForm();
           dispatch(removeImage());
-          dispatch(closeAddSupplierForm());
-          sweatalert({ title: t("created"), text: t("created_successfully"), icon: "success" });
+          dispatch(closeEditProductForm());
+          sweatalert({ title: t("updated"), text: t("updated_successfully"), icon: "success" });
         } else if (action.meta.requestStatus == "rejected") {
           const status = action.payload && action.payload.status;
           const errors = action.payload && action.payload.message && action.payload.message.errors;
@@ -93,16 +93,21 @@ const SupplierAddForm = () => {
 
   return (
     <React.Fragment>
-      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
-      {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, setFieldValue, touched, values, status }) => {
+      <Formik enableReinitialize={true} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
+        {({ handleSubmit, values, status }) => {
+          useEffect(() => {
+            if (detail.logo) {
+              dispatch(selectImage({ name: detail.logo, size: "", type: "", url: detail.logo_url }));
+            }
+          }, [detail]);
           return (
             <div className={"full-screen-drawer p-0 " + rightDrawerOpened} id="addsuppliers-drawer">
               <div className="drawer-wrp position-relative">
                 <form noValidate onSubmit={handleSubmit}>
                   <div className="drawer-header px-md-4 px-3 py-3 d-flex flex-wrap align-items-center">
-                    <h3 className="mb-0 fw-semibold">{t('new_supplier')}</h3>
+                    <h3 className="mb-0 fw-semibold">New Supplier</h3>
                     <div className="ms-auto">
-                      <a className="close btn me-1 cursor-pointer" onClick={handleCloseAddSupplierForm}>
+                      <a className="close btn me-1 cursor-pointer" onClick={handleCloseEditSupplierForm}>
                         {t("cancel")}
                       </a>
                       <button type="submit" className="btn">
@@ -126,7 +131,7 @@ const SupplierAddForm = () => {
                         <div className="col-md-6 ps-md-0 mb-md-0 mb-3">
                           <h4 className="fw-semibold mb-2">{t("contact_information")}</h4>
                           <p>{t("add_the_contact_details_of_this_supplier")}</p>
-                          <InputFieldImage name="logo" accept="image/*" label={t("add_supplier_Logo")} page="supplier-form" controlId="supplierForm-logo" />
+                          <InputFieldImage name="logo" accept="image/*" label={t("add_supplier_Logo")} page="supplier-form" controlId="supplierForm-logo" imagname="" imageurl="" />
                         </div>
                         <div className="col-md-6 pe-md-0">
                           <div className="row gx-2">
@@ -184,4 +189,4 @@ const SupplierAddForm = () => {
   );
 };
 
-export default SupplierAddForm;
+export default ProductEditForm;

@@ -10,6 +10,7 @@ import Select from "react-select";
 import Autocomplete from "react-google-autocomplete";
 import config from "../../config";
 import { selectImage, removeImage } from "../../store/slices/imageSlice";
+import CustomSelect from "./CustomSelect";
 
 const FloatLabelInputField = ({ label, controlId, ...props }) => {
   const [field, meta] = useField(props);
@@ -132,7 +133,7 @@ const InputFieldImage = ({ label, controlId, page, ...props }) => {
           ""
         )}
 
-        {page == "supplier-form" ? (
+        {page == "supplier-form" || page == "product-form" ? (
           <>
             <div className="input-file position-relative d-flex align-content-center flex-wrap justify-content-center ms-lg-5">
               <Form.Control type="file" onChange={field.onChange} {...props} isInvalid={!!meta.error} className={image && image.selected ? "input-photo d-none" : "input-photo"} />
@@ -140,7 +141,7 @@ const InputFieldImage = ({ label, controlId, page, ...props }) => {
               <span className={"cursor-pointer " + (image && image.selected ? "d-block" : "d-none")} onClick={removeSelectedImage}>
                 {t("remove")}
               </span>
-              <span className={"cursor-pointer " + (image && image.selected ? "d-none" : "d-block")}>{t("add_supplier_Logo")}</span>
+              <span className={"cursor-pointer " + (image && image.selected ? "d-none" : "d-block")}>{label}</span>
             </div>
             <div className="d-flex align-content-center flex-wrap justify-content-center ms-lg-5">
               <Form.Control.Feedback type="invalid" className={image && image.selected ? "d-none" : "d-block"}>
@@ -190,22 +191,30 @@ const InputFieldImage = ({ label, controlId, page, ...props }) => {
 
 const ReactSelectField = ({ label, controlId, options, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  const [valueState, setValueState] = useState(null);
-  const handler = (event) => {
-    helpers.setValue(event);
-    setValueState(event);
+  // const [valueState, setValueState] = useState(null);
+  const handleChange = value => {
+    // props.onChange("supplier_id", value ? value.value : "");
+    helpers.setValue(value);
+    helpers.setTouched(true);
+    helpers.setError(undefined);
+    // setValueState(value ? value.value : "");
+  };
+
+  const handleBlur = () => {
+    props.onBlur("supplier_id", true);
   };
 
   const customStyles = {
     menuPortal: (provided) => ({ ...provided, zIndex: 3 }),
     menu: (provided) => ({ ...provided, zIndex: 3 }),
   };
-
+  
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>
         <Form.Label>{label}</Form.Label>
-        <Select {...field} {...props} isInvalid={!!meta.error} className={meta.touched && meta.error ? "is-invalid" : ""} isClearable={true} onChange={handler} options={options} onBlur={() => helpers.setTouched(true)} classNamePrefix={"my-custom-react-select"} styles={customStyles} />
+        {/* <Select {...field} {...props} isInvalid={!!meta.error} className={meta.touched && meta.error ? "is-invalid" : ""} isClearable={true} onChange={handler} options={options} onBlur={() => helpers.setTouched(true)} classNamePrefix={"my-custom-react-select"} styles={customStyles} /> */}
+        <Select {...field} {...props} isInvalid={!!meta.error} className={meta.touched && meta.error ? "is-invalid" : ""} isClearable={true} options={options} onChange={handleChange} onBlur={handleBlur} />
         <Form.Control.Feedback type="invalid">{meta.error}</Form.Control.Feedback>
       </Form.Group>
     </>
