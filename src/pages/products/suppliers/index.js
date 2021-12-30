@@ -16,15 +16,9 @@ const Suppliers = () => {
   const currentUser = auth.user;
 
   const GridView = useSelector((state) => state.supplier.isGridView);
-  
   const fetchDataGrid = () => {
     dispatch(supplierGridViewApi({ next_page_url: GridView.next_page_url }));
   };
-  const [input, setInput] = useState("");
-  const fetchDataSuggetionList = () => {
-    dispatch(supplierSuggetionListApi({ next_page_url: SuggetionView.next_page_url, q: input }));
-  };
-
   const [isFetching, setIsFetching] = useState(false);
   const loadMoreItems = () => {
     setIsFetching(true);
@@ -37,7 +31,7 @@ const Suppliers = () => {
 
   return (
     <>
-      {GridView && GridView.data ? (
+      {GridView.length > 0 || GridView.data ? (
         <div className="row">
           <InfiniteScroll className="row" dataLength={GridView.data && GridView.data.length ? GridView.data.length : "0"} next={fetchDataGrid} scrollableTarget="page-content" hasMore={GridView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
             <a className="box-image-cover cursor-pointer" onClick={() => dispatch(openAddSupplierForm())}>
@@ -66,7 +60,7 @@ const Suppliers = () => {
             <img src={config.imagepath + "service.png"} alt="" className="mb-md-4 mb-3" />
             <h4 className="mb-2 fw-semibold">
               {t("no_suppliers_have_been_created_yet")}
-              <a className="add-suppliers ms-1 cursor-pointer">{t("please_create_one")}</a>.
+              <a className="add-suppliers ms-1 cursor-pointer" onClick={() => dispatch(openAddSupplierForm())}>{t("please_create_one")}</a>.
             </h4>
           </div>
         </div>

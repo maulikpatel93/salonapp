@@ -16,7 +16,6 @@ const SupplierGridView = (props) => {
   // const view = useSelector((state) => state.supplier.isView);
  
   const objectData = view && view.data ? view.data : view;
- 
   const handleSupplierDelete = (e) => {
     const props = JSON.parse(e.currentTarget.dataset.obj);
     const name = ucfirst(props.first_name + " " + props.last_name);

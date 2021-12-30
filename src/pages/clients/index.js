@@ -48,9 +48,6 @@ const Clients = () => {
   const fetchDataList = () => {
     dispatch(clientListViewApi({ next_page_url: ListView.next_page_url }));
   };
-  const fetchDataSuggetionList = () => {
-    dispatch(clientSuggetionListApi({ next_page_url: SuggetionView.next_page_url, q: isSearchName }));
-  };
 
   const [isFetching, setIsFetching] = useState(false);
   const loadMoreItems = () => {
@@ -61,6 +58,10 @@ const Clients = () => {
     setTimeout(() => {
       setIsFetching(false);
     }, 2000);
+  };
+  
+  const fetchDataSuggetionList = () => {
+    dispatch(clientSuggetionListApi({ next_page_url: SuggetionView.next_page_url, q: isSearchName }));
   };
 
   const handleClickSearch = (e) => {

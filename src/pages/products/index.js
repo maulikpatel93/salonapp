@@ -8,9 +8,10 @@ import config from "../../config";
 import Suppliers from "./suppliers";
 
 import { openNewProductForm, productTabView, productTabGridView, productListViewApi, productSort, productSortRemove, productOpenSearchList, productRemoveSearchList, productSuggetionListApi } from "../../store/slices/productSlice";
-import { openAddSupplierForm, supplierGridViewApi } from "../../store/slices/supplierSlice";
+import { openAddSupplierForm, supplierGridViewApi, openSupplierSearchList, closeSupplierSearchList, supplierSuggetionListApi, supplierSearchName } from "../../store/slices/supplierSlice";
 import SupplierAddForm from "./suppliers/SupplierAddForm";
 import SupplierEditForm from "./suppliers/SupplierEditForm";
+import SupplierSuggetionListView from "./suppliers/SupplierSuggetionListView";
 
 const Products = () => {
   const { t } = useTranslation();
@@ -22,8 +23,14 @@ const Products = () => {
   const tabview = useSelector((state) => state.product.isTabView);
   const ListView = useSelector((state) => state.product.isListView);
   const sort = useSelector((state) => state.product.isSort);
-  const isSearchList = useSelector((state) => state.product.isSearchList);
-  const SuggetionView = useSelector((state) => state.product.isSuggetionListView);
+
+  const isSearchListProduct = useSelector((state) => state.product.isSearchList);
+  const isSearchNameProduct = useSelector((state) => state.supplier.isSearchName);
+  const isSuggetionViewProduct = useSelector((state) => state.product.isSuggetionListView);
+
+  const isSearchListSupplier = useSelector((state) => state.supplier.isSearchList);
+  const isSearchNameSupplier = useSelector((state) => state.supplier.isSearchName);
+  const isSuggetionViewSupplier = useSelector((state) => state.supplier.isSuggetionListView);
 
   useEffect(() => {
     dispatch(productSortRemove());
@@ -45,6 +52,40 @@ const Products = () => {
 
   const handleOpenAddSupplierForm = () => {
     dispatch(openAddSupplierForm());
+  };
+
+  const fetchDataSuggetionListSupplier = () => {
+    dispatch(clientSuggetionListApi({ next_page_url: isSuggetionViewSupplier.next_page_url, q: isSearchName }));
+  };
+
+  const handleClickSearch = (e) => {
+    let q = e.currentTarget.value;
+    if (q && q.length > 0) {
+      dispatch(openSupplierSearchList());
+      dispatch(supplierSuggetionListApi({ q: q }));
+    }
+  };
+  const handleKeyUpSearch = (e) => {
+    let q = e.currentTarget.value;
+    dispatch(supplierSearchName(q));
+    if (q && q.length > 0) {
+      dispatch(openSupplierSearchList());
+      dispatch(supplierSuggetionListApi({ q: q })).then((action) => {
+        if (action.meta.requestStatus == "rejected") {
+          // dispatch(closeSupplierSearchList());
+        }
+      });
+    }
+  };
+  const handleCloseSearch = () => {
+    dispatch(supplierSearchName(""));
+    dispatch(closeSupplierSearchList());
+    dispatch(supplierGridViewApi());
+  };
+  const handleOnBlur = (e) => {
+    setTimeout(() => {
+      dispatch(closeSupplierSearchList());
+    }, 100);
   };
 
   return (
@@ -71,47 +112,17 @@ const Products = () => {
                 <span className="input-group-text">
                   <i className="far fa-search"></i>
                 </span>
-                <input type="text" className="form-control search-input" placeholder="Search" />
-                <a href="#" className="close" style={{ display: "none" }}>
+                {tabview && tabview == "product" ? <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchNameSupplier} onInput={(e) => dispatch(supplierSearchName(e.target.value))} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} onBlur={handleOnBlur} /> : <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchNameSupplier} onInput={(e) => dispatch(supplierSearchName(e.target.value))} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} onBlur={handleOnBlur} />}
+                <a href="#" className="close" style={{ display: isSearchNameSupplier ? "block" : "none" }} onClick={handleCloseSearch}>
                   <i className="fal fa-times"></i>
                 </a>
               </div>
-              <div className="search-result dropdown-box">
-                <ul className="p-0 m-0 list-unstyled">
-                  <li>
-                    <a href="#" className="d-flex">
-                      <div className="user-img me-2">
-                        <img src={config.imagepath + "Avatar.png"} alt="" />
-                      </div>
-                      <div className="user-id">
-                        <span className="user-name">Jo Smith</span>
-                        <span className="user-id">jo.smith@gmail.com</span>
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="d-flex">
-                      <div className="user-img me-2">
-                        <img src={config.imagepath + "Avatar.png"} alt="" />
-                      </div>
-                      <div className="user-id">
-                        <span className="user-name">Jo Smith</span>
-                        <span className="user-id">jo.smith@gmail.com</span>
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="d-flex">
-                      <div className="user-img me-2">
-                        <img src={config.imagepath + "Avatar.png"} alt="" />
-                      </div>
-                      <div className="user-id">
-                        <span className="user-name">Jo Smith</span>
-                        <span className="user-id">jo.smith@gmail.com</span>
-                      </div>
-                    </a>
-                  </li>
-                </ul>
+              <div className={"search-result dropdown-box " + isSearchListSupplier} id="search-content">
+                <InfiniteScroll className="" dataLength={isSuggetionViewSupplier.data && isSuggetionViewSupplier.data.length ? isSuggetionViewSupplier.data.length : "0"} next={fetchDataSuggetionListSupplier} scrollableTarget="search-content" hasMore={isSuggetionViewSupplier.next_page_url ? true : false} loader={<h4>loading...</h4>}>
+                  <ul className="p-0 m-0 list-unstyled">
+                    <SupplierSuggetionListView view={isSuggetionViewSupplier} />
+                  </ul>
+                </InfiniteScroll>
               </div>
             </div>
           </div>

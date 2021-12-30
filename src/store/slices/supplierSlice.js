@@ -150,6 +150,7 @@ const initialState = {
   issupplierDetailTab: "appointment",
   isSort: "",
   isSearchList: "",
+  isSearchName: "",
 };
 
 export const supplierSlice = createSlice({
@@ -187,6 +188,9 @@ export const supplierSlice = createSlice({
     closeSupplierSearchList: (state) => {
       state.isSearchList = "";
     },
+    supplierSearchName: (state, action) => {
+      state.isSearchName = action.payload;
+    },
   },
   extraReducers: {
     [supplierStoreApi.pending]: (state, action) => {},
@@ -197,8 +201,8 @@ export const supplierSlice = createSlice({
     [supplierUpdateApi.pending]: (state, action) => {},
     [supplierUpdateApi.fulfilled]: (state, action) => {
       const { id, ...changes } = action.payload;
-      const existingData = state.isGridView.data.find(event => event.id === id);
-      if(existingData){
+      const existingData = state.isGridView.data.find((event) => event.id === id);
+      if (existingData) {
         Object.keys(changes).map((keyName, i) => {
           existingData[keyName] = changes[keyName];
         });
@@ -253,5 +257,5 @@ export const supplierSlice = createSlice({
   },
 });
 // Action creators are generated for each case reducer function
-export const { reset, openAddSupplierForm, closeAddSupplierForm, openEditSupplierForm, closeEditSupplierForm, openSupplierDetailModal, closeSupplierDetailModal, openSupplierSearchList, closeSupplierSearchList } = supplierSlice.actions;
+export const { reset, openAddSupplierForm, closeAddSupplierForm, openEditSupplierForm, closeEditSupplierForm, openSupplierDetailModal, closeSupplierDetailModal, openSupplierSearchList, closeSupplierSearchList, supplierSearchName } = supplierSlice.actions;
 export default supplierSlice.reducer;
