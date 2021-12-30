@@ -14,6 +14,7 @@ import { closeAddProductForm, productStoreApi } from "../../../store/slices/prod
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
 import CustomSelect from "./CustomSelect";
+
 const ProductAddForm = () => {
   const [loading, setLoading] = useState(false);
   const rightDrawerOpened = useSelector((state) => state.product.isOpenedAddForm);
