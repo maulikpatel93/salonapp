@@ -26,8 +26,8 @@ export const CustomSelect = ({
     form.setFieldValue(
       field.name,
       isMulti
-        ? (option).map((item) => item.value)
-        : (option).value
+        ? option ? (option).map((item) => item.value) : ''
+        : option ? (option).value : ''
     );
   };
 
@@ -50,6 +50,7 @@ export const CustomSelect = ({
       placeholder={placeholder}
       options={options}
       isMulti={isMulti}
+      isClearable
     />
   );
 };
