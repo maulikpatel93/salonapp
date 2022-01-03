@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 // validation Formik
@@ -10,13 +10,16 @@ import { InputField, SwitchField, InputFieldImage, TextareaField, ReactSelectFie
 import { sweatalert } from "../../../component/Sweatalert2";
 
 // import { closeNewSupplierForm } from "../../../store/slices/supplierSlice";
-import { closeAddProductForm, productStoreApi } from "../../../store/slices/productSlice";
+import { productManageStock, closeAddProductForm, productStoreApi } from "../../../store/slices/productSlice";
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
 
 const ProductAddForm = () => {
   const [loading, setLoading] = useState(false);
   const rightDrawerOpened = useSelector((state) => state.product.isOpenedAddForm);
+  const isProductManageStock = useSelector((state) => state.product.isProductManageStock);
+  const isSuppplierOption = useSelector((state) => state.supplier.isSuppplierOption);
+  const isTaxOption = useSelector((state) => state.tax.isTaxOption);
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -25,6 +28,7 @@ const ProductAddForm = () => {
   const handleCloseAddProductForm = () => {
     dispatch(closeAddProductForm());
     dispatch({ type: "product/detail/rejected" });
+    dispatch(removeImage());
   };
 
   const initialValues = {
@@ -34,7 +38,7 @@ const ProductAddForm = () => {
     description: "",
     cost_price: "",
     retail_price: "",
-    manage_stock: "",
+    manage_stock: isProductManageStock,
     stock_quantity: "",
     low_stock_threshold: "",
     tax_id: "",
@@ -46,15 +50,21 @@ const ProductAddForm = () => {
 
   const validationSchema = Yup.object().shape({
     image: Yup.mixed(),
-    name: Yup.string().max(100).label(t("supplier_name")).trim().required(),
+    name: Yup.string().max(100).label(t("product_name")).trim().required(),
     sku: Yup.string().trim().label(t("sku")).required(),
     description: Yup.string().trim().label(t("description")).required(),
-    cost_price: Yup.string().trim().label(t("cost_price")).required().test('Decimal only', t('The_field_should_have_decimal_only'), decimalOnly),
-    retail_price: Yup.string().trim().label(t("retail_price")).required().test('Decimal only', t('The_field_should_have_decimal_only'), decimalOnly),
-    stock_quantity: Yup.string().trim().label(t("stock_quantity")).required().test('Digits only', t('The_field_should_have_digits_only'), digitOnly),
-    low_stock_threshold: Yup.string().trim().label(t("low_stock_threshold")).required().test('Digits only', t('The_field_should_have_digits_only'), digitOnly),
-    tax_id: Yup.string().trim().label(t("tax")).required().test('Digits only', t('The_field_should_have_digits_only'), digitOnly),
-    supplier_id: Yup.lazy(val => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("supplier")).required()))
+    cost_price: Yup.string().trim().label(t("cost_price")).required().test("Decimal only", t("The_field_should_have_decimal_only"), decimalOnly),
+    retail_price: Yup.string().trim().label(t("retail_price")).required().test("Decimal only", t("The_field_should_have_decimal_only"), decimalOnly),
+    stock_quantity: Yup.string().when("manage_stock", {
+      is: 1,
+      then: Yup.string().trim().label(t("stock_quantity")).required().test("Digits only", t("The_field_should_have_digits_only"), digitOnly),
+    }),
+    low_stock_threshold: Yup.string().when("manage_stock", {
+      is: 1,
+      then: Yup.string().trim().label(t("low_stock_threshold")).required().test("Digits only", t("The_field_should_have_digits_only"), digitOnly),
+    }),
+    tax_id: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("tax")).required())),
+    supplier_id: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("supplier")).required())),
   });
   yupconfig();
 
@@ -90,18 +100,13 @@ const ProductAddForm = () => {
     }
   };
 
-  const supplierOptions = [
-    { value: "Food", label: "Food" },
-    { value: "Being Fabulous", label: "Being Fabulous" },
-    { value: "Ken Wheeler", label: "Ken Wheeler" },
-    { value: "ReasonML", label: "ReasonML" },
-    { value: "Unicorns", label: "Unicorns" },
-    { value: "Kittens", label: "Kittens" }
-  ];;
+  const supplierOptionsData = isSuppplierOption;
+  const taxOptionsData = isTaxOption;
+
   return (
     <React.Fragment>
-      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
-        {({ errors, touched, handleChange, handleSubmit, setFieldValue, setFieldTouched, values }) => {
+      <Formik enableReinitialize={true} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
+        {({ handleChange, handleSubmit, values }) => {
           return (
             <div className={"full-screen-drawer p-0 " + rightDrawerOpened} id="addproduct-drawer">
               <div className="drawer-wrp position-relative">
@@ -133,7 +138,7 @@ const ProductAddForm = () => {
                             <InputField type="text" name="sku" value={values.sku} label={t("sku")} controlId="productForm-sku" />
                           </div>
                           <div className="mb-3">
-                            <ReactSelectField name="supplier_id" placeholder={t('--Select--')}  value={values.supplier_id} options={supplierOptions} label={t("supplier")} controlId="productForm-supplier_id" isMulti={false} />
+                            <ReactSelectField name="supplier_id" placeholder={t("search_option")} value={values.supplier_id} options={supplierOptionsData} label={t("supplier")} controlId="productForm-supplier_id" isMulti={false} />
                           </div>
                           <div className="mb-3">
                             <TextareaField name="description" value={values.description} label={t("description")} controlId="productForm-description" />
@@ -152,10 +157,10 @@ const ProductAddForm = () => {
                               <InputField type="text" name="cost_price" value={values.cost_price} label={t("cost_price")} controlId="productForm-cost_price" />
                             </div>
                             <div className="mb-2 col-md-4 col-6 mb-3">
-                              <InputField type="text" name="retail_price" value={values.state} label={t("retail_price")} controlId="productForm-retail_price" />
+                              <InputField type="text" name="retail_price" value={values.retail_price} label={t("retail_price")} controlId="productForm-retail_price" />
                             </div>
                             <div className="col-md-8 mb-3">
-                              <InputField type="text" name="tax_id" value={values.postcode} label={t("tax") + " (" + t("included_in_price") + ")"} controlId="productForm-tax_id" />
+                              <ReactSelectField name="tax_id" placeholder={t("search_option")} value={values.tax_id} options={taxOptionsData} label={t("tax")} controlId="productForm-tax_id" isMulti={false} />
                             </div>
                           </div>
                         </div>
@@ -167,10 +172,21 @@ const ProductAddForm = () => {
                           <p>{t("manage_stock_levels_of_this_product")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
-                          <div className="mb-3">
-                            <SwitchField name="manage_stock" label={t("manage_stock")} controlId="clientForm-manage_stock" value="1" />
-                          </div>
-                          <div className="row">
+                          <SwitchField
+                            name="manage_stock"
+                            label={t("manage_stock")}
+                            controlId="clientForm-manage_stock"
+                            value={values.manage_stock}
+                            onChange={(e) => {
+                              if (e.currentTarget.checked) {
+                                dispatch(productManageStock(1));
+                              } else {
+                                dispatch(productManageStock(0));
+                              }
+                              handleChange(e);
+                            }}
+                          />
+                          <div className="row" style={{ display: values.manage_stock ? "" : "none" }}>
                             <div className="mb-3 col-md-6">
                               <InputField type="text" name="stock_quantity" value={values.stock_quantity} label={t("stock_quantity")} controlId="productForm-stock_quantity" />
                             </div>

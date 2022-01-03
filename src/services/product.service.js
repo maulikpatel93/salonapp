@@ -70,6 +70,8 @@ const view = (values) => {
     id: values && values.id ? values.id : "",
     field: values && values.id ? "" : "name,image,sku,description,cost_price,retail_price,stock_quantity", // first_name,last_name,email
     salon_field: false, //business_name,owner_name
+    supplier_field: 'name', //business_name,owner_name
+    tax_field: 'name', //business_name,owner_name
     result: result, //business_name,owner_name
   };
   return axios.post(next_page_url ? `${next_page_url}&${sortstring}` : API_URL + action, data, { headers: authHeader() });

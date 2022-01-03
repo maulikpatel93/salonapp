@@ -148,6 +148,7 @@ const initialState = {
   isSort: "",
   isSearchList: "",
   isSearchName: "",
+  isProductManageStock: 0,
 };
 
 export const productSlice = createSlice({
@@ -167,6 +168,16 @@ export const productSlice = createSlice({
       state.isOpenedDetailModal = "";
     },
     closeAddProductForm: (state = initialState) => {
+      state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "";
+      state.isOpenedDetailModal = "";
+    },
+    openEditProductForm: (state = initialState) => {
+      state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "open";
+      state.isOpenedDetailModal = "";
+    },
+    closeEditProductForm: (state = initialState) => {
       state.isOpenedAddForm = "";
       state.isOpenedEditForm = "";
       state.isOpenedDetailModal = "";
@@ -197,17 +208,20 @@ export const productSlice = createSlice({
     productSearchName: (state, action) => {
       state.isSearchName = action.payload;
     },
+    productManageStock: (state, action) => {
+      state.isProductManageStock = action.payload;
+    },
   },
   extraReducers: {
     [productStoreApi.pending]: (state, action) => {},
     [productStoreApi.fulfilled]: (state, action) => {
-      state.isGridView.data = [...state.isGridView.data, action.payload];
+      state.isListView.data = [...state.isListView.data, action.payload];
     },
     [productStoreApi.rejected]: (state, action) => {},
     [productUpdateApi.pending]: (state, action) => {},
     [productUpdateApi.fulfilled]: (state, action) => {
       const { id, ...changes } = action.payload;
-      const existingData = state.isGridView.data.find((event) => event.id === id);
+      const existingData = state.isListView.data.find((event) => event.id === id);
       if (existingData) {
         Object.keys(changes).map((keyName, i) => {
           existingData[keyName] = changes[keyName];
@@ -237,7 +251,7 @@ export const productSlice = createSlice({
       let viewdata = state.isSuggetionListView && state.isSuggetionListView.data;
       let newviewdata = action.payload && action.payload.data;
       state.isSuggetionListView = action.payload;
-      if (old_current_page && new_current_page && old_current_page < new_current_page &&  old_current_page != new_current_page) {
+      if (old_current_page && new_current_page && old_current_page < new_current_page && old_current_page != new_current_page) {
         let data = viewdata && newviewdata ? (state.isSuggetionListView.data = [...viewdata, ...newviewdata]) : action.payload;
       }
       state.isSuggetionListView = action.payload;
@@ -261,5 +275,5 @@ export const productSlice = createSlice({
   },
 });
 // Action creators are generated for each case reducer function
-export const { reset, productTabView, openAddProductForm, closeAddProductForm,  productTabGridView, openProductDetailModal, closeProductDetailModal, productDetailTab, productSort, productSortRemove, openProductSearchList, closeProductSearchList, productSearchName } = productSlice.actions;
+export const { reset, productTabView, openAddProductForm, closeAddProductForm, openEditProductForm, closeEditProductForm, productTabGridView, openProductDetailModal, closeProductDetailModal, productDetailTab, productSort, productSortRemove, openProductSearchList, closeProductSearchList, productSearchName, productManageStock } = productSlice.actions;
 export default productSlice.reducer;

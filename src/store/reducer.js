@@ -8,6 +8,7 @@ import imageReducer from "../store/slices/imageSlice";
 import clientReducer from "../store/slices/clientSlice";
 import supplierReducer from "../store/slices/supplierSlice";
 import productReducer from "../store/slices/productSlice";
+import taxReducer from "../store/slices/taxSlice";
 //-----------------------|| COMBINE REDUCER ||-----------------------//
 const rootPersistConfig = {
   key: "root",
@@ -61,6 +62,7 @@ const reducer = combineReducers({
     },
     supplierReducer,
   ),
+  tax: taxReducer,
   image: imageReducer,
 });
 

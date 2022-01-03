@@ -8,12 +8,14 @@ import config from "../../config";
 import Suppliers from "./suppliers";
 
 import { openAddProductForm, productTabView, productListViewApi, productSort, productSortRemove, openProductSearchList, closeProductSearchList, productSuggetionListApi, productSearchName } from "../../store/slices/productSlice";
-import { openAddSupplierForm, supplierGridViewApi, openSupplierSearchList, closeSupplierSearchList, supplierSuggetionListApi, supplierSearchName } from "../../store/slices/supplierSlice";
+import { openAddSupplierForm, supplierGridViewApi, openSupplierSearchList, closeSupplierSearchList, supplierSuggetionListApi, supplierSearchName, supplierOptions } from "../../store/slices/supplierSlice";
+import { taxOptions } from "../../store/slices/taxSlice";
 import SupplierAddForm from "./suppliers/SupplierAddForm";
 import SupplierEditForm from "./suppliers/SupplierEditForm";
 import SupplierSuggetionListView from "./suppliers/SupplierSuggetionListView";
 import ProductListView from "./list/ProductListView";
 import ProductAddForm from "./form/ProductAddForm";
+import ProductEditForm from "./form/ProductEditForm";
 
 const Products = () => {
   const { t } = useTranslation();
@@ -50,6 +52,8 @@ const Products = () => {
 
   const handleopenAddProductForm = () => {
     dispatch(openAddProductForm());
+    dispatch(supplierOptions({ option: { valueField: "id", labelField: "name" } }));
+    dispatch(taxOptions({ option: { valueField: "id", labelField: "name" } }));
   };
 
   const handleOpenAddSupplierForm = () => {
@@ -246,7 +250,7 @@ const Products = () => {
                               </div>
                             </th>
                             <th>
-                              <div className="d-flex align-items-center justify-content-center">
+                              <div className="">
                                 SKU
                                 <span className="down-up-arrow">
                                   <i className="fal fa-angle-up"></i>
@@ -255,7 +259,7 @@ const Products = () => {
                               </div>
                             </th>
                             <th>
-                              <div className="d-flex align-items-center justify-content-center">
+                              <div className="">
                                 Supplier
                                 <span className="down-up-arrow">
                                   <i className="fal fa-angle-up"></i>
@@ -264,7 +268,7 @@ const Products = () => {
                               </div>
                             </th>
                             <th>
-                              <div className="d-flex align-items-center justify-content-center">
+                              <div className="">
                                 Stock
                                 <span className="down-up-arrow">
                                   <i className="fal fa-angle-up"></i>
@@ -273,12 +277,17 @@ const Products = () => {
                               </div>
                             </th>
                             <th>
-                              <div className="d-flex align-items-center justify-content-center">
+                              <div className="">
                                 Retail Price
                                 <span className="down-up-arrow">
                                   <i className="fal fa-angle-up"></i>
                                   <i className="fal fa-angle-down"></i>
                                 </span>
+                              </div>
+                            </th>
+                            <th>
+                              <div className="d-flex align-items-center justify-content-end">
+                                Action
                               </div>
                             </th>
                           </tr>
@@ -296,7 +305,10 @@ const Products = () => {
                     <img src={config.imagepath + "service.png"} alt="" className="mb-md-4 mb-3" />
                     <h4 className="mb-2 fw-semibold">
                       {t("no_products_have_been_created_yet")}
-                      <a className="add-product ms-1 cursor-pointer" onClick={() => dispatch(openAddProductForm())}>{t("please_create_one")}</a>.
+                      <a className="add-product ms-1 cursor-pointer" onClick={() => dispatch(openAddProductForm())}>
+                        {t("please_create_one")}
+                      </a>
+                      .
                     </h4>
                   </div>
                 </div>
@@ -310,6 +322,7 @@ const Products = () => {
         <SupplierAddForm />
         <SupplierEditForm />
         <ProductAddForm />
+        <ProductEditForm />
       </div>
     </>
   );

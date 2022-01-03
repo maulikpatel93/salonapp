@@ -92,6 +92,7 @@
     "are_you_sure": "Are you sure?",
     "are_you_sure_delete_client": "Are you sure want to delete this client?",
     "are_you_sure_delete_supplier": "Are you sure want to delete this supplier?",
+    "are_you_sure_delete_product": "Are you sure want to delete this product?",
     "yes_delete_it": "Yes, delete it!",
     "appointments": "Appointments",
     "appointment": "Appointment",
@@ -158,5 +159,6 @@
     "stock_quantity": "Stock Quantity",
     "low_stock_threshold": "Low Stock Threshold",
     "The_field_should_have_digits_only": "The field should have digits only",
-    "The_field_should_have_decimal_only": "The field should have decimal only"
+    "The_field_should_have_decimal_only": "The field should have decimal only",
+    "search_option": "Search..."
 }

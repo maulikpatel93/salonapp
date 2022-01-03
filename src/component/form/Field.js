@@ -78,6 +78,7 @@ const SelectField = ({ label, controlId, options, ...props }) => {
 };
 
 const SwitchField = ({ label, controlId, ...props }) => {
+  const dispatch = useDispatch();
   const [field, meta] = useField(props);
   const checked = field.value == 1 ? true : "";
   return (

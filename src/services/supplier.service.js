@@ -2,7 +2,6 @@ import axios from "axios";
 import { store } from "../store";
 import config from "../config";
 import authHeader from "./auth-header";
-import { setMessage, clearMessage } from "../store/slices/message";
 
 const API_URL = config.API_URL;
 
@@ -61,16 +60,18 @@ const view = (values) => {
       sortstring = jsort;
     }
   }
+  const pagination = values && values.option ? false : true;
   const action = page ? `afterlogin/suppliers/view?page=${page}&${sortstring}` : `afterlogin/suppliers/view?${sortstring}`;
   const data = {
     auth_key: auth_key,
     action: action,
     salon_id: auth.user.salon_id,
-    pagination: values && values.id ? false : true, //true or false
+    pagination: values && values.id ? false : pagination, //true or false
     id: values && values.id ? values.id : "",
     field: values && values.id ? "" : "name,first_name,last_name,email,logo,phone_number,website", // first_name,last_name,email
     salon_field: false, //business_name,owner_name
     result: result, //business_name,owner_name
+    option: values && values.option ? values.option : ''
   };
   return axios.post(next_page_url ? `${next_page_url}&${sortstring}` : API_URL + action, data, { headers: authHeader() });
 };

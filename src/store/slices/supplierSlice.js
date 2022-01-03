@@ -71,6 +71,29 @@ export const supplierGridViewApi = createAsyncThunk("supplier/gridview", async (
   }
 });
 
+export const supplierOptions = createAsyncThunk("supplier/supplierOptions", async (formValues, thunkAPI) => {
+  try {
+    const resposedata = await supplierApiController
+      .view(formValues, thunkAPI)
+      .then((response) => {
+        if (response.status == 200) {
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+        }
+        return thunkAPI.rejectWithValue({ status: error.response.status });
+      });
+    return resposedata;
+  } catch (error) {
+    const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    return thunkAPI.rejectWithValue();
+  }
+});
+
 export const supplierDetailApi = createAsyncThunk("supplier/detail", async (formValues, thunkAPI) => {
   try {
     const resposedata = await supplierApiController
@@ -148,6 +171,7 @@ const initialState = {
   isDetailData: "",
   isSearchList: "",
   isSearchName: "",
+  isSuppplierOption: [],
 };
 
 export const supplierSlice = createSlice({
@@ -249,6 +273,13 @@ export const supplierSlice = createSlice({
       state.isGridView.data = state.isGridView.data ? state.isGridView.data.filter((item) => item.id != id) : state.isGridView.filter((item) => item.id != id);
     },
     [supplierDeleteApi.rejected]: (state, action) => {},
+    [supplierOptions.pending]: (state, action) => {},
+    [supplierOptions.fulfilled]: (state, action) => {
+      state.isSuppplierOption = action.payload;
+    },
+    [supplierOptions.rejected]: (state, action) => {
+      state.isSuppplierOption = [];
+    },
   },
 });
 // Action creators are generated for each case reducer function
