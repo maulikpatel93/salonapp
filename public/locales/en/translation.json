@@ -156,5 +156,7 @@
     "manage_stock_levels_of_this_product": "Manage stock levels of this product.",
     "manage_stock": "Manage Stock",
     "stock_quantity": "Stock Quantity",
-    "low_stock_threshold": "Low Stock Threshold"
+    "low_stock_threshold": "Low Stock Threshold",
+    "The_field_should_have_digits_only": "The field should have digits only",
+    "The_field_should_have_decimal_only": "The field should have decimal only"
 }

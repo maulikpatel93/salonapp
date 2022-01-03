@@ -26,8 +26,8 @@ export const CustomSelect = ({
     form.setFieldValue(
       field.name,
       isMulti
-        ? (option).map((item) => item.value)
-        : (option).value
+        ? option ? (option).map((item) => item.value) : ''
+        : option ? (option).value : ''
     );
   };
 
@@ -41,6 +41,18 @@ export const CustomSelect = ({
     }
   };
 
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      color: state.isSelected ? '#fff' : '',
+      borderWidth: state.isFocused ? '0' : '0',
+    }),
+    control: (provided, state) => ({
+      ...provided,
+      borderWidth: state.isFocused ? '0px' : '1px'
+    }),
+  }
+
   return (
     <Select
       className={className}
@@ -50,6 +62,17 @@ export const CustomSelect = ({
       placeholder={placeholder}
       options={options}
       isMulti={isMulti}
+      isClearable
+      styles={customStyles}
+      theme={(theme) => ({
+        ...theme,
+        colors: {
+          ...theme.colors,
+          border:'1px',
+          primary25: '#F4EEEB',
+          primary: '#8C1C4D',
+        },
+      })}
     />
   );
 };

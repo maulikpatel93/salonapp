@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 // validation Formik
 import * as Yup from "yup";
-import { Field, Formik } from "formik";
+import { Formik } from "formik";
 import config from "../../../config";
 import yupconfig from "../../../yupconfig";
 import { InputField, SwitchField, InputFieldImage, TextareaField, ReactSelectField } from "../../../component/form/Field";
@@ -13,7 +13,6 @@ import { sweatalert } from "../../../component/Sweatalert2";
 import { closeAddProductForm, productStoreApi } from "../../../store/slices/productSlice";
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
-import CustomSelect from "./CustomSelect";
 
 const ProductAddForm = () => {
   const [loading, setLoading] = useState(false);
@@ -42,18 +41,20 @@ const ProductAddForm = () => {
     supplier_id: "",
   };
 
+  const digitOnly = (value) => /^\d+$/.test(value);
+  const decimalOnly = (value) => /^\d{1,6}(\.\d{1,2})?$/.test(value);
+
   const validationSchema = Yup.object().shape({
     image: Yup.mixed(),
-    name: Yup.string().max(100).label(t("supplier_name")).required(),
-    sku: Yup.string().label(t("sku")).required(),
-    description: Yup.string().label(t("description")).required(),
-    cost_price: Yup.string().label(t("cost_price")).required(),
-    retail_price: Yup.string().label(t("retail_price")).required(),
-    stock_quantity: Yup.number().positive().integer().label(t("stock_quantity")).required(),
-    low_stock_threshold: Yup.number().positive().integer().label(t("low_stock_threshold")).required(),
-    tax_id: Yup.number().positive().integer().label(t("tax")).required(),
-    // supplier_id:Yup.number().positive().integer().label(t("tax")).required()
-    supplier_id: Yup.string().nullable().label(t("supplier")).required()
+    name: Yup.string().max(100).label(t("supplier_name")).trim().required(),
+    sku: Yup.string().trim().label(t("sku")).required(),
+    description: Yup.string().trim().label(t("description")).required(),
+    cost_price: Yup.string().trim().label(t("cost_price")).required().test('Decimal only', t('The_field_should_have_decimal_only'), decimalOnly),
+    retail_price: Yup.string().trim().label(t("retail_price")).required().test('Decimal only', t('The_field_should_have_decimal_only'), decimalOnly),
+    stock_quantity: Yup.string().trim().label(t("stock_quantity")).required().test('Digits only', t('The_field_should_have_digits_only'), digitOnly),
+    low_stock_threshold: Yup.string().trim().label(t("low_stock_threshold")).required().test('Digits only', t('The_field_should_have_digits_only'), digitOnly),
+    tax_id: Yup.string().trim().label(t("tax")).required().test('Digits only', t('The_field_should_have_digits_only'), digitOnly),
+    supplier_id: Yup.lazy(val => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("supplier")).required()))
   });
   yupconfig();
 
@@ -132,15 +133,7 @@ const ProductAddForm = () => {
                             <InputField type="text" name="sku" value={values.sku} label={t("sku")} controlId="productForm-sku" />
                           </div>
                           <div className="mb-3">
-                            <ReactSelectField name="supplier_id" value={values.supplier_id} onChange={setFieldValue} onBlur={setFieldTouched} options={supplierOptions} label={t("supplier")} controlId="productForm-supplier_id" />
-                            <Field
-                              className="custom-select"
-                              name="supplier_id"
-                              options={supplierOptions}
-                              component={CustomSelect}
-                              placeholder="Select a language..."
-                              isMulti={false}
-                            />
+                            <ReactSelectField name="supplier_id" placeholder={t('--Select--')}  value={values.supplier_id} options={supplierOptions} label={t("supplier")} controlId="productForm-supplier_id" isMulti={false} />
                           </div>
                           <div className="mb-3">
                             <TextareaField name="description" value={values.description} label={t("description")} controlId="productForm-description" />

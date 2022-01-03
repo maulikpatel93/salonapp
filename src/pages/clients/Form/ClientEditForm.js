@@ -50,12 +50,12 @@ const ClientEditForm = (props) => {
   };
 
   const validationSchema = Yup.object().shape({
-    first_name: Yup.string().max(50).label(t("first_name")).required(),
-    last_name: Yup.string().max(50).label(t("last_name")).required(),
-    email: Yup.string().max(100).email().label(t("email")).required(),
-    phone_number: Yup.string().matches(config.phone_number_pattern, t(config.phone_number_334_error)).label(t("phone_number")).required(),
-    date_of_birth: Yup.string().label(t("date_of_birth")).required(),
-    gender: Yup.string().label(t("gender")).required().nullable(),
+    first_name: Yup.string().trim().max(50).label(t("first_name")).required(),
+    last_name: Yup.string().trim().max(50).label(t("last_name")).required(),
+    email: Yup.string().trim().max(100).email().label(t("email")).required(),
+    phone_number: Yup.string().trim().matches(config.phone_number_pattern, t(config.phone_number_334_error)).label(t("phone_number")).required(),
+    date_of_birth: Yup.string().trim().label(t("date_of_birth")).required(),
+    gender: Yup.string().trim().label(t("gender")).required().nullable(),
     // gender: Yup.object()
     //   .shape({
     //     value: Yup.string(),
@@ -64,12 +64,12 @@ const ClientEditForm = (props) => {
     //   .label(t("gender"))
     //   .required()
     //   .nullable(),
-    address: Yup.string().label(t("address")).required(),
-    street: Yup.string().label(t("street")).required(),
-    suburb: Yup.string().label(t("suburb")).required(),
-    state: Yup.string().label(t("state")).required(),
-    postcode: Yup.string().max(12).label(t("postcode")).required(),
-    description: Yup.string().label(t("description")).required()
+    address: Yup.string().trim().label(t("address")).required(),
+    street: Yup.string().trim().label(t("street")).required(),
+    suburb: Yup.string().trim().label(t("suburb")).required(),
+    state: Yup.string().trim().label(t("state")).required(),
+    postcode: Yup.string().trim().max(12).label(t("postcode")).required(),
+    description: Yup.string().trim().label(t("description")).required()
   });
   yupconfig();
 
