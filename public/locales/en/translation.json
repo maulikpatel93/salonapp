@@ -50,6 +50,7 @@
             "length": "${path} must have ${length} items"
         }
     },
+    "action": "Action",
     "name": "Name",
     "first_name": "First Name",
     "last_name": "Last Name",

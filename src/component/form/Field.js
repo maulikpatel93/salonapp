@@ -11,6 +11,7 @@ import config from "../../config";
 import { selectImage, removeImage } from "../../store/slices/imageSlice";
 import CustomSelect from "../../component/form/CustomSelect";
 import { Field } from "formik";
+import { productManageStock } from "../../store/slices/productSlice";
 
 const FloatLabelInputField = ({ label, controlId, ...props }) => {
   const [field, meta] = useField(props);
@@ -79,7 +80,7 @@ const SelectField = ({ label, controlId, options, ...props }) => {
 
 const SwitchField = ({ label, controlId, ...props }) => {
   const dispatch = useDispatch();
-  const [field, meta] = useField(props);
+  const [field, meta ] = useField(props);
   const checked = field.value == 1 ? true : "";
   return (
     <>
@@ -112,7 +113,6 @@ const InputFieldImage = ({ label, controlId, page, ...props }) => {
     setFieldValue(props.name, "");
     dispatch(removeImage());
   };
-
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>
@@ -192,27 +192,16 @@ const InputFieldImage = ({ label, controlId, page, ...props }) => {
 
 const ReactSelectField = ({ label, controlId, options, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  // const [valueState, setValueState] = useState(null);
-  // const handleChange = (value) => {
-  //   // props.onChange("supplier_id", value ? value.value : "");
-  //   helpers.setValue(value);
-  //   helpers.setTouched(true);
-  //   helpers.setError(undefined);
-  //   // setValueState(value ? value.value : "");
+  // const customStyles = {
+  //   menuPortal: (provided) => ({ ...provided, zIndex: 3 }),
+  //   menu: (provided) => ({ ...provided, zIndex: 3 }),
   // };
-
-  const customStyles = {
-    menuPortal: (provided) => ({ ...provided, zIndex: 3 }),
-    menu: (provided) => ({ ...provided, zIndex: 3 }),
-  };
 
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>
         <Form.Label>{label}</Form.Label>
-        <Field  {...field} {...props} options={options} component={CustomSelect} className="custom-select" isInvalid={!!meta.error} className={meta.touched && meta.error ? "is-invalid" : ""} />
-        {/* <Select {...field} {...props} isInvalid={!!meta.error} className={meta.touched && meta.error ? "is-invalid" : ""} isClearable={true} onChange={handler} options={options} onBlur={() => helpers.setTouched(true)} classNamePrefix={"my-custom-react-select"} styles={customStyles} /> */}
-        {/* <Select {...field} {...props} isInvalid={!!meta.error} className={meta.touched && meta.error ? "is-invalid" : ""} isClearable={true} options={options} onChange={handleChange} onBlur={handleBlur} /> */}
+        <Field {...field} {...props} options={options} component={CustomSelect} isInvalid={!!meta.error} className={"custom-select " + (meta.touched && meta.error ? "is-invalid" : "")} />
         <Form.Control.Feedback type="invalid">{meta.error}</Form.Control.Feedback>
       </Form.Group>
     </>

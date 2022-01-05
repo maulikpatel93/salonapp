@@ -32,7 +32,7 @@ const update = (values) => {
     if (["gender"].includes(value) && values[value] && typeof values[value] === "object") {
       formData.append(value, values[value].value);
     } else {
-      formData.append(value, values[value]);
+      formData.append(value, values[value] === null ? '' : values[value]);
     }
   }
   const action = "afterlogin/products/update/" + values.id;
@@ -53,9 +53,21 @@ const view = (values) => {
   let sortstring = "";
   if (sort) {
     let sortArray = [];
+    let sortSubArray = [];
     Object.keys(sort).map(function (key, index) {
-      sortArray[index] = `sort[${key}]=${sort[key]}`;
+      if (Object.keys(sort[key]).length > 0) {
+        Object.keys(sort[key]).map(function (subkey, subindex) {
+          sortSubArray[subindex] = `sort[${key}][${subkey}]=${sort[key][subkey]}`;
+        });
+      }
+      if(key != 'supplier'){
+        sortArray[index] = `sort[${key}]=${sort[key]}`;
+      }
     });
+    if (sortSubArray.length > 0) {
+      let jsubsort = sortSubArray.join("&");
+      sortstring = jsubsort;
+    } 
     if (sortArray.length > 0) {
       let jsort = sortArray.join("&");
       sortstring = jsort;

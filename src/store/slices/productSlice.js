@@ -194,7 +194,8 @@ export const productSlice = createSlice({
     },
     productSort: (state, action) => {
       let sort = state.isSort ? state.isSort : {};
-      state.isSort = Object.assign(sort, action.payload);
+      // state.isSort = Object.assign(sort, action.payload);
+      state.isSort = action.payload;
     },
     productSortRemove: (state) => {
       state.isSort = "";

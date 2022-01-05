@@ -23,12 +23,21 @@ export const CustomSelect = ({
   isMulti = false
 }) => {
   const onChange = (option) => {
-    form.setFieldValue(
-      field.name,
-      isMulti
-        ? option ? (option).map((item) => item.value) : ''
-        : option ? (option).value : ''
-    );
+    if (option) {
+      form.setFieldValue(
+        field.name,
+        isMulti
+          ? (option).map((item) => item.value)
+          : (option).value
+      );
+    }else{
+      form.setFieldValue(
+        field.name,
+        isMulti
+          ? ''
+          : ''
+      );
+    }
   };
 
   const getValue = () => {
