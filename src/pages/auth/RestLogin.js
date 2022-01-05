@@ -45,10 +45,11 @@ const RestLogin = (props) => {
     const { email, password, remember_me } = formValue;
     setLoading(true);
     try {
-      dispatch(login({ email, password, remember_me }));
-      if (message) {
-        setLoading(false);
-      }
+      dispatch(login({ email, password, remember_me })).then((action) => {
+        if(action && action.meta && action.meta.requestStatus == 'rejected'){
+          setLoading(false);
+        }
+      });
     } catch (err) {
       console.error(err);
       setLoading(false);
