@@ -29,6 +29,10 @@ const Products = () => {
   const tabview = useSelector((state) => state.product.isTabView);
   const ListView = useSelector((state) => state.product.isListView);
   const sort = useSelector((state) => state.product.isSort);
+  const productIsOpenedAddForm = useSelector((state) => state.product.isOpenedAddForm);
+  const productIsOpenedEditForm = useSelector((state) => state.product.isOpenedEditForm);
+  const supplierIsOpenedAddForm = useSelector((state) => state.supplier.isOpenedAddForm);
+  const supplierIsOpenedEditForm = useSelector((state) => state.supplier.isOpenedEditForm);
 
   const isSearchListProduct = useSelector((state) => state.product.isSearchList);
   const isSearchNameProduct = useSelector((state) => state.product.isSearchName);
@@ -350,10 +354,10 @@ const Products = () => {
             </div>
           </div>
         </div>
-        <SupplierAddForm />
-        <SupplierEditForm />
-        <ProductAddForm />
-        <ProductEditForm />
+        {supplierIsOpenedAddForm ? <SupplierAddForm /> : ''}
+        {supplierIsOpenedEditForm ? <SupplierEditForm /> : ''}
+        {productIsOpenedAddForm ? <ProductAddForm /> : ''}
+        {productIsOpenedEditForm ? <ProductEditForm /> : ''}
       </div>
     </>
   );

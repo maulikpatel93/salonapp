@@ -134,7 +134,7 @@ const ProductEditForm = () => {
             }
           }, [detail]);
           return (
-            <div className={"full-screen-drawer p-0 " + rightDrawerOpened} id="addproduct-drawer">
+            <div className={(rightDrawerOpened ? "full-screen-drawer p-0 " : '') + rightDrawerOpened} id="editproduct-drawer">
               <div className="drawer-wrp position-relative">
                 <form noValidate onSubmit={formik.handleSubmit}>
                   <div className="drawer-header px-md-4 px-3 py-3 d-flex flex-wrap align-items-center">

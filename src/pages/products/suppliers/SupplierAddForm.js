@@ -93,12 +93,13 @@ const SupplierAddForm = () => {
 
   return (
     <React.Fragment>
-      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
-      {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, setFieldValue, touched, values, status }) => {
+      <Formik enableReinitialize={false} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
+      {(formik) => {
+        console.log(formik.values);
           return (
-            <div className={"full-screen-drawer p-0 " + rightDrawerOpened} id="addsuppliers-drawer">
+            <div className={(rightDrawerOpened ? "full-screen-drawer p-0 " : '') + rightDrawerOpened} id="addsuppliers-drawer">
               <div className="drawer-wrp position-relative">
-                <form noValidate onSubmit={handleSubmit}>
+                <form noValidate onSubmit={formik.handleSubmit}>
                   <div className="drawer-header px-md-4 px-3 py-3 d-flex flex-wrap align-items-center">
                     <h3 className="mb-0 fw-semibold">{t('new_supplier')}</h3>
                     <div className="ms-auto">
@@ -118,7 +119,7 @@ const SupplierAddForm = () => {
                           <p>{t("add_the_name_of_the_supplier")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
-                          <InputField type="text" name="name" value={values.name} label={t("supplier_name")} controlId="supplierForm-name" />
+                          <InputField type="text" name="name" value={formik.values.name} label={t("supplier_name")} controlId="supplierForm-name" onChange={formik.handleChange}/>
                         </div>
                       </div>
                       <hr className="drawer-supplier-hr"></hr>
@@ -126,25 +127,25 @@ const SupplierAddForm = () => {
                         <div className="col-md-6 ps-md-0 mb-md-0 mb-3">
                           <h4 className="fw-semibold mb-2">{t("contact_information")}</h4>
                           <p>{t("add_the_contact_details_of_this_supplier")}</p>
-                          <InputFieldImage name="logo" accept="image/*" label={t("add_supplier_Logo")} page="supplier-form" controlId="supplierForm-logo" />
+                          <InputFieldImage name="logo" accept="image/*" label={t("add_supplier_Logo")} page="supplier-form" controlId="supplierForm-logo" onChange={formik.handleChange}/>
                         </div>
                         <div className="col-md-6 pe-md-0">
                           <div className="row gx-2">
                             <div className="mb-3 col-md-6">
-                              <InputField type="text" name="first_name" value={values.first_name} label={t("first_name")} controlId="supplierForm-first_name" />
+                              <InputField type="text" name="first_name" value={formik.values.first_name} label={t("first_name")} controlId="supplierForm-first_name" onChange={formik.handleChange}/>
                             </div>
                             <div className="mb-3 col-md-6">
-                              <InputField type="text" name="last_name" value={values.last_name} label={t("last_name")} controlId="supplierForm-last_name" />
+                              <InputField type="text" name="last_name" value={formik.values.last_name} label={t("last_name")} controlId="supplierForm-last_name" onChange={formik.handleChange}/>
                             </div>
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="phone_number" value={values.phone_number} mask="999-999-9999" label={t("phone_number")} controlId="supplierForm-phone_number" />
+                            <InputField type="text" name="phone_number" value={formik.values.phone_number} mask="999-999-9999" label={t("phone_number")} controlId="supplierForm-phone_number" onChange={formik.handleChange}/>
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="email" value={values.email} label={t("email")} controlId="supplierForm-email" />
+                            <InputField type="text" name="email" value={formik.values.email} label={t("email")} controlId="supplierForm-email" onChange={formik.handleChange}/>
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="website" value={values.website} label={t("website")} controlId="supplierForm-website" />
+                            <InputField type="text" name="website" value={formik.values.website} label={t("website")} controlId="supplierForm-website" onChange={formik.handleChange}/>
                           </div>
                         </div>
                       </div>
@@ -155,19 +156,19 @@ const SupplierAddForm = () => {
                           <p>{t("add_the_address_of_this_supplier")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
-                          <MapAddressField name="address" label={t("address")} value={values.address} placeholder={t("typing_address")} controlId="supplierForm-address" />
+                          <MapAddressField name="address" label={t("address")} value={formik.values.address} placeholder={t("typing_address")} controlId="supplierForm-address" onChange={formik.handleChange}/>
                           <div className="mb-3">
-                            <InputField type="text" name="street" value={values.street} label={t("street")} controlId="supplierForm-street" />
+                            <InputField type="text" name="street" value={formik.values.street} label={t("street")} controlId="supplierForm-street" onChange={formik.handleChange}/>
                           </div>
                           <div className="row gx-2">
                             <div className="col-md-6 mb-3">
-                              <InputField type="text" name="suburb" value={values.suburb} label={t("suburb")} controlId="supplierForm-suburb" />
+                              <InputField type="text" name="suburb" value={formik.values.suburb} label={t("suburb")} controlId="supplierForm-suburb" onChange={formik.handleChange}/>
                             </div>
                             <div className="col-md-3 col-6 mb-3">
-                              <InputField type="text" name="state" value={values.state} label={t("state")} controlId="supplierForm-state" />
+                              <InputField type="text" name="state" value={formik.values.state} label={t("state")} controlId="supplierForm-state" onChange={formik.handleChange}/>
                             </div>
                             <div className="col-md-3 col-6 mb-3">
-                              <InputField type="text" name="postcode" value={values.postcode} label={t("postcode")} controlId="supplierForm-postcode" />
+                              <InputField type="text" name="postcode" value={formik.values.postcode} label={t("postcode")} controlId="supplierForm-postcode" onChange={formik.handleChange}/>
                             </div>
                           </div>
                         </div>

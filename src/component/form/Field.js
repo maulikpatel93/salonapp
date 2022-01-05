@@ -11,7 +11,6 @@ import config from "../../config";
 import { selectImage, removeImage } from "../../store/slices/imageSlice";
 import CustomSelect from "../../component/form/CustomSelect";
 import { Field } from "formik";
-import { productManageStock } from "../../store/slices/productSlice";
 
 const FloatLabelInputField = ({ label, controlId, ...props }) => {
   const [field, meta] = useField(props);

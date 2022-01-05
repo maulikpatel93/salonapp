@@ -28,18 +28,17 @@ const SupplierEditForm = () => {
     dispatch({ type: "supplier/detail/rejected" });
   };
   const initialValues = {
-    id: detail && detail.id,
-    name: detail && detail.name,
-    first_name: detail && detail.first_name,
-    last_name: detail && detail.last_name,
-    email: detail && detail.email,
-    phone_number: detail && detail.phone_number,
-    website: detail && detail.website,
-    address: detail && detail.address,
-    street: detail && detail.street,
-    suburb: detail && detail.suburb,
-    state: detail && detail.state,
-    postcode: detail && detail.postcode,
+    name: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone_number: '',
+    website: '',
+    address: '',
+    street: '',
+    suburb: '',
+    state: '',
+    postcode: '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -93,17 +92,23 @@ const SupplierEditForm = () => {
 
   return (
     <React.Fragment>
-      <Formik enableReinitialize={true} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
-        {({ handleSubmit, values, status }) => {
+      <Formik enableReinitialize={false} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
+        {(formik) => {
           useEffect(() => {
-            if (detail.logo) {
-              dispatch(selectImage({ name: detail.logo, size: "", type: "", url: detail.logo_url }));
+            if(detail){
+              if (detail.logo) {
+                dispatch(selectImage({ name: detail.logo, size: "", type: "", url: detail.logo_url }));
+              }
+              const fields = ['id',"name", "first_name", "last_name", "email", "phone_number", "website", "address", "street", "suburb", "state", "postcode"];
+              fields.forEach((field) => {
+                formik.setFieldValue(field, detail[field], false);
+              });
             }
           }, [detail]);
           return (
-            <div className={"full-screen-drawer p-0 " + rightDrawerOpened} id="addsuppliers-drawer">
+            <div className={(rightDrawerOpened ? "full-screen-drawer p-0 " : '') + rightDrawerOpened} id="editsuppliers-drawer">
               <div className="drawer-wrp position-relative">
-                <form noValidate onSubmit={handleSubmit}>
+                <form noValidate onSubmit={formik.handleSubmit}>
                   <div className="drawer-header px-md-4 px-3 py-3 d-flex flex-wrap align-items-center">
                     <h3 className="mb-0 fw-semibold">{t('edit_supplier')}</h3>
                     <div className="ms-auto">
@@ -123,7 +128,7 @@ const SupplierEditForm = () => {
                           <p>{t("add_the_name_of_the_supplier")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
-                          <InputField type="text" name="name" value={values.name} label={t("supplier_name")} controlId="supplierForm-name" />
+                          <InputField type="text" name="name" value={formik.values.name} label={t("supplier_name")} controlId="supplierForm-name" />
                         </div>
                       </div>
                       <hr className="drawer-supplier-hr"></hr>
@@ -136,20 +141,20 @@ const SupplierEditForm = () => {
                         <div className="col-md-6 pe-md-0">
                           <div className="row gx-2">
                             <div className="mb-3 col-md-6">
-                              <InputField type="text" name="first_name" value={values.first_name} label={t("first_name")} controlId="supplierForm-first_name" />
+                              <InputField type="text" name="first_name" value={formik.values.first_name} label={t("first_name")} controlId="supplierForm-first_name" />
                             </div>
                             <div className="mb-3 col-md-6">
-                              <InputField type="text" name="last_name" value={values.last_name} label={t("last_name")} controlId="supplierForm-last_name" />
+                              <InputField type="text" name="last_name" value={formik.values.last_name} label={t("last_name")} controlId="supplierForm-last_name" />
                             </div>
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="phone_number" value={values.phone_number} mask="999-999-9999" label={t("phone_number")} controlId="supplierForm-phone_number" />
+                            <InputField type="text" name="phone_number" value={formik.values.phone_number} mask="999-999-9999" label={t("phone_number")} controlId="supplierForm-phone_number" />
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="email" value={values.email} label={t("email")} controlId="supplierForm-email" />
+                            <InputField type="text" name="email" value={formik.values.email} label={t("email")} controlId="supplierForm-email" />
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="website" value={values.website} label={t("website")} controlId="supplierForm-website" />
+                            <InputField type="text" name="website" value={formik.values.website} label={t("website")} controlId="supplierForm-website" />
                           </div>
                         </div>
                       </div>
@@ -160,19 +165,19 @@ const SupplierEditForm = () => {
                           <p>{t("add_the_address_of_this_supplier")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
-                          <MapAddressField name="address" label={t("address")} value={values.address} placeholder={t("typing_address")} controlId="supplierForm-address" />
+                          <MapAddressField name="address" label={t("address")} value={formik.values.address} placeholder={t("typing_address")} controlId="supplierForm-address" />
                           <div className="mb-3">
-                            <InputField type="text" name="street" value={values.street} label={t("street")} controlId="supplierForm-street" />
+                            <InputField type="text" name="street" value={formik.values.street} label={t("street")} controlId="supplierForm-street" />
                           </div>
                           <div className="row gx-2">
                             <div className="col-md-6 mb-3">
-                              <InputField type="text" name="suburb" value={values.suburb} label={t("suburb")} controlId="supplierForm-suburb" />
+                              <InputField type="text" name="suburb" value={formik.values.suburb} label={t("suburb")} controlId="supplierForm-suburb" />
                             </div>
                             <div className="col-md-3 col-6 mb-3">
-                              <InputField type="text" name="state" value={values.state} label={t("state")} controlId="supplierForm-state" />
+                              <InputField type="text" name="state" value={formik.values.state} label={t("state")} controlId="supplierForm-state" />
                             </div>
                             <div className="col-md-3 col-6 mb-3">
-                              <InputField type="text" name="postcode" value={values.postcode} label={t("postcode")} controlId="supplierForm-postcode" />
+                              <InputField type="text" name="postcode" value={formik.values.postcode} label={t("postcode")} controlId="supplierForm-postcode" />
                             </div>
                           </div>
                         </div>

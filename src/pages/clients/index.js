@@ -26,6 +26,8 @@ const Clients = () => {
   const isSearchList = useSelector((state) => state.client.isSearchList);
   const isSearchName = useSelector((state) => state.client.isSearchName);
   const SuggetionView = useSelector((state) => state.client.isSuggetionListView);
+  const clientIsOpenedAddForm = useSelector((state) => state.client.isOpenedAddForm);
+  const clientIsOpenedDetailModal = useSelector((state) => state.client.isOpenedDetailModal);
 
   useEffect(() => {
     dispatch(clientSortRemove());
@@ -233,8 +235,8 @@ const Clients = () => {
             </div>
           </div>
         </div>
-        <ClientAddForm />
-        <ClientDetailModal />
+        {clientIsOpenedAddForm ? <ClientAddForm /> : ''}
+        {clientIsOpenedDetailModal ? <ClientDetailModal /> : ''}
       </div>
     </>
   );
