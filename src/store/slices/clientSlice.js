@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import clientApiController from "../../services/client.service";
+import Unauthorized from "../Unauthorized";
 
 export const clientStoreApi = createAsyncThunk("client/create", async (formvalues, thunkAPI) => {
   try {
@@ -13,7 +14,13 @@ export const clientStoreApi = createAsyncThunk("client/create", async (formvalue
         }
       })
       .catch((error) => {
-        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
+        }
         return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
       });
     return resposedata;
@@ -35,7 +42,13 @@ export const clientUpdateApi = createAsyncThunk("client/update", async (formvalu
         }
       })
       .catch((error) => {
-        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
+        }
         return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
       });
     return resposedata;
@@ -58,6 +71,9 @@ export const clientListViewApi = createAsyncThunk("client/listview", async (form
         if (error.response && error.response.status == 422) {
           const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
         } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
         }
         return thunkAPI.rejectWithValue({ status: error.response.status });
       });
@@ -81,6 +97,9 @@ export const clientGridViewApi = createAsyncThunk("client/gridview", async (form
         if (error.response && error.response.status == 422) {
           const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
         } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
         }
         return thunkAPI.rejectWithValue({ status: error.response.status });
       });
@@ -104,12 +123,14 @@ export const clientDetailApi = createAsyncThunk("client/detail", async (formValu
         if (error.response && error.response.status == 422) {
           const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
         } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
         }
         return thunkAPI.rejectWithValue({ status: error.response.status });
       });
     return resposedata;
   } catch (error) {
-    console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
     return thunkAPI.rejectWithValue();
   }
@@ -125,12 +146,17 @@ export const clientDeleteApi = createAsyncThunk("client/delete", async (formValu
         }
       })
       .catch((error) => {
-        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
+        }
         return thunkAPI.rejectWithValue(message);
       });
     return resposedata;
   } catch (error) {
-    console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
     return thunkAPI.rejectWithValue();
   }
@@ -146,12 +172,17 @@ export const clientSuggetionListApi = createAsyncThunk("client/suggetionlist", a
         }
       })
       .catch((error) => {
-        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
+        }
         return thunkAPI.rejectWithValue(message);
       });
     return resposedata;
   } catch (error) {
-    console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
     return thunkAPI.rejectWithValue();
   }
@@ -168,7 +199,7 @@ const initialState = {
   isClientDetailTab: "appointment",
   isSort: "",
   isSearchList: "",
-  isSearchName: ""
+  isSearchName: "",
 };
 
 export const clientSlice = createSlice({
@@ -220,7 +251,7 @@ export const clientSlice = createSlice({
     },
     clientSearchName: (state, action) => {
       state.isSearchName = action.payload;
-    }
+    },
   },
   extraReducers: {
     [clientStoreApi.pending]: (state, action) => {},
@@ -242,14 +273,14 @@ export const clientSlice = createSlice({
       const { id, ...changes } = action.payload;
       let isGridView = state.isGridView && state.isGridView.data ? state.isGridView.data : state.isGridView;
       let isListView = state.isListView && state.isListView.data ? state.isListView.data : state.isListView;
-      const existingGridData = isGridView ? isGridView.find(event => event.id === id) : '';
-      const existingListData = isListView ? isListView.find(event => event.id === id) : '';
-      if(existingGridData){
+      const existingGridData = isGridView ? isGridView.find((event) => event.id === id) : "";
+      const existingListData = isListView ? isListView.find((event) => event.id === id) : "";
+      if (existingGridData) {
         Object.keys(changes).map((keyName, i) => {
           existingGridData[keyName] = changes[keyName];
         });
       }
-      if(existingListData){
+      if (existingListData) {
         Object.keys(changes).map((keyName, i) => {
           existingListData[keyName] = changes[keyName];
         });

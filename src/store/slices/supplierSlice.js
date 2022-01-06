@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
 import supplierApiController from "../../services/supplier.service";
-import { setMessage } from "./message";
+import Unauthorized from "../Unauthorized";
 
 export const usersAdapter = createEntityAdapter();
 
@@ -16,7 +16,13 @@ export const supplierStoreApi = createAsyncThunk("supplier/create", async (formv
         }
       })
       .catch((error) => {
-        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
+        }
         return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
       });
     return resposedata;
@@ -38,7 +44,13 @@ export const supplierUpdateApi = createAsyncThunk("supplier/update", async (form
         }
       })
       .catch((error) => {
-        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
+        }
         return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
       });
     return resposedata;
@@ -61,6 +73,9 @@ export const supplierGridViewApi = createAsyncThunk("supplier/gridview", async (
         if (error.response && error.response.status == 422) {
           const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
         } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
         }
         return thunkAPI.rejectWithValue({ status: error.response.status });
       });
@@ -84,6 +99,9 @@ export const supplierOptions = createAsyncThunk("supplier/supplierOptions", asyn
         if (error.response && error.response.status == 422) {
           const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
         } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
         }
         return thunkAPI.rejectWithValue({ status: error.response.status });
       });
@@ -107,12 +125,14 @@ export const supplierDetailApi = createAsyncThunk("supplier/detail", async (form
         if (error.response && error.response.status == 422) {
           const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
         } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
         }
         return thunkAPI.rejectWithValue({ status: error.response.status });
       });
     return resposedata;
   } catch (error) {
-    console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
     return thunkAPI.rejectWithValue();
   }
@@ -128,14 +148,18 @@ export const supplierDeleteApi = createAsyncThunk("supplier/delete", async (form
         }
       })
       .catch((error) => {
-        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
+        }
         return thunkAPI.rejectWithValue(message);
       });
     return resposedata;
   } catch (error) {
-    console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    thunkAPI.dispatch(setMessage(message));
     return thunkAPI.rejectWithValue();
   }
 });
@@ -150,14 +174,18 @@ export const supplierSuggetionListApi = createAsyncThunk("supplier/suggetionlist
         }
       })
       .catch((error) => {
-        const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        if (error.response && error.response.status == 422) {
+          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
+        } else if (error.response.status == 401) {
+          Unauthorized(thunkAPI);
+        } else if(error.response == undefined){
+          Unauthorized(thunkAPI);
+        }
         return thunkAPI.rejectWithValue(message);
       });
     return resposedata;
   } catch (error) {
-    console.log(error);
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    thunkAPI.dispatch(setMessage(message));
     return thunkAPI.rejectWithValue();
   }
 });
