@@ -263,10 +263,9 @@ const Products = () => {
           <div className={"tab-content " + (tabview && tabview == "product" ? "px-lg-4" : "list-view-content")}>
             <div className={"tab-pane" + (tabview && tabview == "product" ? " show active" : "")} id="product" role="tabpanel" aria-labelledby="product-tab">
               {ListView.length > 0 || ListView.data ? (
-               
-                  <div className="" id="scrollableListView">
+                <section>
+                  <div className="table-responsive services-table-shadow" id="scrollableListView">
                     <InfiniteScroll dataLength={ListView.data && ListView.data.length ? ListView.data.length : "0"} next={fetchDataList} scrollableTarget="page-content-product" hasMore={ListView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
-                    <div className="table-responsive services-table-shadow">
                       <table className="table bg-white">
                         <thead>
                           <tr>
@@ -325,7 +324,6 @@ const Products = () => {
                           <ProductListView view={ListView} />
                         </tbody>
                       </table>
-                      </div>
                       <div className="col-2 m-auto p-3">
                         {!isFetching && ListView.next_page_url && (
                           <button onClick={loadMoreItems} className="btn btn-primary">
@@ -335,6 +333,7 @@ const Products = () => {
                       </div>
                     </InfiniteScroll>
                   </div>
+                </section>
               ) : (
                 <div className="complete-box text-center d-flex flex-column justify-content-center my-md-5 my-4 bg-white">
                   <div className="complete-box-wrp text-center ">

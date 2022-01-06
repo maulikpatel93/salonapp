@@ -97,7 +97,7 @@ const Clients = () => {
 
   return (
     <>
-      <div className={"page-content bg-pink service page-content-"+tabview} id="page-content">
+      <div className="page-content bg-pink service" id="page-content">
         <div className="row bg-white align-items-center sticky-top">
           <div className="common-tab col-md-4 col-4 order-1">
             <ul className="nav nav-tabs mb-0 justify-content-start" role="tablist">
@@ -130,7 +130,7 @@ const Clients = () => {
           </div>
           <div className="col-md-4 col-8 text-end ps-0 mb-md-0 mb-2 order-3">
             <span className="list-view-lable me-1">{t("display_as")}</span>
-            <ul className="nav nav-tabs mb-0 d-inline-block list-view-tab border-0 me-xs-3 me-2" role="tablist">
+            <ul className="nav nav-tabs mb-0 d-inline-block list-view-tab border-0 me-xs-3" role="tablist">
               <li className="nav-item d-inline-block">
                 <a className={"nav-link border-0 cursor-pointer" + (tabview && tabview == "grid" ? " active" : "")} id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true" onClick={() => dispatch(clientTabGridView())}>
                   <img src={config.imagepath + "block-view.png"} alt="" />
@@ -171,7 +171,7 @@ const Clients = () => {
         <div className="tab-content list-view-content">
           <div className={"tab-pane" + (tabview && tabview == "grid" ? " show active" : "")} id="all">
             <div className="" id="scrollableGridView">
-              <InfiniteScroll className="row" dataLength={GridView.data && GridView.data.length ? GridView.data.length : "0"} next={fetchDataGrid} scrollableTarget={"page-content"+tabview} hasMore={GridView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
+              <InfiniteScroll className="row" dataLength={GridView.data && GridView.data.length ? GridView.data.length : "0"} next={fetchDataGrid} scrollableTarget="page-content" hasMore={GridView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
                 <a className="box-image-cover cursor-pointer" onClick={handleopenAddClientForm}>
                   <div className="tabs-image">
                     <img src={config.imagepath + "tabs-image.png"} alt="" />
@@ -201,9 +201,8 @@ const Clients = () => {
             </div>
           </div>
           <div className={"tab-pane" + (tabview && tabview == "list" ? " show active" : "")} id="listview">
-            <div className="" id="scrollableListView">
-              <InfiniteScroll dataLength={ListView.data && ListView.data.length ? ListView.data.length : "0"} next={fetchDataList} scrollableTarget={"page-content"+tabview} hasMore={ListView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
-              <div className="table-responsive bg-white">
+            <div className="table-responsive bg-white" id="scrollableListView">
+              <InfiniteScroll dataLength={ListView.data && ListView.data.length ? ListView.data.length : "0"} next={fetchDataList} scrollableTarget="page-content" hasMore={ListView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
                 <table className="table mb-0">
                   <thead className="position-sticky">
                     <tr>
@@ -225,7 +224,6 @@ const Clients = () => {
                     <ClientListView currentUser={currentUser} view={ListView} />
                   </tbody>
                 </table>
-                </div>
                 <div className="col-2 m-auto p-3">
                   {!isFetching && GridView.next_page_url && (
                     <button onClick={loadMoreItems} className="btn btn-primary">
