@@ -216,7 +216,11 @@ export const productSlice = createSlice({
   extraReducers: {
     [productStoreApi.pending]: (state, action) => {},
     [productStoreApi.fulfilled]: (state, action) => {
-      state.isListView.data = [...state.isListView.data, action.payload];
+      if (state.isListView && state.isListView.data) {
+        state.isListView.data = [...state.isListView.data, action.payload];
+      } else {
+        state.isListView = { data: [action.payload] };
+      }
     },
     [productStoreApi.rejected]: (state, action) => {},
     [productUpdateApi.pending]: (state, action) => {},

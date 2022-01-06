@@ -63,7 +63,7 @@ const ClientListView = (props) => {
                 )}
               </td>
               <td>
-                <a className="cursor-pointer text-decoration-none hover-primary" onClick={handleClientDetailModal}>
+                <a className="cursor-pointer text-decoration-dotted hover-primary" onClick={handleClientDetailModal}>
                   {ucfirst(first_name + " " + last_name)}
                 </a>
               </td>

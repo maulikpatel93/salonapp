@@ -53,14 +53,7 @@ const ClientAddForm = (props) => {
     email: Yup.string().trim().max(100).email().label(t("email")).required(),
     phone_number: Yup.string().trim().matches(config.phone_number_pattern, t(config.phone_number_334_error)).label(t("phone_number")).required(),
     date_of_birth: Yup.string().trim().label(t("date_of_birth")).required(),
-    gender: Yup.object()
-      .shape({
-        value: Yup.string(),
-        label: Yup.string(),
-      })
-      .label(t("gender"))
-      .required()
-      .nullable(),
+    gender: Yup.string().trim().label(t("gender")).required().nullable(),
     address: Yup.string().trim().label(t("address")).required(),
     street: Yup.string().trim().label(t("street")).required(),
     suburb: Yup.string().trim().label(t("suburb")).required(),

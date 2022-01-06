@@ -225,8 +225,16 @@ export const clientSlice = createSlice({
   extraReducers: {
     [clientStoreApi.pending]: (state, action) => {},
     [clientStoreApi.fulfilled]: (state, action) => {
-      state.isGridView.data = [...state.isGridView.data, action.payload];
-      state.isListView.data = [...state.isListView.data, action.payload];
+      if (state.isGridView && state.isGridView.data) {
+        state.isGridView.data = [...state.isGridView.data, action.payload];
+      } else {
+        state.isGridView = { data: [action.payload] };
+      }
+      if (state.isListView && state.isListView.data) {
+        state.isListView.data = [...state.isListView.data, action.payload];
+      } else {
+        state.isListView = { data: [action.payload] };
+      }
     },
     [clientStoreApi.rejected]: (state, action) => {},
     [clientUpdateApi.pending]: (state, action) => {},

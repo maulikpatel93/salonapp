@@ -216,7 +216,11 @@ export const supplierSlice = createSlice({
   extraReducers: {
     [supplierStoreApi.pending]: (state, action) => {},
     [supplierStoreApi.fulfilled]: (state, action) => {
-      state.isGridView.data = [...state.isGridView.data, action.payload];
+      if (state.isGridView && state.isGridView.data) {
+        state.isGridView.data = [...state.isGridView.data, action.payload];
+      } else {
+        state.isGridView = { data: [action.payload] };
+      }
     },
     [supplierStoreApi.rejected]: (state, action) => {},
     [supplierUpdateApi.pending]: (state, action) => {},
