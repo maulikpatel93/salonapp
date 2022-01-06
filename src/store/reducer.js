@@ -8,6 +8,8 @@ import imageReducer from "../store/slices/imageSlice";
 import clientReducer from "../store/slices/clientSlice";
 import supplierReducer from "../store/slices/supplierSlice";
 import productReducer from "../store/slices/productSlice";
+import categoryReducer from "../store/slices/categorySlice";
+import serviceReducer from "../store/slices/serviceSlice";
 import taxReducer from "../store/slices/taxSlice";
 //-----------------------|| COMBINE REDUCER ||-----------------------//
 const rootPersistConfig = {
@@ -61,6 +63,28 @@ const reducer = combineReducers({
       whitelist:['isTabView']
     },
     supplierReducer,
+  ),
+  service: persistReducer(
+    {
+      key: "service",
+      storage,
+      keyPrefix: "salon-",
+      debug: false,
+      timeout: 20000,
+      whitelist:['isTabView']
+    },
+    serviceReducer,
+  ),
+  category: persistReducer(
+    {
+      key: "category",
+      storage,
+      keyPrefix: "salon-",
+      debug: false,
+      timeout: 20000,
+      whitelist:['isTabView']
+    },
+    categoryReducer,
   ),
   tax: taxReducer,
   image: imageReducer,

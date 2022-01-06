@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import clientApiController from "../../services/client.service";
-import Unauthorized from "../Unauthorized";
+import HandleError from "../HandleError";
 
 export const clientStoreApi = createAsyncThunk("client/create", async (formvalues, thunkAPI) => {
   try {
@@ -13,16 +13,7 @@ export const clientStoreApi = createAsyncThunk("client/create", async (formvalue
           return thunkAPI.rejectWithValue();
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'create'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -41,16 +32,7 @@ export const clientUpdateApi = createAsyncThunk("client/update", async (formvalu
           return thunkAPI.rejectWithValue();
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'update'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -67,16 +49,7 @@ export const clientListViewApi = createAsyncThunk("client/listview", async (form
           return response.data;
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue({ status: error.response.status });
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'listview'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -93,16 +66,7 @@ export const clientGridViewApi = createAsyncThunk("client/gridview", async (form
           return response.data;
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue({ status: error.response.status });
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'gridview'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -119,16 +83,7 @@ export const clientDetailApi = createAsyncThunk("client/detail", async (formValu
           return response.data;
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue({ status: error.response.status });
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'detail'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -145,16 +100,7 @@ export const clientDeleteApi = createAsyncThunk("client/delete", async (formValu
           return response.data;
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue(message);
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'delete'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -171,16 +117,7 @@ export const clientSuggetionListApi = createAsyncThunk("client/suggetionlist", a
           return response.data;
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue(message);
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'suggetionlist'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();

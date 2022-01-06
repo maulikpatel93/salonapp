@@ -20,7 +20,7 @@ const ProductEditForm = () => {
   const rightDrawerOpened = useSelector((state) => state.product.isOpenedEditForm);
   const detail = useSelector((state) => state.product.isDetailData);
   const isProductManageStock = useSelector((state) => state.product.isProductManageStock);
-  const isSuppplierOption = useSelector((state) => state.supplier.isSuppplierOption);
+  const isSupplierOption = useSelector((state) => state.supplier.isSupplierOption);
   const isTaxOption = useSelector((state) => state.tax.isTaxOption);
 
   const { t } = useTranslation();
@@ -118,7 +118,7 @@ const ProductEditForm = () => {
     }
   };
 
-  const supplierOptionsData = isSuppplierOption;
+  const supplierOptionsData = isSupplierOption;
   const taxOptionsData = isTaxOption;
 
   return (

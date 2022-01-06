@@ -1,12 +1,10 @@
-import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
-import supplierApiController from "../../services/supplier.service";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import serviceApiController from "../../services/service.service";
 import HandleError from "../HandleError";
 
-export const usersAdapter = createEntityAdapter();
-
-export const supplierStoreApi = createAsyncThunk("supplier/create", async (formvalues, thunkAPI) => {
+export const serviceStoreApi = createAsyncThunk("service/create", async (formvalues, thunkAPI) => {
   try {
-    const resposedata = await supplierApiController
+    const resposedata = await serviceApiController
       .create(formvalues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -23,9 +21,9 @@ export const supplierStoreApi = createAsyncThunk("supplier/create", async (formv
   }
 });
 
-export const supplierUpdateApi = createAsyncThunk("supplier/update", async (formvalues, thunkAPI) => {
+export const serviceUpdateApi = createAsyncThunk("service/update", async (formvalues, thunkAPI) => {
   try {
-    const resposedata = await supplierApiController
+    const resposedata = await serviceApiController
       .update(formvalues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -42,16 +40,16 @@ export const supplierUpdateApi = createAsyncThunk("supplier/update", async (form
   }
 });
 
-export const supplierGridViewApi = createAsyncThunk("supplier/gridview", async (formValues, thunkAPI) => {
+export const serviceListViewApi = createAsyncThunk("service/listview", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await supplierApiController
+    const resposedata = await serviceApiController
       .view(formValues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
           return response.data;
         }
       })
-      .catch((error) => HandleError(thunkAPI, error, 'gridview'));
+      .catch((error) => HandleError(thunkAPI, error, 'listview'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -59,26 +57,9 @@ export const supplierGridViewApi = createAsyncThunk("supplier/gridview", async (
   }
 });
 
-export const supplierOptions = createAsyncThunk("supplier/supplierOptions", async (formValues, thunkAPI) => {
+export const serviceDetailApi = createAsyncThunk("service/detail", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await supplierApiController
-      .view(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
-      .catch((error) => HandleError(thunkAPI, error, 'supplierOptions'));
-    return resposedata;
-  } catch (error) {
-    const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    return thunkAPI.rejectWithValue();
-  }
-});
-
-export const supplierDetailApi = createAsyncThunk("supplier/detail", async (formValues, thunkAPI) => {
-  try {
-    const resposedata = await supplierApiController
+    const resposedata = await serviceApiController
       .view(formValues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -93,9 +74,9 @@ export const supplierDetailApi = createAsyncThunk("supplier/detail", async (form
   }
 });
 
-export const supplierDeleteApi = createAsyncThunk("supplier/delete", async (formValues, thunkAPI) => {
+export const serviceDeleteApi = createAsyncThunk("service/delete", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await supplierApiController
+    const resposedata = await serviceApiController
       .deleted(formValues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -110,9 +91,9 @@ export const supplierDeleteApi = createAsyncThunk("supplier/delete", async (form
   }
 });
 
-export const supplierSuggetionListApi = createAsyncThunk("supplier/suggetionlist", async (formValues, thunkAPI) => {
+export const serviceSuggetionListApi = createAsyncThunk("service/suggetionlist", async (formValues, thunkAPI) => {
   try {
-    const resposedata = await supplierApiController
+    const resposedata = await serviceApiController
       .suggetionlist(formValues, thunkAPI)
       .then((response) => {
         if (response.status == 200) {
@@ -131,91 +112,116 @@ const initialState = {
   isOpenedAddForm: "",
   isOpenedEditForm: "",
   isOpenedDetailModal: "",
-  isGridView: [],
+  isListView: [],
   isSuggetionListView: [],
   isDetailData: "",
+  isTabView: "service",
+  isSort: "",
   isSearchList: "",
   isSearchName: "",
-  isSupplierOption: [],
+  isServiceManageStock: 0,
 };
 
-export const supplierSlice = createSlice({
-  name: "supplier",
+export const serviceSlice = createSlice({
+  name: "service",
   initialState,
   reducers: {
     reset: () => initialState,
-    openAddSupplierForm: (state = initialState) => {
+    serviceTabView: (state, action) => {
+      state.isOpenedAddForm = "";
       state.isOpenedEditForm = "";
+      state.isOpenedDetailModal = "";
+      state.isTabView = action.payload;
+    },
+    openAddServiceForm: (state = initialState) => {
       state.isOpenedAddForm = "open";
-    },
-    closeAddSupplierForm: (state = initialState) => {
       state.isOpenedEditForm = "";
-      state.isOpenedAddForm = "";
-    },
-    openEditSupplierForm: (state = initialState) => {
-      state.isOpenedAddForm = "";
-      state.isOpenedEditForm = "open";
-    },
-    closeEditSupplierForm: (state = initialState) => {
-      state.isOpenedAddForm = "";
-      state.isOpenedEditForm = "";
-    },
-    openSupplierDetailModal: (state = initialState) => {
-      state.isOpenedAddForm = "";
-      state.isOpenedDetailModal = "open";
-    },
-    closeSupplierDetailModal: (state = initialState) => {
-      state.isOpenedAddForm = "";
       state.isOpenedDetailModal = "";
     },
-    openSupplierSearchList: (state) => {
+    closeAddServiceForm: (state = initialState) => {
+      state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "";
+      state.isOpenedDetailModal = "";
+    },
+    openEditServiceForm: (state = initialState) => {
+      state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "open";
+      state.isOpenedDetailModal = "";
+    },
+    closeEditServiceForm: (state = initialState) => {
+      state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "";
+      state.isOpenedDetailModal = "";
+    },
+    openServiceDetailModal: (state = initialState) => {
+      state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "";
+      state.isOpenedDetailModal = "open";
+    },
+    closeServiceDetailModal: (state = initialState) => {
+      state.isOpenedAddForm = "";
+      state.isOpenedEditForm = "";
+      state.isOpenedDetailModal = "";
+    },
+    serviceSort: (state, action) => {
+      let sort = state.isSort ? state.isSort : {};
+      // state.isSort = Object.assign(sort, action.payload);
+      state.isSort = action.payload;
+    },
+    serviceSortRemove: (state) => {
+      state.isSort = "";
+    },
+    openServiceSearchList: (state) => {
       state.isSearchList = "open";
     },
-    closeSupplierSearchList: (state) => {
+    closeServiceSearchList: (state) => {
       state.isSearchList = "";
     },
-    supplierSearchName: (state, action) => {
+    serviceSearchName: (state, action) => {
       state.isSearchName = action.payload;
+    },
+    serviceManageStock: (state, action) => {
+      state.isServiceManageStock = action.payload;
     },
   },
   extraReducers: {
-    [supplierStoreApi.pending]: (state, action) => {},
-    [supplierStoreApi.fulfilled]: (state, action) => {
-      if (state.isGridView && state.isGridView.data) {
-        state.isGridView.data = [...state.isGridView.data, action.payload];
+    [serviceStoreApi.pending]: (state, action) => {},
+    [serviceStoreApi.fulfilled]: (state, action) => {
+      if (state.isListView && state.isListView.data) {
+        state.isListView.data = [...state.isListView.data, action.payload];
       } else {
-        state.isGridView = { data: [action.payload] };
+        state.isListView = { data: [action.payload] };
       }
     },
-    [supplierStoreApi.rejected]: (state, action) => {},
-    [supplierUpdateApi.pending]: (state, action) => {},
-    [supplierUpdateApi.fulfilled]: (state, action) => {
+    [serviceStoreApi.rejected]: (state, action) => {},
+    [serviceUpdateApi.pending]: (state, action) => {},
+    [serviceUpdateApi.fulfilled]: (state, action) => {
       const { id, ...changes } = action.payload;
-      const existingData = state.isGridView.data.find((event) => event.id === id);
+      const existingData = state.isListView.data.find((event) => event.id === id);
       if (existingData) {
         Object.keys(changes).map((keyName, i) => {
           existingData[keyName] = changes[keyName];
         });
       }
     },
-    [supplierUpdateApi.rejected]: (state, action) => {},
-    [supplierGridViewApi.pending]: (state, action) => {},
-    [supplierGridViewApi.fulfilled]: (state, action) => {
-      let old_current_page = state.isGridView.current_page ? state.isGridView.current_page : "";
+    [serviceUpdateApi.rejected]: (state, action) => {},
+    [serviceListViewApi.pending]: (state, action) => {},
+    [serviceListViewApi.fulfilled]: (state, action) => {
+      let old_current_page = state.isListView.current_page ? state.isListView.current_page : "";
       let new_current_page = action.payload.current_page ? action.payload.current_page : "";
-      let viewdata = state.isGridView && state.isGridView.data;
+      let viewdata = state.isListView && state.isListView.data;
       let newviewdata = action.payload && action.payload.data;
-      state.isGridView = action.payload;
+      state.isListView = action.payload;
       if (old_current_page && new_current_page && old_current_page < new_current_page && old_current_page != new_current_page) {
-        let data = viewdata && newviewdata ? (state.isGridView.data = [...viewdata, ...newviewdata]) : action.payload;
+        let data = viewdata && newviewdata ? (state.isListView.data = [...viewdata, ...newviewdata]) : action.payload;
       }
-      state.isGridView = action.payload;
+      state.isListView = action.payload;
     },
-    [supplierGridViewApi.rejected]: (state, action) => {
-      state.isGridView = [];
+    [serviceListViewApi.rejected]: (state, action) => {
+      state.isListView = [];
     },
-    [supplierSuggetionListApi.pending]: (state, action) => {},
-    [supplierSuggetionListApi.fulfilled]: (state, action) => {
+    [serviceSuggetionListApi.pending]: (state, action) => {},
+    [serviceSuggetionListApi.fulfilled]: (state, action) => {
       let old_current_page = state.isSuggetionListView.current_page ? state.isSuggetionListView.current_page : "";
       let new_current_page = action.payload.current_page ? action.payload.current_page : "";
       let viewdata = state.isSuggetionListView && state.isSuggetionListView.data;
@@ -226,31 +232,24 @@ export const supplierSlice = createSlice({
       }
       state.isSuggetionListView = action.payload;
     },
-    [supplierSuggetionListApi.rejected]: (state, action) => {
+    [serviceSuggetionListApi.rejected]: (state, action) => {
       state.isSuggetionListView = [];
     },
-    [supplierDetailApi.pending]: (state, action) => {},
-    [supplierDetailApi.fulfilled]: (state, action) => {
+    [serviceDetailApi.pending]: (state, action) => {},
+    [serviceDetailApi.fulfilled]: (state, action) => {
       state.isDetailData = action.payload;
     },
-    [supplierDetailApi.rejected]: (state, action) => {
+    [serviceDetailApi.rejected]: (state, action) => {
       state.isDetailData = "";
     },
-    [supplierDeleteApi.pending]: (state, action) => {},
-    [supplierDeleteApi.fulfilled]: (state, action) => {
+    [serviceDeleteApi.pending]: (state, action) => {},
+    [serviceDeleteApi.fulfilled]: (state, action) => {
       const { id } = action.payload;
-      state.isGridView.data = state.isGridView.data ? state.isGridView.data.filter((item) => item.id != id) : state.isGridView.filter((item) => item.id != id);
+      state.isListView.data = state.isListView.data ? state.isListView.data.filter((item) => item.id != id) : state.isListView.filter((item) => item.id != id);
     },
-    [supplierDeleteApi.rejected]: (state, action) => {},
-    [supplierOptions.pending]: (state, action) => {},
-    [supplierOptions.fulfilled]: (state, action) => {
-      state.isSupplierOption = action.payload;
-    },
-    [supplierOptions.rejected]: (state, action) => {
-      state.isSupplierOption = [];
-    },
+    [serviceDeleteApi.rejected]: (state, action) => {},
   },
 });
 // Action creators are generated for each case reducer function
-export const { reset, openAddSupplierForm, closeAddSupplierForm, openEditSupplierForm, closeEditSupplierForm, openSupplierDetailModal, closeSupplierDetailModal, openSupplierSearchList, closeSupplierSearchList, supplierSearchName } = supplierSlice.actions;
-export default supplierSlice.reducer;
+export const { reset, serviceTabView, openAddServiceForm, closeAddServiceForm, openEditServiceForm, closeEditServiceForm, serviceTabGridView, openServiceDetailModal, closeServiceDetailModal, serviceDetailTab, serviceSort, serviceSortRemove, openServiceSearchList, closeServiceSearchList, serviceSearchName, serviceManageStock } = serviceSlice.actions;
+export default serviceSlice.reducer;

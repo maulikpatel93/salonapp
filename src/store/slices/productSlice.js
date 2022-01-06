@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import productApiController from "../../services/product.service";
-import Unauthorized from "../Unauthorized";
+import HandleError from "../HandleError";
 
 export const productStoreApi = createAsyncThunk("product/create", async (formvalues, thunkAPI) => {
   try {
@@ -13,16 +13,7 @@ export const productStoreApi = createAsyncThunk("product/create", async (formval
           return thunkAPI.rejectWithValue();
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'create'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -41,16 +32,7 @@ export const productUpdateApi = createAsyncThunk("product/update", async (formva
           return thunkAPI.rejectWithValue();
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue({ status: error.response.status, message: message });
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'update'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -67,16 +49,7 @@ export const productListViewApi = createAsyncThunk("product/listview", async (fo
           return response.data;
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue({ status: error.response.status });
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'listview'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -93,16 +66,7 @@ export const productDetailApi = createAsyncThunk("product/detail", async (formVa
           return response.data;
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue({ status: error.response.status });
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'detail'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -119,16 +83,7 @@ export const productDeleteApi = createAsyncThunk("product/delete", async (formVa
           return response.data;
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue(message);
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'delete'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -145,16 +100,7 @@ export const productSuggetionListApi = createAsyncThunk("product/suggetionlist",
           return response.data;
         }
       })
-      .catch((error) => {
-        if (error.response && error.response.status == 422) {
-          const message = (error.response && error.response.data && error.response.data) || error.message || error.toString();
-        } else if (error.response.status == 401) {
-          Unauthorized(thunkAPI);
-        } else if(error.response == undefined){
-          Unauthorized(thunkAPI);
-        }
-        return thunkAPI.rejectWithValue(message);
-      });
+      .catch((error) => HandleError(thunkAPI, error, 'suggetionlist'));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
