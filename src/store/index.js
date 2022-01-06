@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage';
 
 const actionMiddleware = (store) => (next) => (action) => {
   // store.dispatch({ type: "client/view/reset" })
+  // console.log(action);
   if(action.payload && action.payload.status && action.payload.status == 401){
     // storage.removeItem(`salon-auth`);
     // storage.removeItem(`salon-client`);
