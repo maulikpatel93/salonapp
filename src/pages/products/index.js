@@ -90,8 +90,6 @@ const Products = () => {
     if (q && q.length > 0) {
       dispatch(openProductSearchList());
       dispatch(productSuggetionListApi({ q: q }));
-    }else{
-      dispatch(productListViewApi());
     }
   };
   const handleKeyUpSearchProduct = (e) => {
@@ -129,8 +127,6 @@ const Products = () => {
     if (q && q.length > 0) {
       dispatch(openSupplierSearchList());
       dispatch(supplierSuggetionListApi({ q: q }));
-    }else{
-      dispatch(supplierGridViewApi());
     }
   };
   const handleKeyUpSearchSupplier = (e) => {

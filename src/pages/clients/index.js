@@ -83,6 +83,9 @@ const Clients = () => {
           // dispatch(closeClientSearchList());
         }
       });
+    }else{
+      dispatch(clientGridViewApi());
+      dispatch(clientListViewApi());
     }
   };
   const handleCloseSearch = () => {

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
 import categoryApiController from "../../services/category.service";
-import Unauthorized from "../Unauthorized";
 import HandleError from "../HandleError";
+import HandleResponse from "../HandleResponse";
 
 export const usersAdapter = createEntityAdapter();
 
@@ -9,14 +9,8 @@ export const categoryStoreApi = createAsyncThunk("category/create", async (formv
   try {
     const resposedata = await categoryApiController
       .create(formvalues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return thunkAPI.fulfillWithValue(response.data);
-        } else {
-          return thunkAPI.rejectWithValue();
-        }
-      })
-      .catch((error) => HandleError(thunkAPI, error, 'create'));
+      .then((response) => HandleResponse(thunkAPI, response, 'create'))
+      .catch((error) => HandleError(thunkAPI, error, "create"));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -28,14 +22,8 @@ export const categoryUpdateApi = createAsyncThunk("category/update", async (form
   try {
     const resposedata = await categoryApiController
       .update(formvalues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return thunkAPI.fulfillWithValue(response.data);
-        } else {
-          return thunkAPI.rejectWithValue();
-        }
-      })
-      .catch((error) => HandleError(thunkAPI, error, 'update'));
+      .then((response) => HandleResponse(thunkAPI, response, 'update'))
+      .catch((error) => HandleError(thunkAPI, error, "update"));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -47,12 +35,8 @@ export const categoryListViewApi = createAsyncThunk("category/gridview", async (
   try {
     const resposedata = await categoryApiController
       .view(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
-      .catch((error) => HandleError(thunkAPI, error, 'gridview'));
+      .then((response) => HandleResponse(thunkAPI, response, 'gridview'))
+      .catch((error) => HandleError(thunkAPI, error, "gridview"));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -64,12 +48,8 @@ export const categoryOptions = createAsyncThunk("category/categoryOptions", asyn
   try {
     const resposedata = await categoryApiController
       .view(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
-      .catch((error) => HandleError(thunkAPI, error, 'categoryOptions'));
+      .then((response) => HandleResponse(thunkAPI, response, 'categoryOptions'))
+      .catch((error) => HandleError(thunkAPI, error, "categoryOptions"));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -81,12 +61,8 @@ export const categoryDetailApi = createAsyncThunk("category/detail", async (form
   try {
     const resposedata = await categoryApiController
       .view(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
-      .catch((error) => HandleError(thunkAPI, error, 'detail'));
+      .then((response) => HandleResponse(thunkAPI, response, 'detail'))
+      .catch((error) => HandleError(thunkAPI, error, "detail"));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -98,12 +74,8 @@ export const categoryDeleteApi = createAsyncThunk("category/delete", async (form
   try {
     const resposedata = await categoryApiController
       .deleted(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
-      .catch((error) => HandleError(thunkAPI, error, 'delete'));
+      .then((response) => HandleResponse(thunkAPI, response, 'delete'))
+      .catch((error) => HandleError(thunkAPI, error, "delete"));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -115,12 +87,8 @@ export const categoriesuggetionListApi = createAsyncThunk("category/suggetionlis
   try {
     const resposedata = await categoryApiController
       .suggetionlist(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
-      .catch((error) => HandleError(thunkAPI, error, 'suggetionlist'));
+      .then((response) => HandleResponse(thunkAPI, response, 'suggetionlist'))
+      .catch((error) => HandleError(thunkAPI, error, "suggetionlist"));
     return resposedata;
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();

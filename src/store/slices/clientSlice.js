@@ -1,18 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import clientApiController from "../../services/client.service";
 import HandleError from "../HandleError";
+import HandleResponse from "../HandleResponse";
 
 export const clientStoreApi = createAsyncThunk("client/create", async (formvalues, thunkAPI) => {
   try {
     const resposedata = await clientApiController
       .create(formvalues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return thunkAPI.fulfillWithValue(response.data);
-        } else {
-          return thunkAPI.rejectWithValue();
-        }
-      })
+      .then((response) => HandleResponse(thunkAPI, response, 'create'))
       .catch((error) => HandleError(thunkAPI, error, 'create'));
     return resposedata;
   } catch (error) {
@@ -25,13 +20,7 @@ export const clientUpdateApi = createAsyncThunk("client/update", async (formvalu
   try {
     const resposedata = await clientApiController
       .update(formvalues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return thunkAPI.fulfillWithValue(response.data);
-        } else {
-          return thunkAPI.rejectWithValue();
-        }
-      })
+      .then((response) => HandleResponse(thunkAPI, response, 'update'))
       .catch((error) => HandleError(thunkAPI, error, 'update'));
     return resposedata;
   } catch (error) {
@@ -44,11 +33,7 @@ export const clientListViewApi = createAsyncThunk("client/listview", async (form
   try {
     const resposedata = await clientApiController
       .view(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
+      .then((response) => HandleResponse(thunkAPI, response, 'listview'))
       .catch((error) => HandleError(thunkAPI, error, 'listview'));
     return resposedata;
   } catch (error) {
@@ -61,11 +46,7 @@ export const clientGridViewApi = createAsyncThunk("client/gridview", async (form
   try {
     const resposedata = await clientApiController
       .view(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
+      .then((response) => HandleResponse(thunkAPI, response, 'gridview'))
       .catch((error) => HandleError(thunkAPI, error, 'gridview'));
     return resposedata;
   } catch (error) {
@@ -78,11 +59,7 @@ export const clientDetailApi = createAsyncThunk("client/detail", async (formValu
   try {
     const resposedata = await clientApiController
       .view(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
+      .then((response) => HandleResponse(thunkAPI, response, 'detail'))
       .catch((error) => HandleError(thunkAPI, error, 'detail'));
     return resposedata;
   } catch (error) {
@@ -95,11 +72,7 @@ export const clientDeleteApi = createAsyncThunk("client/delete", async (formValu
   try {
     const resposedata = await clientApiController
       .deleted(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
+      .then((response) => HandleResponse(thunkAPI, response, 'delete'))
       .catch((error) => HandleError(thunkAPI, error, 'delete'));
     return resposedata;
   } catch (error) {
@@ -112,11 +85,7 @@ export const clientSuggetionListApi = createAsyncThunk("client/suggetionlist", a
   try {
     const resposedata = await clientApiController
       .suggetionlist(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
+      .then((response) => HandleResponse(thunkAPI, response, 'suggetionlist'))
       .catch((error) => HandleError(thunkAPI, error, 'suggetionlist'));
     return resposedata;
   } catch (error) {
@@ -250,6 +219,7 @@ export const clientSlice = createSlice({
         let data = viewdata && newviewdata ? (state.isListView.data = [...viewdata, ...newviewdata]) : action.payload;
       }
       state.isListView = action.payload;
+      console.log(state);
     },
     [clientListViewApi.rejected]: (state, action) => {
       state.isListView = [];

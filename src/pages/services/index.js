@@ -90,8 +90,6 @@ const Services = () => {
     if (q && q.length > 0) {
       dispatch(openServiceSearchList());
       dispatch(serviceSuggetionListApi({ q: q }));
-    }else{
-      dispatch(serviceListViewApi());
     }
   };
   const handleKeyUpSearchService = (e) => {
@@ -129,8 +127,6 @@ const Services = () => {
     if (q && q.length > 0) {
       dispatch(openCategorieSearchList());
       dispatch(categoriesuggetionListApi({ q: q }));
-    }else{
-      dispatch(categoryListViewApi());
     }
   };
   const handleKeyUpSearchCategory = (e) => {

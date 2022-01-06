@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
 import taxApiController from "../../services/tax.service";
 import HandleError from "../HandleError";
+import HandleResponse from "../HandleResponse";
 
 export const usersAdapter = createEntityAdapter();
 
@@ -8,11 +9,7 @@ export const taxOptions = createAsyncThunk("tax/taxOptions", async (formValues, 
   try {
     const resposedata = await taxApiController
       .view(formValues, thunkAPI)
-      .then((response) => {
-        if (response.status == 200) {
-          return response.data;
-        }
-      })
+      .then((response) => HandleResponse(thunkAPI, response, 'taxOptions'))
       .catch((error) => HandleError(thunkAPI, error, 'taxOptions'));
     return resposedata;
   } catch (error) {
