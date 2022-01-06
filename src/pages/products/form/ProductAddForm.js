@@ -130,7 +130,7 @@ const ProductAddForm = () => {
                         <div className="col-md-6 ps-md-0 mb-md-0 mb-3">
                           <h4 className="fw-semibold mb-2">{t("description")}</h4>
                           <p>{t("add_the_name_and_general_details_of_this_product")}</p>
-                          <InputFieldImage name="image" accept="image/*" label={t("add_product_image")} page="product-form" controlId="productForm-logo" />
+                          <InputFieldImage name="image" accept="image/*" label={t("add_product_image")} page="product-form" controlId="productForm-logo" imagname="" imageurl=""/>
                         </div>
                         <div className="col-md-6 pe-md-0">
                           <div className="mb-3">

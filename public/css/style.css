@@ -2207,7 +2207,9 @@ tbody td {
 /* new product */
 
 #addproduct-drawer .input-file,
-#addsuppliers-drawer .input-file {
+#addsuppliers-drawer .input-file,
+#editproduct-drawer .input-file,
+#editsuppliers-drawer .input-file {
     width: 200px;
     height: 235.29px;
     border-radius: 5px;
@@ -3075,7 +3077,9 @@ table .pro-title {
         max-width: 150px;
     }
     #addproduct-drawer .input-file,
-    #addsuppliers-drawer .input-file {
+    #addsuppliers-drawer .input-file,
+    #editproduct-drawer .input-file,
+    #editsuppliers-drawer .input-file {
         width: 170px;
         height: 180px;
     }
@@ -3364,7 +3368,9 @@ table .pro-title {
         max-width: 100%;
     }
     #addproduct-drawer .input-file,
-    #addsuppliers-drawer .input-file {
+    #addsuppliers-drawer .input-file,
+    #editproduct-drawer .input-file,
+    #editsuppliers-drawer .input-file {
         width: 130px;
         height: 120px;
     }

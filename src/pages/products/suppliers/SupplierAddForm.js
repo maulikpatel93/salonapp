@@ -95,7 +95,6 @@ const SupplierAddForm = () => {
     <React.Fragment>
       <Formik enableReinitialize={false} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSupplierSubmit}>
       {(formik) => {
-        console.log(formik.values);
           return (
             <div className={(rightDrawerOpened ? "full-screen-drawer p-0 " : '') + rightDrawerOpened} id="addsuppliers-drawer">
               <div className="drawer-wrp position-relative">
@@ -127,7 +126,7 @@ const SupplierAddForm = () => {
                         <div className="col-md-6 ps-md-0 mb-md-0 mb-3">
                           <h4 className="fw-semibold mb-2">{t("contact_information")}</h4>
                           <p>{t("add_the_contact_details_of_this_supplier")}</p>
-                          <InputFieldImage name="logo" accept="image/*" label={t("add_supplier_Logo")} page="supplier-form" controlId="supplierForm-logo" onChange={formik.handleChange}/>
+                          <InputFieldImage name="logo" accept="image/*" label={t("add_supplier_Logo")} page="supplier-form" controlId="supplierForm-logo" imagname="" imageurl=""/>
                         </div>
                         <div className="col-md-6 pe-md-0">
                           <div className="row gx-2">
