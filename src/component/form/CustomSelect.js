@@ -14,53 +14,36 @@ import Select from "react-select";
 //   placeholder?: string;
 // }
 
-export const CustomSelect = ({
-  className,
-  placeholder,
-  field,
-  form,
-  options,
-  isMulti = false
-}) => {
+export const CustomSelect = ({ className, placeholder, field, form, options, isMulti = false }) => {
   const onChange = (option) => {
     if (option) {
-      form.setFieldValue(
-        field.name,
-        isMulti
-          ? (option).map((item) => item.value)
-          : (option).value
-      );
-    }else{
-      form.setFieldValue(
-        field.name,
-        isMulti
-          ? ''
-          : ''
-      );
+      form.setFieldValue(field.name, isMulti ? option.map((item) => item.value) : option.value);
+    } else {
+      form.setFieldValue(field.name, isMulti ? "" : "");
     }
   };
 
   const getValue = () => {
     if (options) {
-      return isMulti
-        ? options.filter(option => field.value.indexOf(option.value) >= 0)
-        : options.find(option => option.value === field.value);
+      return isMulti ? options.filter((option) => field.value.indexOf(option.value) >= 0) : options.find((option) => option.value === field.value);
     } else {
-      return isMulti ? [] : ("");
+      return isMulti ? [] : "";
     }
   };
 
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
-      color: state.isSelected ? '#fff' : '',
-      borderWidth: state.isFocused ? '0' : '0',
+      color: state.isSelected ? "#fff" : "",
+      borderWidth: state.isFocused ? "0" : "0",
     }),
     control: (provided, state) => ({
       ...provided,
-      borderWidth: state.isFocused ? '0px' : '1px'
+      borderWidth: state.isFocused ? "0px" : "1px",
     }),
-  }
+    menuPortal: (provided) => ({ ...provided, zIndex: 3 }),
+    menu: (provided) => ({ ...provided, zIndex: 3 }),
+  };
 
   return (
     <Select
@@ -77,9 +60,9 @@ export const CustomSelect = ({
         ...theme,
         colors: {
           ...theme.colors,
-          border:'1px',
-          primary25: '#F4EEEB',
-          primary: '#8C1C4D',
+          border: "1px",
+          primary25: "#F4EEEB",
+          primary: "#8C1C4D",
         },
       })}
     />
