@@ -35,7 +35,7 @@ const ServiceAddForm = () => {
     name: "",
     category_id: "",
     description: "",
-    price:"",
+    price: "",
     duration: "",
     padding_time: "",
     tax_id: "",
@@ -48,7 +48,8 @@ const ServiceAddForm = () => {
     name: Yup.string().max(100).label(t("service_name")).trim().required(),
     category_id: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("category")).required())),
     description: Yup.string().trim().label(t("description")).required(),
-    padding_time: Yup.string().trim().label(t("padding_time")).required(),
+    duration: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("duration")).required())),
+    padding_time: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("padding_time")).required())),
     tax_id: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("tax")).required())),
     price: Yup.object().shape({
       general: Yup.object().shape({
@@ -62,7 +63,7 @@ const ServiceAddForm = () => {
       senior: Yup.object().shape({
         price: Yup.string().trim().required(),
         add_on_price: Yup.string().trim().required(),
-      })
+      }),
     }),
   });
   yupconfig();
@@ -106,7 +107,11 @@ const ServiceAddForm = () => {
     { value: "Female", label: t("female") },
     { value: "Other", label: t("other") },
   ];
-
+  const paddingtimeOptionsData = [
+    { value: "Male", label: t("male") },
+    { value: "Female", label: t("female") },
+    { value: "Other", label: t("other") },
+  ];
   return (
     <React.Fragment>
       <Formik enableReinitialize={false} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handlecategoriesubmit}>
@@ -138,7 +143,7 @@ const ServiceAddForm = () => {
                             <InputField type="text" name="name" value={formik.values.name} label={t("service_name")} controlId="serviceForm-name" />
                           </div>
                           <div className="mb-3">
-                              <ReactSelectField name="category_id" placeholder={t("search_option")} value={formik.values.category_id} options={categoryOptionsData} label={t("tax")} controlId="productForm-category_id" isMulti={false}  />
+                            <ReactSelectField name="category_id" placeholder={t("search_option")} value={formik.values.category_id} options={categoryOptionsData} label={t("category")} controlId="serviceForm-category_id" isMulti={false} />
                           </div>
                           <div className="mb-3">
                             <TextareaField name="description" value={formik.values.description} label={t("description")} controlId="serviceForm-description" />
@@ -157,12 +162,10 @@ const ServiceAddForm = () => {
                               <label htmlFor="">General</label>
                             </div>
                             <div className="col-lg-3 col-md-4 col-4 mb-2">
-                              <label htmlFor="">Price</label>
-                              <input type="text" className="form-control" placeholder="$"  />
+                              <InputField type="text" name="price[general][price]" value={formik.values.cost_price} placeholder="$" label={t("price")} controlId="serviceForm-price" />
                             </div>
                             <div className="col-lg-3 col-md-4 col-4 ms-xxl-4 mb-2">
-                              <label htmlFor="">Add-on Price</label>
-                              <input type="text" className="form-control" placeholder="$" />
+                              <InputField type="text" name="price[general][add_on_price]" value={formik.values.add_on_price} placeholder="$" label={t("price")} controlId="serviceForm-price" />
                             </div>
                           </div>
                           <div className="row">
@@ -170,7 +173,7 @@ const ServiceAddForm = () => {
                               <label htmlFor="">Junior</label>
                             </div>
                             <div className="col-lg-3 col-md-4 col-4 mb-2">
-                              <input type="text" className="form-control" placeholder="$"  />
+                              <input type="text" className="form-control" placeholder="$" />
                             </div>
                             <div className="col-lg-3 col-md-4 col-4 ms-xxl-4 mb-2">
                               <input type="text" className="form-control" placeholder="$" />
@@ -181,7 +184,7 @@ const ServiceAddForm = () => {
                               <label htmlFor="">Senior</label>
                             </div>
                             <div className="col-lg-3 col-md-4 mb-2 col-4">
-                              <input type="text" className="form-control" placeholder="$"  />
+                              <input type="text" className="form-control" placeholder="$" />
                             </div>
                             <div className="col-lg-3 col-md-4 col-4 ms-xxl-4 mb-2">
                               <input type="text" className="form-control" placeholder="$" />
@@ -192,25 +195,19 @@ const ServiceAddForm = () => {
                       <hr className="drawer-category-hr"></hr>
                       <div className="row mx-0">
                         <div className="col-md-6 ps-md-0 mb-md-0 mb-3">
-                          <h4 className="fw-semibold mb-2">{t('duration')}</h4>
-                          <p>{t('how_long_is_this_service')}</p>
+                          <h4 className="fw-semibold mb-2">{t("duration")}</h4>
+                          <p>{t("how_long_is_this_service")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
                           <div className="row">
-                            <div className="mb-2 col-auto mb-3">
-                              <Field name="duration" placeholder={t("search_option")} options={durationOptionsData} component={CustomSelect} isInvalid={!!formik.errors.duration} className={"custom-select " + (formik.touched.duration && formik.errors.duration ? "is-invalid" : "")} />
-                              {formik.errors && formik.errors.duration ? <div className="invalid-feedback d-block">{formik.errors.duration}</div> : ""}
+                            <div className="col-auto">
+                              <ReactSelectField name="duration" placeholder={t("search_option")} value={formik.values.duration} options={durationOptionsData} label={t("duration")} controlId="serviceForm-duration" isMulti={false} />
                             </div>
-                            <div className="mb-2 col-auto mb-3">
-                              <label htmlFor="">Padding Time</label>
-                              <select className="form-control">
-                                <option value="">0 mins</option>
-                                <option value="">0 mins</option>
-                                <option value="">0 mins</option>
-                              </select>
+                            <div className="col-auto">
+                              <ReactSelectField name="padding_time" placeholder={t("search_option")} value={formik.values.padding_time} options={paddingtimeOptionsData} label={t("padding_time")} controlId="serviceForm-padding_time" isMulti={false} />
                             </div>
                           </div>
-                          <p>{t('padding_time_note')}</p>
+                          <p>{t("padding_time_note")}</p>
                         </div>
                       </div>
                       <hr className="drawer-category-hr"></hr>
@@ -222,7 +219,7 @@ const ServiceAddForm = () => {
                         <div className="col-md-6 pe-md-0">
                           <div className="row">
                             <div className="col-md-8 mb-3">
-                              <ReactSelectField name="tax_id" placeholder={t("search_option")} value={formik.values.tax_id} options={taxOptionsData} label={t("tax")} controlId="serviceForm-tax_id" isMulti={false}  />
+                              <ReactSelectField name="tax_id" placeholder={t("search_option")} value={formik.values.tax_id} options={taxOptionsData} label={t("tax")} controlId="serviceForm-tax_id" isMulti={false} />
                             </div>
                           </div>
                         </div>
