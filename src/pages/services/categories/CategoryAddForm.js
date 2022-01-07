@@ -40,8 +40,6 @@ const CategoryAddForm = () => {
     setLoading(true);
     try {
       dispatch(categoryStoreApi(values)).then((action) => {
-
-        console.log(action);
         if (action.meta.requestStatus == "fulfilled") {
           setStatus({ success: true });
           resetForm();

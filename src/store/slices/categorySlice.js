@@ -151,7 +151,7 @@ export const categorySlice = createSlice({
     [categoryStoreApi.pending]: (state, action) => {},
     [categoryStoreApi.fulfilled]: (state, action) => {
       if (state.isListView && state.isListView.data) {
-        state.isListView.data = [...state.isListView.data, action.payload];
+        state.isListView.data = [action.payload, ...state.isListView.data];
       } else {
         state.isListView = { data: [action.payload] };
       }

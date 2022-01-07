@@ -30,7 +30,7 @@ const ProductListView = (props) => {
     }
   };
 
-  const handleProductEditForm = (e, props) => {
+  const handleProductEditForm = (e) => {
     const id = e.currentTarget.closest(".product-view-tr").dataset.id;
     dispatch(openEditProductForm());
     dispatch(productDetailApi({ id })).then(action => {
@@ -89,7 +89,7 @@ const ProductListView = (props) => {
                   <div className="dropdown-menu dropdown-box dropdown-menu-end" aria-labelledby="dropdownMenuButton1" data-popper-placement="bottom-end">
                     <ul className="p-0 m-0 list-unstyled">
                       <li>
-                        <a className="d-flex align-items-center edit-service cursor-pointer" onClick={(e) => handleProductEditForm(e, { tab: "productdetail" })}>
+                        <a className="d-flex align-items-center edit-service cursor-pointer" onClick={(e) => handleProductEditForm(e)}>
                           <img src={config.imagepath + "edit.png"} className="me-3" alt="" />
                           {t("edit")}
                         </a>

@@ -151,7 +151,7 @@ export const supplierSlice = createSlice({
     [supplierStoreApi.pending]: (state, action) => {},
     [supplierStoreApi.fulfilled]: (state, action) => {
       if (state.isGridView && state.isGridView.data) {
-        state.isGridView.data = [...state.isGridView.data, action.payload];
+        state.isGridView.data = [action.payload, ...state.isGridView.data];
       } else {
         state.isGridView = { data: [action.payload] };
       }

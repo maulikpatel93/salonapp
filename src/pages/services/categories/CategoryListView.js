@@ -26,7 +26,7 @@ const CategoryListView = (props) => {
   };
 
   const handleEditForm = (e) => {
-    const id = e.currentTarget.closest(".box-image-cover").dataset.id;
+    const id = e.currentTarget.closest(".category-view-tr").dataset.id;
     dispatch(openEditCategoryForm());
     dispatch(categoryDetailApi({ id }));
   };
@@ -37,7 +37,7 @@ const CategoryListView = (props) => {
           let id = objectData[item].id;
           let name = objectData[item].name;
           return (
-            <tr className="" key={i} data-id={id}>
+            <tr className="category-view-tr" key={i} data-id={id}>
               <td>{ucfirst(name)}</td>
               <td>
                 <a href="#" className="color-wine">
@@ -51,10 +51,16 @@ const CategoryListView = (props) => {
                   </button>
                   <div className="dropdown-menu dropdown-box dropdown-menu-end" aria-labelledby="dropdownMenuButton1" data-popper-placement="bottom-end">
                     <ul className="p-0 m-0 list-unstyled">
+                    <li>
+                        <a className="d-flex align-items-center edit-service cursor-pointer" onClick={(e) => handleEditForm(e)}>
+                          <img src={config.imagepath + "edit.png"} className="me-3" alt="" />
+                          {t("edit")}
+                        </a>
+                      </li>
                       <li>
-                        <a data-bs-toggle="modal" data-bs-target="#edit-category" className="d-flex align-items-center">
-                          <img src="assets/images/edit.png" className="me-3" alt="" />
-                          Edit
+                        <a className="d-flex align-items-center cursor-pointer" data-obj={JSON.stringify(objectData[item])} onClick={handleCategoryDelete}>
+                          <i className="far fa-trash me-3"></i>
+                          {t("delete")}
                         </a>
                       </li>
                     </ul>
