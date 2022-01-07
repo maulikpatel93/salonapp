@@ -102,7 +102,7 @@ const Services = () => {
           // dispatch(closecategoriesearchList());
         }
       });
-    }else{
+    } else {
       dispatch(serviceListViewApi());
     }
   };
@@ -139,7 +139,7 @@ const Services = () => {
           // dispatch(closecategoriesearchList());
         }
       });
-    }else{
+    } else {
       dispatch(categoryListViewApi());
     }
   };
@@ -320,13 +320,14 @@ const Services = () => {
                           <ServiceListView view={ListView} />
                         </tbody>
                       </table>
-                      <div className="col-2 m-auto p-3">
-                        {!isFetching && ListView.next_page_url && (
+
+                      {!isFetching && ListView.next_page_url && (
+                        <div className="col-2 m-auto p-3">
                           <button onClick={loadMoreItems} className="btn btn-primary">
                             {t("more")}
                           </button>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </InfiniteScroll>
                   </div>
                 </section>
@@ -350,10 +351,10 @@ const Services = () => {
             </div>
           </div>
         </div>
-        {categoryIsOpenedAddForm ? <CategoryAddForm /> : ''}
-        {categoryIsOpenedEditForm ? <CategoryEditForm /> : ''}
-        {serviceIsOpenedAddForm ? <ServiceAddForm /> : ''}
-        {serviceIsOpenedEditForm ? <ServiceEditForm /> : ''}
+        {categoryIsOpenedAddForm ? <CategoryAddForm /> : ""}
+        {categoryIsOpenedEditForm ? <CategoryEditForm /> : ""}
+        {serviceIsOpenedAddForm ? <ServiceAddForm /> : ""}
+        {serviceIsOpenedEditForm ? <ServiceEditForm /> : ""}
       </div>
     </>
   );

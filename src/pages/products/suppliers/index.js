@@ -36,7 +36,7 @@ const Suppliers = () => {
           <InfiniteScroll className="row" dataLength={GridView.data && GridView.data.length ? GridView.data.length : "0"} next={fetchDataGrid} scrollableTarget="page-content-supplier" hasMore={GridView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
             <a className="box-image-cover cursor-pointer" onClick={() => dispatch(openAddSupplierForm())}>
               <div className="tabs-image">
-              <img src={config.imagepath + "suppliers.png"} alt="" />
+                <img src={config.imagepath + "suppliers.png"} alt="" />
               </div>
               <div className="image-content">
                 <h5>
@@ -45,13 +45,13 @@ const Suppliers = () => {
               </div>
             </a>
             <SupplierGridView currentUser={currentUser} view={GridView} />
-            <div className="col-2 m-auto text-center">
-              {!isFetching && GridView.next_page_url && (
+            {!isFetching && GridView.next_page_url && (
+              <div className="col-2 m-auto text-center">
                 <button onClick={loadMoreItems} className="btn btn-primary">
                   {t("more")}
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </InfiniteScroll>
         </div>
       ) : (
@@ -60,7 +60,10 @@ const Suppliers = () => {
             <img src={config.imagepath + "service.png"} alt="" className="mb-md-4 mb-3" />
             <h4 className="mb-2 fw-semibold">
               {t("no_suppliers_have_been_created_yet")}
-              <a className="add-suppliers ms-1 cursor-pointer" onClick={() => dispatch(openAddSupplierForm())}>{t("please_create_one")}</a>.
+              <a className="add-suppliers ms-1 cursor-pointer" onClick={() => dispatch(openAddSupplierForm())}>
+                {t("please_create_one")}
+              </a>
+              .
             </h4>
           </div>
         </div>

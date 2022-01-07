@@ -34,7 +34,7 @@ const Categories = () => {
       {ListView.length > 0 || ListView.data ? (
         <section className="services-table">
           <div className="services-table-shadow">
-            <InfiniteScroll className="row" dataLength={ListView.data && ListView.data.length ? ListView.data.length : "0"} next={fetchDataGrid} scrollableTarget="page-content-category" hasMore={ListView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
+            <InfiniteScroll className="" dataLength={ListView.data && ListView.data.length ? ListView.data.length : "0"} next={fetchDataGrid} scrollableTarget="page-content-category" hasMore={ListView.next_page_url ? true : false} loader={<h4>loading...</h4>}>
               <table className="table table-striped bg-white categorie-table">
                 <thead>
                   <tr>
@@ -47,13 +47,14 @@ const Categories = () => {
                   <CategoryListView currentUser={currentUser} view={ListView} />
                 </tbody>
               </table>
-              <div className="col-2 m-auto text-center">
-                {!isFetching && ListView.next_page_url && (
-                  <button onClick={loadMoreItems} className="btn btn-primary">
+
+              {!isFetching && ListView.next_page_url && (
+                <div className="col-2 m-auto text-center">
+                  <button onClick={loadMoreItems} className="btn btn-primary m-4">
                     {t("more")}
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </InfiniteScroll>
           </div>
         </section>

@@ -102,7 +102,7 @@ const Products = () => {
           // dispatch(closeSupplierSearchList());
         }
       });
-    }else{
+    } else {
       dispatch(productListViewApi());
     }
   };
@@ -139,7 +139,7 @@ const Products = () => {
           // dispatch(closeSupplierSearchList());
         }
       });
-    }else{
+    } else {
       dispatch(supplierGridViewApi());
     }
   };
@@ -256,7 +256,7 @@ const Products = () => {
         </div>
 
         <div className="container">
-          <div className={"tab-content " + (tabview && tabview == "product" ? "px-lg-4" : "list-view-content")}>
+          <div className={"tab-content list-view-content"}>
             <div className={"tab-pane" + (tabview && tabview == "product" ? " show active" : "")} id="product" role="tabpanel" aria-labelledby="product-tab">
               {ListView.length > 0 || ListView.data ? (
                 <section>
@@ -320,13 +320,13 @@ const Products = () => {
                           <ProductListView view={ListView} />
                         </tbody>
                       </table>
-                      <div className="col-2 m-auto p-3">
-                        {!isFetching && ListView.next_page_url && (
+                      {!isFetching && ListView.next_page_url && (
+                        <div className="col-2 m-auto p-3">
                           <button onClick={loadMoreItems} className="btn btn-primary">
                             {t("more")}
                           </button>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </InfiniteScroll>
                   </div>
                 </section>
@@ -350,10 +350,10 @@ const Products = () => {
             </div>
           </div>
         </div>
-        {supplierIsOpenedAddForm ? <SupplierAddForm /> : ''}
-        {supplierIsOpenedEditForm ? <SupplierEditForm /> : ''}
-        {productIsOpenedAddForm ? <ProductAddForm /> : ''}
-        {productIsOpenedEditForm ? <ProductEditForm /> : ''}
+        {supplierIsOpenedAddForm ? <SupplierAddForm /> : ""}
+        {supplierIsOpenedEditForm ? <SupplierEditForm /> : ""}
+        {productIsOpenedAddForm ? <ProductAddForm /> : ""}
+        {productIsOpenedEditForm ? <ProductEditForm /> : ""}
       </div>
     </>
   );

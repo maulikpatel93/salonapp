@@ -43,7 +43,7 @@ const Clients = () => {
     dispatch(clientSort(props));
     dispatch(clientListViewApi({ sort: props }));
   };
-  
+
   const fetchDataGrid = () => {
     dispatch(clientGridViewApi({ next_page_url: GridView.next_page_url }));
   };
@@ -61,7 +61,7 @@ const Clients = () => {
       setIsFetching(false);
     }, 2000);
   };
-  
+
   const fetchDataSuggetionList = () => {
     dispatch(clientSuggetionListApi({ next_page_url: SuggetionView.next_page_url, q: isSearchName }));
   };
@@ -79,24 +79,26 @@ const Clients = () => {
     if (q && q.length > 0) {
       dispatch(openClientSearchList());
       dispatch(clientSuggetionListApi({ q: q })).then((action) => {
-        if(action.meta.requestStatus == 'rejected'){
+        if (action.meta.requestStatus == "rejected") {
           // dispatch(closeClientSearchList());
         }
       });
-    }else{
+    } else {
       dispatch(clientGridViewApi());
       dispatch(clientListViewApi());
     }
   };
   const handleCloseSearch = () => {
-    dispatch(clientSearchName(''));
+    dispatch(clientSearchName(""));
     dispatch(closeClientSearchList());
     dispatch(clientGridViewApi());
     dispatch(clientListViewApi());
-  }
+  };
   const handleOnBlur = (e) => {
-    setTimeout(() => {dispatch(closeClientSearchList())}, 100);
-  }
+    setTimeout(() => {
+      dispatch(closeClientSearchList());
+    }, 100);
+  };
 
   return (
     <>
@@ -117,8 +119,8 @@ const Clients = () => {
                 <span className="input-group-text">
                   <i className="far fa-search"></i>
                 </span>
-                <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchName} onInput={(e) => dispatch(clientSearchName(e.target.value))} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} onBlur={handleOnBlur}/>
-                <a className="close cursor-pointer" style={{ display: isSearchName ? "block":'none' }} onClick={handleCloseSearch}>
+                <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchName} onInput={(e) => dispatch(clientSearchName(e.target.value))} onClick={handleClickSearch} onKeyUp={handleKeyUpSearch} onBlur={handleOnBlur} />
+                <a className="close cursor-pointer" style={{ display: isSearchName ? "block" : "none" }} onClick={handleCloseSearch}>
                   <i className="fal fa-times"></i>
                 </a>
               </div>
@@ -193,13 +195,14 @@ const Clients = () => {
                 </div>
               </a> */}
                 <ClientGridView currentUser={currentUser} view={GridView} />
-                <div className="col-2 m-auto text-center">
-                  {!isFetching && GridView.next_page_url && (
+
+                {!isFetching && GridView.next_page_url && (
+                  <div className="col-2 m-auto text-center">
                     <button onClick={loadMoreItems} className="btn btn-primary">
                       {t("more")}
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
               </InfiniteScroll>
             </div>
           </div>
@@ -227,19 +230,19 @@ const Clients = () => {
                     <ClientListView currentUser={currentUser} view={ListView} />
                   </tbody>
                 </table>
-                <div className="col-2 m-auto p-3">
-                  {!isFetching && GridView.next_page_url && (
+                {!isFetching && GridView.next_page_url && (
+                  <div className="col-2 m-auto p-3">
                     <button onClick={loadMoreItems} className="btn btn-primary">
                       {t("more")}
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
               </InfiniteScroll>
             </div>
           </div>
         </div>
-        {clientIsOpenedAddForm ? <ClientAddForm /> : ''}
-        {clientIsOpenedDetailModal ? <ClientDetailModal /> : ''}
+        {clientIsOpenedAddForm ? <ClientAddForm /> : ""}
+        {clientIsOpenedDetailModal ? <ClientDetailModal /> : ""}
       </div>
     </>
   );
