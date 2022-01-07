@@ -186,14 +186,14 @@ const Services = () => {
                 {tabview && tabview == "service" ? (
                   <>
                     <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchNameService} onInput={(e) => dispatch(serviceSearchName(e.target.value))} onClick={handleClickSearchService} onKeyUp={handleKeyUpSearchService} onBlur={handleOnBlurService} />
-                    <a href="#" className="close" style={{ display: isSearchNameService ? "block" : "none" }} onClick={handleCloseSearchService}>
+                    <a className="close cursor-pointer" style={{ display: isSearchNameService ? "block" : "none" }} onClick={handleCloseSearchService}>
                       <i className="fal fa-times"></i>
                     </a>
                   </>
                 ) : (
                   <>
                     <input type="text" className="form-control search-input" placeholder={t("search")} value={isSearchNameCategory} onInput={(e) => dispatch(categoriesearchName(e.target.value))} onClick={handleClickSearchCategory} onKeyUp={handleKeyUpSearchCategory} onBlur={handleOnBlurCategory} />
-                    <a href="#" className="close" style={{ display: isSearchNameCategory ? "block" : "none" }} onClick={handleCloseSearchCategory}>
+                    <a className="close cursor-pointer" style={{ display: isSearchNameCategory ? "block" : "none" }} onClick={handleCloseSearchCategory}>
                       <i className="fal fa-times"></i>
                     </a>
                   </>

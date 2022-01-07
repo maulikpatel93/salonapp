@@ -118,7 +118,7 @@ const SupplierAddForm = () => {
                           <p>{t("add_the_name_of_the_supplier")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
-                          <InputField type="text" name="name" value={formik.values.name} label={t("supplier_name")} controlId="supplierForm-name" onChange={formik.handleChange}/>
+                          <InputField type="text" name="name" value={formik.values.name} label={t("supplier_name")} controlId="supplierForm-name" />
                         </div>
                       </div>
                       <hr className="drawer-supplier-hr"></hr>
@@ -131,20 +131,20 @@ const SupplierAddForm = () => {
                         <div className="col-md-6 pe-md-0">
                           <div className="row gx-2">
                             <div className="mb-3 col-md-6">
-                              <InputField type="text" name="first_name" value={formik.values.first_name} label={t("first_name")} controlId="supplierForm-first_name" onChange={formik.handleChange}/>
+                              <InputField type="text" name="first_name" value={formik.values.first_name} label={t("first_name")} controlId="supplierForm-first_name" />
                             </div>
                             <div className="mb-3 col-md-6">
-                              <InputField type="text" name="last_name" value={formik.values.last_name} label={t("last_name")} controlId="supplierForm-last_name" onChange={formik.handleChange}/>
+                              <InputField type="text" name="last_name" value={formik.values.last_name} label={t("last_name")} controlId="supplierForm-last_name" />
                             </div>
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="phone_number" value={formik.values.phone_number} mask="999-999-9999" label={t("phone_number")} controlId="supplierForm-phone_number" onChange={formik.handleChange}/>
+                            <InputField type="text" name="phone_number" value={formik.values.phone_number} mask="999-999-9999" label={t("phone_number")} controlId="supplierForm-phone_number" />
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="email" value={formik.values.email} label={t("email")} controlId="supplierForm-email" onChange={formik.handleChange}/>
+                            <InputField type="text" name="email" value={formik.values.email} label={t("email")} controlId="supplierForm-email" />
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="website" value={formik.values.website} label={t("website")} controlId="supplierForm-website" onChange={formik.handleChange}/>
+                            <InputField type="text" name="website" value={formik.values.website} label={t("website")} controlId="supplierForm-website" />
                           </div>
                         </div>
                       </div>
@@ -155,19 +155,19 @@ const SupplierAddForm = () => {
                           <p>{t("add_the_address_of_this_supplier")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
-                          <MapAddressField name="address" label={t("address")} value={formik.values.address} placeholder={t("typing_address")} controlId="supplierForm-address" onChange={formik.handleChange}/>
+                          <MapAddressField name="address" label={t("address")} value={formik.values.address} placeholder={t("typing_address")} controlId="supplierForm-address" />
                           <div className="mb-3">
-                            <InputField type="text" name="street" value={formik.values.street} label={t("street")} controlId="supplierForm-street" onChange={formik.handleChange}/>
+                            <InputField type="text" name="street" value={formik.values.street} label={t("street")} controlId="supplierForm-street" />
                           </div>
                           <div className="row gx-2">
                             <div className="col-md-6 mb-3">
-                              <InputField type="text" name="suburb" value={formik.values.suburb} label={t("suburb")} controlId="supplierForm-suburb" onChange={formik.handleChange}/>
+                              <InputField type="text" name="suburb" value={formik.values.suburb} label={t("suburb")} controlId="supplierForm-suburb" />
                             </div>
                             <div className="col-md-3 col-6 mb-3">
-                              <InputField type="text" name="state" value={formik.values.state} label={t("state")} controlId="supplierForm-state" onChange={formik.handleChange}/>
+                              <InputField type="text" name="state" value={formik.values.state} label={t("state")} controlId="supplierForm-state" />
                             </div>
                             <div className="col-md-3 col-6 mb-3">
-                              <InputField type="text" name="postcode" value={formik.values.postcode} label={t("postcode")} controlId="supplierForm-postcode" onChange={formik.handleChange}/>
+                              <InputField type="text" name="postcode" value={formik.values.postcode} label={t("postcode")} controlId="supplierForm-postcode" />
                             </div>
                           </div>
                         </div>

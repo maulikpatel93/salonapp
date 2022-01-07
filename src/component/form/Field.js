@@ -191,11 +191,6 @@ const InputFieldImage = ({ label, controlId, page, ...props }) => {
 
 const ReactSelectField = ({ label, controlId, options, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  // const customStyles = {
-  //   menuPortal: (provided) => ({ ...provided, zIndex: 3 }),
-  //   menu: (provided) => ({ ...provided, zIndex: 3 }),
-  // };
-
   return (
     <>
       <Form.Group className="mb-3" controlId={controlId}>

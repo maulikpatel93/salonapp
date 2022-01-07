@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 // validation Formik
 import * as Yup from "yup";
-import { Field, Formik } from "formik";
+import { Formik } from "formik";
 import config from "../../../config";
 import yupconfig from "../../../yupconfig";
 import { InputField, SwitchField, InputFieldImage, TextareaField, ReactSelectField } from "../../../component/form/Field";
@@ -140,9 +140,7 @@ const ProductAddForm = () => {
                             <InputField type="text" name="sku" value={formik.values.sku} label={t("sku")} controlId="productForm-sku" />
                           </div>
                           <div className="mb-3">
-                            <Field name="supplier_id" placeholder={t("search_option")} options={supplierOptionsData} component={CustomSelect} isInvalid={!!formik.errors.supplier_id} className={"custom-select " + (formik.touched.supplier_id && formik.errors.supplier_id ? "is-invalid" : "")} />
-                            {formik.errors && formik.errors.supplier_id ? <div className="invalid-feedback d-block">{formik.errors.supplier_id}</div> : ""}
-                            {/* <ReactSelectField name="supplier_id" placeholder={t("search_option")} value={formik.values.supplier_id} options={supplierOptionsData} label={t("supplier")} controlId="productForm-supplier_id" isMulti={false} /> */}
+                            <ReactSelectField name="supplier_id" placeholder={t("search_option")} value={formik.values.supplier_id} options={supplierOptionsData} label={t("supplier")} controlId="productForm-supplier_id" isMulti={false} />
                           </div>
                           <div className="mb-3">
                             <TextareaField name="description" value={formik.values.description} label={t("description")} controlId="productForm-description" />
@@ -164,9 +162,7 @@ const ProductAddForm = () => {
                               <InputField type="text" name="retail_price" value={formik.values.retail_price} label={t("retail_price")} controlId="productForm-retail_price" />
                             </div>
                             <div className="col-md-8 mb-3">
-                              <Field name="tax_id" placeholder={t("search_option")} options={taxOptionsData} component={CustomSelect} isInvalid={!!formik.errors.tax_id} className={"custom-select " + (formik.touched.tax_id && formik.errors.tax_id ? "is-invalid" : "")} />
-                              {formik.errors && formik.errors.tax_id ? <div className="invalid-feedback d-block">{formik.errors.tax_id}</div> : ""}
-                              {/* <ReactSelectField name="tax_id" placeholder={t("search_option")} value={formik.values.tax_id} options={taxOptionsData} label={t("tax")} controlId="productForm-tax_id" isMulti={false} /> */}
+                              <ReactSelectField name="tax_id" placeholder={t("search_option")} value={formik.values.tax_id} options={taxOptionsData} label={t("tax")} controlId="productForm-tax_id" isMulti={false}  />
                             </div>
                           </div>
                         </div>

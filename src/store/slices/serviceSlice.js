@@ -91,8 +91,7 @@ const initialState = {
   isTabView: "service",
   isSort: "",
   isSearchList: "",
-  isSearchName: "",
-  isServiceManageStock: 0,
+  isSearchName: ""
 };
 
 export const serviceSlice = createSlice({
@@ -152,10 +151,7 @@ export const serviceSlice = createSlice({
     },
     serviceSearchName: (state, action) => {
       state.isSearchName = action.payload;
-    },
-    serviceManageStock: (state, action) => {
-      state.isServiceManageStock = action.payload;
-    },
+    }
   },
   extraReducers: {
     [serviceStoreApi.pending]: (state, action) => {},

@@ -158,16 +158,16 @@ const ProductEditForm = () => {
                         </div>
                         <div className="col-md-6 pe-md-0">
                           <div className="mb-3">
-                            <InputField type="text" name="name" value={formik.values.name} label={t("product_name")} controlId="productForm-name" onChange={formik.handleChange} />
+                            <InputField type="text" name="name" value={formik.values.name} label={t("product_name")} controlId="productForm-name"  />
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="sku" value={formik.values.sku} label={t("sku")} controlId="productForm-sku" onChange={formik.handleChange} />
+                            <InputField type="text" name="sku" value={formik.values.sku} label={t("sku")} controlId="productForm-sku"  />
                           </div>
                           <div className="mb-3">
-                            <ReactSelectField name="supplier_id" placeholder={t("search_option")} value={formik.values.supplier_id} options={supplierOptionsData} label={t("supplier")} controlId="productForm-supplier_id" isMulti={false} onChange={formik.handleChange} />
+                            <ReactSelectField name="supplier_id" placeholder={t("search_option")} value={formik.values.supplier_id} options={supplierOptionsData} label={t("supplier")} controlId="productForm-supplier_id" isMulti={false}  />
                           </div>
                           <div className="mb-3">
-                            <TextareaField name="description" value={formik.values.description} label={t("description")} controlId="productForm-description" onChange={formik.handleChange} />
+                            <TextareaField name="description" value={formik.values.description} label={t("description")} controlId="productForm-description"  />
                           </div>
                         </div>
                       </div>
@@ -180,13 +180,13 @@ const ProductEditForm = () => {
                         <div className="col-md-6 pe-md-0">
                           <div className="row">
                             <div className="mb-2 col-md-4 col-6 mb-3">
-                              <InputField type="text" name="cost_price" value={formik.values.cost_price} label={t("cost_price")} controlId="productForm-cost_price" onChange={formik.handleChange} />
+                              <InputField type="text" name="cost_price" value={formik.values.cost_price} label={t("cost_price")} controlId="productForm-cost_price"  />
                             </div>
                             <div className="mb-2 col-md-4 col-6 mb-3">
-                              <InputField type="text" name="retail_price" value={formik.values.retail_price} label={t("retail_price")} controlId="productForm-retail_price" onChange={formik.handleChange} />
+                              <InputField type="text" name="retail_price" value={formik.values.retail_price} label={t("retail_price")} controlId="productForm-retail_price"  />
                             </div>
                             <div className="col-md-8 mb-3">
-                              <ReactSelectField name="tax_id" placeholder={t("search_option")} value={formik.values.tax_id} options={taxOptionsData} label={t("tax")} controlId="productForm-tax_id" isMulti={false} onChange={formik.handleChange} />
+                              <ReactSelectField name="tax_id" placeholder={t("search_option")} value={formik.values.tax_id} options={taxOptionsData} label={t("tax")} controlId="productForm-tax_id" isMulti={false}  />
                             </div>
                           </div>
                         </div>
@@ -219,10 +219,10 @@ const ProductEditForm = () => {
                           {console.log(formik.values.manage_stock)}
                           <div className="row" style={{ display: formik.values.manage_stock == "" || formik.values.manage_stock == 0 ? "none" : "" }}>
                             <div className="mb-3 col-md-6">
-                              <InputField type="text" name="stock_quantity" value={formik.values.stock_quantity != null ? formik.values.stock_quantity : ""} label={t("stock_quantity")} controlId="productForm-stock_quantity" onChange={formik.handleChange}  />
+                              <InputField type="text" name="stock_quantity" value={formik.values.stock_quantity != null ? formik.values.stock_quantity : ""} label={t("stock_quantity")} controlId="productForm-stock_quantity"   />
                             </div>
                             <div className="mb-3 col-md-6">
-                              <InputField type="text" name="low_stock_threshold" value={formik.values.stock_quantity != null ? formik.values.low_stock_threshold : ""} label={t("low_stock_threshold")} controlId="productForm-low_stock_threshold" onChange={formik.handleChange} />
+                              <InputField type="text" name="low_stock_threshold" value={formik.values.stock_quantity != null ? formik.values.low_stock_threshold : ""} label={t("low_stock_threshold")} controlId="productForm-low_stock_threshold"  />
                             </div>
                           </div>
                         </div>

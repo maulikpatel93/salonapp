@@ -14,7 +14,7 @@ import Select from "react-select";
 //   placeholder?: string;
 // }
 
-export const CustomSelect = ({ className, placeholder, field, form, options, isMulti = false }) => {
+export const CustomSelect = ({ className, placeholder, field, form, options, isMulti = false, label, controlId }) => {
   const onChange = (option) => {
     if (option) {
       form.setFieldValue(field.name, isMulti ? option.map((item) => item.value) : option.value);
@@ -44,28 +44,30 @@ export const CustomSelect = ({ className, placeholder, field, form, options, isM
     menuPortal: (provided) => ({ ...provided, zIndex: 3 }),
     menu: (provided) => ({ ...provided, zIndex: 3 }),
   };
-
   return (
-    <Select
-      className={className}
-      name={field.name}
-      value={getValue()}
-      onChange={onChange}
-      placeholder={placeholder}
-      options={options}
-      isMulti={isMulti}
-      isClearable
-      styles={customStyles}
-      theme={(theme) => ({
-        ...theme,
-        colors: {
-          ...theme.colors,
-          border: "1px",
-          primary25: "#F4EEEB",
-          primary: "#8C1C4D",
-        },
-      })}
-    />
+    <>
+      <Select
+        className={className}
+        id={controlId}
+        name={field.name}
+        value={getValue()}
+        onChange={onChange}
+        placeholder={placeholder}
+        options={options}
+        isMulti={isMulti}
+        isClearable
+        styles={customStyles}
+        theme={(theme) => ({
+          ...theme,
+          colors: {
+            ...theme.colors,
+            border: "1px",
+            primary25: "#F4EEEB",
+            primary: "#8C1C4D",
+          },
+        })}
+      />
+    </>
   );
 };
 

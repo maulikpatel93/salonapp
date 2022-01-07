@@ -9,8 +9,8 @@ import yupconfig from "../../../yupconfig";
 import { InputField, SwitchField, InputFieldImage, TextareaField, ReactSelectField } from "../../../component/form/Field";
 import { sweatalert } from "../../../component/Sweatalert2";
 
-// import { closeNewCategoryForm } from "../../../store/slices/supplierSlice";
-import { serviceManageStock, closeAddServiceForm, serviceStoreApi } from "../../../store/slices/serviceSlice";
+// import { closeNewCategoryForm } from "../../../store/slices/categorySlice";
+import { closeAddServiceForm, serviceStoreApi } from "../../../store/slices/serviceSlice";
 import { removeImage } from "../../../store/slices/imageSlice";
 import useScriptRef from "../../../hooks/useScriptRef";
 import CustomSelect from "../../../component/form/CustomSelect";
@@ -18,8 +18,7 @@ import CustomSelect from "../../../component/form/CustomSelect";
 const ServiceAddForm = () => {
   const [loading, setLoading] = useState(false);
   const rightDrawerOpened = useSelector((state) => state.service.isOpenedAddForm);
-  const isServiceManageStock = useSelector((state) => state.service.isServiceManageStock);
-  const isCategoryOption = useSelector((state) => state.supplier.isCategoryOption);
+  const isCategoryOption = useSelector((state) => state.category.isCategoryOption);
   const isTaxOption = useSelector((state) => state.tax.isTaxOption);
 
   const { t } = useTranslation();
@@ -33,40 +32,38 @@ const ServiceAddForm = () => {
   };
 
   const initialValues = {
-    image: "",
     name: "",
-    sku: "",
+    category_id: "",
     description: "",
-    cost_price: "",
-    retail_price: "",
-    manage_stock: '',
-    stock_quantity: "",
-    low_stock_threshold: "",
+    price:"",
+    duration: "",
+    padding_time: "",
     tax_id: "",
-    supplier_id: "",
   };
 
   const digitOnly = (value) => /^\d+$/.test(value);
   const decimalOnly = (value) => /^\d{1,6}(\.\d{1,2})?$/.test(value);
 
   const validationSchema = Yup.object().shape({
-    image: Yup.mixed().nullable(),
     name: Yup.string().max(100).label(t("service_name")).trim().required(),
-    sku: Yup.string().trim().label(t("sku")).required(),
+    category_id: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("category")).required())),
     description: Yup.string().trim().label(t("description")).required(),
-    cost_price: Yup.string().trim().label(t("cost_price")).required().test("Decimal only", t("The_field_should_have_decimal_only"), decimalOnly),
-    retail_price: Yup.string().trim().label(t("retail_price")).required().test("Decimal only", t("The_field_should_have_decimal_only"), decimalOnly),
-    manage_stock:Yup.mixed().nullable(),
-    stock_quantity: Yup.string().when("manage_stock", {
-      is: '1',
-      then: Yup.string().trim().label(t("stock_quantity")).required().test("Digits only", t("The_field_should_have_digits_only"), digitOnly).nullable(),
-    }),
-    low_stock_threshold: Yup.string().when("manage_stock", {
-      is: '1',
-      then: Yup.string().trim().label(t("low_stock_threshold")).required().test("Digits only", t("The_field_should_have_digits_only"), digitOnly).nullable(),
-    }),
+    padding_time: Yup.string().trim().label(t("padding_time")).required(),
     tax_id: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("tax")).required())),
-    supplier_id: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("supplier")).required())),
+    price: Yup.object().shape({
+      general: Yup.object().shape({
+        price: Yup.string().trim().required(),
+        add_on_price: Yup.string().trim().required(),
+      }),
+      junior: Yup.object().shape({
+        price: Yup.string().trim().required(),
+        add_on_price: Yup.string().trim().required(),
+      }),
+      senior: Yup.object().shape({
+        price: Yup.string().trim().required(),
+        add_on_price: Yup.string().trim().required(),
+      })
+    }),
   });
   yupconfig();
 
@@ -102,15 +99,20 @@ const ServiceAddForm = () => {
     }
   };
 
-  const supplierOptionsData = isCategoryOption;
+  const categoryOptionsData = isCategoryOption;
   const taxOptionsData = isTaxOption;
+  const durationOptionsData = [
+    { value: "Male", label: t("male") },
+    { value: "Female", label: t("female") },
+    { value: "Other", label: t("other") },
+  ];
 
   return (
     <React.Fragment>
       <Formik enableReinitialize={false} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handlecategoriesubmit}>
         {(formik) => {
           return (
-            <div className={(rightDrawerOpened ? "full-screen-drawer p-0 " : '') + rightDrawerOpened} id="addservice-drawer">
+            <div className={(rightDrawerOpened ? "full-screen-drawer p-0 " : "") + rightDrawerOpened} id="addservice-drawer">
               <div className="drawer-wrp position-relative">
                 <form noValidate onSubmit={formik.handleSubmit}>
                   <div className="drawer-header px-md-4 px-3 py-3 d-flex flex-wrap align-items-center">
@@ -129,79 +131,98 @@ const ServiceAddForm = () => {
                       <div className="row mx-0">
                         <div className="col-md-6 ps-md-0 mb-md-0 mb-3">
                           <h4 className="fw-semibold mb-2">{t("description")}</h4>
-                          <p>{t("add_the_name_and_general_details_of_this_service")}</p>
-                          <InputFieldImage name="image" accept="image/*" label={t("add_service_image")} page="service-form" controlId="serviceForm-logo" imagname="" imageurl=""/>
+                          <p>{t("add_the_name_and_description_of_this_service")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
                           <div className="mb-3">
                             <InputField type="text" name="name" value={formik.values.name} label={t("service_name")} controlId="serviceForm-name" />
                           </div>
                           <div className="mb-3">
-                            <InputField type="text" name="sku" value={formik.values.sku} label={t("sku")} controlId="serviceForm-sku" />
-                          </div>
-                          <div className="mb-3">
-                            <Field name="supplier_id" placeholder={t("search_option")} options={supplierOptionsData} component={CustomSelect} isInvalid={!!formik.errors.supplier_id} className={"custom-select " + (formik.touched.supplier_id && formik.errors.supplier_id ? "is-invalid" : "")} />
-                            {formik.errors && formik.errors.supplier_id ? <div className="invalid-feedback d-block">{formik.errors.supplier_id}</div> : ""}
-                            {/* <ReactSelectField name="supplier_id" placeholder={t("search_option")} value={formik.values.supplier_id} options={supplierOptionsData} label={t("supplier")} controlId="serviceForm-supplier_id" isMulti={false} /> */}
+                              <ReactSelectField name="category_id" placeholder={t("search_option")} value={formik.values.category_id} options={categoryOptionsData} label={t("tax")} controlId="productForm-category_id" isMulti={false}  />
                           </div>
                           <div className="mb-3">
                             <TextareaField name="description" value={formik.values.description} label={t("description")} controlId="serviceForm-description" />
                           </div>
                         </div>
                       </div>
-                      <hr className="drawer-supplier-hr"></hr>
+                      <hr className="drawer-category-hr"></hr>
                       <div className="row mx-0">
                         <div className="col-md-6 ps-md-0 mb-md-0 mb-3">
                           <h4 className="fw-semibold mb-2">{t("price")}</h4>
-                          <p>{t("add_the_pricing_details_of_this_service")}</p>
+                          <p>{t("price_note_service")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
+                          <div className="row align-items-end">
+                            <div className="col-md-3 mb-2 col-4">
+                              <label htmlFor="">General</label>
+                            </div>
+                            <div className="col-lg-3 col-md-4 col-4 mb-2">
+                              <label htmlFor="">Price</label>
+                              <input type="text" className="form-control" placeholder="$"  />
+                            </div>
+                            <div className="col-lg-3 col-md-4 col-4 ms-xxl-4 mb-2">
+                              <label htmlFor="">Add-on Price</label>
+                              <input type="text" className="form-control" placeholder="$" />
+                            </div>
+                          </div>
                           <div className="row">
-                            <div className="mb-2 col-md-4 col-6 mb-3">
-                              <InputField type="text" name="cost_price" value={formik.values.cost_price} label={t("cost_price")} controlId="serviceForm-cost_price" />
+                            <div className="col-md-3 col-4 mb-2">
+                              <label htmlFor="">Junior</label>
                             </div>
-                            <div className="mb-2 col-md-4 col-6 mb-3">
-                              <InputField type="text" name="retail_price" value={formik.values.retail_price} label={t("retail_price")} controlId="serviceForm-retail_price" />
+                            <div className="col-lg-3 col-md-4 col-4 mb-2">
+                              <input type="text" className="form-control" placeholder="$"  />
                             </div>
-                            <div className="col-md-8 mb-3">
-                              <Field name="tax_id" placeholder={t("search_option")} options={taxOptionsData} component={CustomSelect} isInvalid={!!formik.errors.tax_id} className={"custom-select " + (formik.touched.tax_id && formik.errors.tax_id ? "is-invalid" : "")} />
-                              {formik.errors && formik.errors.tax_id ? <div className="invalid-feedback d-block">{formik.errors.tax_id}</div> : ""}
-                              {/* <ReactSelectField name="tax_id" placeholder={t("search_option")} value={formik.values.tax_id} options={taxOptionsData} label={t("tax")} controlId="serviceForm-tax_id" isMulti={false} /> */}
+                            <div className="col-lg-3 col-md-4 col-4 ms-xxl-4 mb-2">
+                              <input type="text" className="form-control" placeholder="$" />
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-md-3 mb-2 col-4">
+                              <label htmlFor="">Senior</label>
+                            </div>
+                            <div className="col-lg-3 col-md-4 mb-2 col-4">
+                              <input type="text" className="form-control" placeholder="$"  />
+                            </div>
+                            <div className="col-lg-3 col-md-4 col-4 ms-xxl-4 mb-2">
+                              <input type="text" className="form-control" placeholder="$" />
                             </div>
                           </div>
                         </div>
                       </div>
-                      <hr className="drawer-supplier-hr"></hr>
+                      <hr className="drawer-category-hr"></hr>
                       <div className="row mx-0">
                         <div className="col-md-6 ps-md-0 mb-md-0 mb-3">
-                          <h4 className="fw-semibold mb-2">{t("inventory")}</h4>
-                          <p>{t("manage_stock_levels_of_this_service")}</p>
+                          <h4 className="fw-semibold mb-2">{t('duration')}</h4>
+                          <p>{t('how_long_is_this_service')}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
-                          <SwitchField
-                            name="manage_stock"
-                            label={t("manage_stock")}
-                            controlId="clientForm-manage_stock"
-                            value={'1'}
-                            onChange={(e) => {
-                              if(e.currentTarget.checked){
-                                setTimeout(() => {
-                                  formik.setFieldValue('manage_stock', '1', false);
-                                }, 100);
-                              }else{
-                                setTimeout(() => {
-                                  formik.setFieldValue('manage_stock', '', false);
-                                }, 100);
-                              }
-                              formik.handleChange(e);
-                            }}
-                          />
-                          <div className="row" style={{ display: formik.values.manage_stock == "" || formik.values.manage_stock == 0 ? "none" : "" }}>
-                            <div className="mb-3 col-md-6">
-                              <InputField type="text" name="stock_quantity" value={formik.values.stock_quantity} label={t("stock_quantity")} controlId="serviceForm-stock_quantity" />
+                          <div className="row">
+                            <div className="mb-2 col-auto mb-3">
+                              <Field name="duration" placeholder={t("search_option")} options={durationOptionsData} component={CustomSelect} isInvalid={!!formik.errors.duration} className={"custom-select " + (formik.touched.duration && formik.errors.duration ? "is-invalid" : "")} />
+                              {formik.errors && formik.errors.duration ? <div className="invalid-feedback d-block">{formik.errors.duration}</div> : ""}
                             </div>
-                            <div className="mb-3 col-md-6">
-                              <InputField type="text" name="low_stock_threshold" value={formik.values.low_stock_threshold} label={t("low_stock_threshold")} controlId="serviceForm-low_stock_threshold" />
+                            <div className="mb-2 col-auto mb-3">
+                              <label htmlFor="">Padding Time</label>
+                              <select className="form-control">
+                                <option value="">0 mins</option>
+                                <option value="">0 mins</option>
+                                <option value="">0 mins</option>
+                              </select>
+                            </div>
+                          </div>
+                          <p>{t('padding_time_note')}</p>
+                        </div>
+                      </div>
+                      <hr className="drawer-category-hr"></hr>
+                      <div className="row mx-0">
+                        <div className="col-md-6 ps-md-0 mb-md-0 mb-3">
+                          <h4 className="fw-semibold mb-2">{t("tax")}</h4>
+                          <p>{t("set_the_tax_rate")}</p>
+                        </div>
+                        <div className="col-md-6 pe-md-0">
+                          <div className="row">
+                            <div className="col-md-8 mb-3">
+                              <ReactSelectField name="tax_id" placeholder={t("search_option")} value={formik.values.tax_id} options={taxOptionsData} label={t("tax")} controlId="serviceForm-tax_id" isMulti={false}  />
                             </div>
                           </div>
                         </div>

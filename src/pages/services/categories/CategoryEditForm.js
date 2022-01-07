@@ -93,7 +93,7 @@ const CategoryEditForm = () => {
                         <div className="modal-body p-md-4 p-3">
                             <h4 className="mb-2">{t('edit_category')}</h4>
                             <form noValidate onSubmit={formik.handleSubmit}>
-                                <InputField type="text" name="name" value={formik.values.name} label={t("category_name")} controlId="categoryForm-name" onChange={formik.handleChange}/>
+                                <InputField type="text" name="name" value={formik.values.name} label={t("category_name")} controlId="categoryForm-name" />
                                 <div className="text-center">
                                     <button type="submit" className="btn">
                                       {t("save")}

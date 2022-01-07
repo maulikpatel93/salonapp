@@ -173,16 +173,18 @@
     "add_category": "Add Category",
     "edit_service": "Edit Service",
     "edit_category": "Edit Category",
-    "add_the_name_of_the_category": "Add the name of the category.",
     "category_name": "Category Name",
-    "add_the_contact_details_of_this_category": "Add the contact details of this category.",
-    "add_category_Logo": "Add Category Logo",
-    "add_the_address_of_this_category": "Add the address of this category.",
     "service": "Service",
-    "add_the_name_of_the_service": "Add the name of the service.",
-    "add_the_name_and_general_details_of_this_service": "Add the name and general details of this service.",
-    "add_service_image": "Add Service Image",
-    "add_the_pricing_details_of_this_service": "Add the pricing details of this service.",
-    "manage_stock_levels_of_this_service": "Manage stock levels of this service."
-
+    "add_the_name_and_description_of_this_service": "Add the name and description of this service.",
+    "price_note_service": "Add the pricing options of the service. If you wish to offer this service at a special price when booked with another service, enter an add-on price for it.",
+    "how_long_is_this_service": "How long is this service?",
+    "set_the_tax_rate": "Set the tax rate.",
+    "add_a_short_description": "Add a short description",
+    "add_on_price": "Add-on Price",
+    "general": "General",
+    "junior": "Junior",
+    "senior": "Senior",
+    "duration": "Duration",
+    "padding_time": "Padding Time",
+    "padding_time_note": "Padding time can be added for preparation or clean-up and it will block out the additional time in your calendar."
 }
