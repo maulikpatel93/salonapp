@@ -42,7 +42,6 @@
         "react-router-dom": "6.0.0-beta.0",
         "react-scripts": "^4.0.3",
         "react-select": "^5.2.1",
-        "react-select-2": "^2.0.11",
         "react-toolkit": "^2.0.0-alpha.6",
         "redux": "^4.0.5",
         "redux-persist": "^6.0.0",
@@ -54,13 +53,9 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "webpack --mode=production --node-env=production",
+        "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "build:dev": "webpack --mode=development",
-        "build:prod": "webpack --mode=production --node-env=production",
-        "watch": "webpack --watch",
-        "serve": "webpack serve",
         "postinstall": "postinstall"
     },
     "postinstall": {
@@ -85,24 +80,14 @@
         "@babel/core": "^7.16.0",
         "@babel/preset-env": "^7.16.4",
         "@fortawesome/fontawesome-free": "^5.15.4",
-        "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
-        "@webpack-cli/generators": "^2.4.1",
         "autoprefixer": "^10.4.0",
         "babel-loader": "^8.2.3",
         "css-loader": "^6.5.1",
-        "html-webpack-plugin": "^5.5.0",
         "mini-css-extract-plugin": "^2.4.5",
-        "postcss": "^8.4.4",
-        "postcss-loader": "^6.2.1",
         "prettier": "^2.5.1",
         "react-refresh": "^0.11.0",
         "sass": "^1.44.0",
         "sass-loader": "^12.4.0",
-        "style-loader": "^3.3.1",
-        "webpack": "^5.65.0",
-        "webpack-cli": "^4.9.1",
-        "webpack-dev-server": "^4.6.0",
-        "webpack-retry-load-plugin": "^1.1.6",
-        "workbox-webpack-plugin": "^6.4.2"
+        "style-loader": "^3.3.1"
     }
 }
