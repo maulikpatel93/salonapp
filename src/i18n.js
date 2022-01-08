@@ -14,7 +14,6 @@ import Backend from "i18next-xhr-backend";
 //     translation: translationDE
 //   }
 // };
-
 i18n
   .use(Backend)
   .use(detector)

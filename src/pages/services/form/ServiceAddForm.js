@@ -51,20 +51,20 @@ const ServiceAddForm = () => {
     duration: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("duration")).required())),
     padding_time: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("padding_time")).required())),
     tax_id: Yup.lazy((val) => (Array.isArray(val) ? Yup.array().of(Yup.string()).nullable().min(1).required() : Yup.string().nullable().label(t("tax")).required())),
-    price: Yup.object().shape({
-      general: Yup.object().shape({
-        price: Yup.string().trim().required(),
-        add_on_price: Yup.string().trim().required(),
-      }),
-      junior: Yup.object().shape({
-        price: Yup.string().trim().required(),
-        add_on_price: Yup.string().trim().required(),
-      }),
-      senior: Yup.object().shape({
-        price: Yup.string().trim().required(),
-        add_on_price: Yup.string().trim().required(),
-      }),
-    }),
+    // price: Yup.object().shape({
+    //   general: Yup.object().shape({
+    //     price: Yup.string().trim().required(),
+    //     add_on_price: Yup.string().trim().required(),
+    //   }),
+    //   junior: Yup.object().shape({
+    //     price: Yup.string().trim().required(),
+    //     add_on_price: Yup.string().trim().required(),
+    //   }),
+    //   senior: Yup.object().shape({
+    //     price: Yup.string().trim().required(),
+    //     add_on_price: Yup.string().trim().required(),
+    //   }),
+    // }),
   });
   yupconfig();
 
@@ -157,15 +157,15 @@ const ServiceAddForm = () => {
                           <p>{t("price_note_service")}</p>
                         </div>
                         <div className="col-md-6 pe-md-0">
-                          <div className="row align-items-end">
+                          <div className="row align-items-end1">
                             <div className="col-md-3 mb-2 col-4">
                               <label htmlFor="">General</label>
                             </div>
                             <div className="col-lg-3 col-md-4 col-4 mb-2">
-                              <InputField type="text" name="price[general][price]" value={formik.values.cost_price} placeholder="$" label={t("price")} controlId="serviceForm-price" />
+                              <InputField type="text" name="price[general][price]" value={formik.values.cost_price} placeholder="$" label={''} controlId="serviceForm-price" />
                             </div>
                             <div className="col-lg-3 col-md-4 col-4 ms-xxl-4 mb-2">
-                              <InputField type="text" name="price[general][add_on_price]" value={formik.values.add_on_price} placeholder="$" label={t("price")} controlId="serviceForm-price" />
+                              <InputField type="text" name="price[general][add_on_price]" value={formik.values.add_on_price} placeholder="$" label={''} controlId="serviceForm-add_on_price" />
                             </div>
                           </div>
                           <div className="row">
